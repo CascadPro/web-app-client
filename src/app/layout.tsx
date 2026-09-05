@@ -1,7 +1,9 @@
+import { domAnimation, LazyMotion } from "motion/react"
 import { ThemeProvider } from "next-themes"
 import { JetBrains_Mono, Mulish } from "next/font/google"
 import type { ReactNode } from "react"
 
+import { Tabs } from "@/components/layouts/tabs/tabs"
 
 import "./globals.css"
 
@@ -28,7 +30,10 @@ export default async function Layout({ children }: Readonly<Props>) {
 		<html lang="ru" data-scroll-behavior="smooth" suppressHydrationWarning>
 			<body className={`${poppins.variable} antialiased`}>
 				<ThemeProvider attribute="class">
+					<LazyMotion features={domAnimation} strict>
 						{children}
+						<Tabs />
+					</LazyMotion>
 				</ThemeProvider>
 			</body>
 		</html>

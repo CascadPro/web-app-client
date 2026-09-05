@@ -66,43 +66,99 @@
 	--color-on-error-container: var(--on-error-container);
 }
 
-@media (prefers-color-scheme: dark) {
-	:root {
-		--primary: #64b5f6;
-		--on-primary: #ffffff;
-		--primary-container: #1976d2;
-		--on-primary-container: #e3f2fd;
+.dark {
+	--primary: #64b5f6;
+	--on-primary: #ffffff;
+	--primary-container: #1976d2;
+	--on-primary-container: #e3f2fd;
 
-		--secondary: #90caf9;
-		--on-secondary: #000000;
-		--secondary-container: #0d47a1;
-		--on-secondary-container: #bbdefb;
+	--secondary: #90caf9;
+	--on-secondary: #000000;
+	--secondary-container: #0d47a1;
+	--on-secondary-container: #bbdefb;
 
-		--tertiary: #b39ddb;
-		--on-tertiary: #000000;
-		--tertiary-container: #5e35b1;
-		--on-tertiary-container: #d1c4e9;
+	--tertiary: #b39ddb;
+	--on-tertiary: #000000;
+	--tertiary-container: #5e35b1;
+	--on-tertiary-container: #d1c4e9;
 
-		--background: #121212;
-		--on-background: #e0e0e0;
+	--background: #121212;
+	--on-background: #e0e0e0;
 
-		--surface: #1e1e1e;
-		--on-surface: #ffffff;
+	--surface: #1e1e1e;
+	--on-surface: #ffffff;
 
-		--surface-variant: #2d2d2d;
-		--on-surface-variant: #b0bec5;
+	--surface-variant: #2d2d2d;
+	--on-surface-variant: #b0bec5;
 
-		--outline: #90a4ae;
+	--outline: #90a4ae;
 
-		--error: #cf6679;
-		--on-error: #000000;
-		--error-container: #b00020;
-		--on-error-container: #ffdad6;
-	}
+	--error: #cf6679;
+	--on-error: #000000;
+	--error-container: #b00020;
+	--on-error-container: #ffdad6;
 }
 
 body {
 	background: var(--background);
-	color: var(--foreground);
-	font-family: Arial, Helvetica, sans-serif;
+	color: var(--on-background);
+	font-family: var(--font-mulish);
+
+	min-height: calc(100vh - 4rem);
+}
+
+* {
+	box-sizing: border-box;
+}
+
+html {
+	-webkit-font-smoothing: antialiased;
+	-webkit-tap-highlight-color: transparent;
+
+	-moz-osx-font-smoothing: grayscale;
+
+	scroll-behavior: smooth;
+	scroll-padding-top: 0px;
+}
+
+@media screen and (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+}
+
+button,
+svg,
+img {
+	user-select: none;
+}
+
+button,
+a {
+	cursor: pointer;
+	outline: none;
+}
+
+input {
+	outline: none;
+}
+
+button:focus,
+a:focus,
+input:focus {
+	outline: none;
+}
+
+kbd {
+	font-weight: 400;
+	font-size: var(--text-sm);
+	font-family: var(--font-jetbrains);
+}
+
+hr {
+	background-color: var(--secondary);
+}
+
+ul {
+	list-style: none;
 }
