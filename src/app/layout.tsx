@@ -32,6 +32,7 @@ export default async function Layout({ children }: Readonly<Props>) {
 				<ThemeProvider attribute="class">
 					<LazyMotion features={domAnimation} strict>
 						{children}
+
 						<Tabs />
 					</LazyMotion>
 				</ThemeProvider>
