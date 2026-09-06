@@ -1,6 +1,5 @@
 import Cookie from "js-cookie"
 
-import { DOMAIN } from "@/libs/constants"
 import { ms, StringValue } from "@/libs/utils"
 
 export interface ICookieStorageOptions {
@@ -17,7 +16,6 @@ export class CookieStorage {
 
 	save(value: string, { path, expiresMs }: ICookieStorageOptions) {
 		Cookie.set(this.STORAGE_KEY, value, {
-			domain: DOMAIN,
 			sameSite: "strict",
 			secure: false,
 			...(path ? { path } : {}),

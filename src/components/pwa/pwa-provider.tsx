@@ -2,14 +2,10 @@
 
 import { useEffect } from "react"
 
-function getCSSVariable(name: string) {
-	return getComputedStyle(document.documentElement)
-		.getPropertyValue(name)
-		.trim()
-}
+import { getCssVar } from "@/libs/utils"
 
 function updatePWATheme() {
-	const background = getCSSVariable("--background")
+	const background = getCssVar("--background")
 	// const primary = getCSSVariable("--primary")
 
 	if (!background) return
