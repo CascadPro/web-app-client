@@ -2,6 +2,8 @@ export const AppRoutes = {
 	INDEX: "/",
 	START: "/start",
 	ABOUT: "/about",
+	OFFLINE: "/offline",
+	MENU: "/menu",
 
 	AUTH: "/auth",
 	REGISTER: "/auth/register",
