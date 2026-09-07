@@ -4,6 +4,7 @@ import { FormProvider } from "react-hook-form"
 
 import { Button, Title } from "@/components/ui"
 import { FormInput } from "@/components/ui/components/form-input"
+import { VALUES } from "@/libs/constants"
 
 import { useLoginPage } from "./hooks/useLogin"
 
@@ -31,6 +32,7 @@ export const LoginPage = () => {
 						label={"Пароль"}
 						placeholder="Введите пароль"
 						containerClassName="w-full mb-12"
+						maxLength={VALUES.MAX_PASSWORD_LENGTH}
 						required
 					/>
 
