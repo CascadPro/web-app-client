@@ -1,3 +1,4 @@
+import { AxiosError } from "axios"
 import { headers } from "next/headers"
 import { NextResponse } from "next/server"
 
@@ -32,7 +33,9 @@ export async function POST(request: Request) {
 			)
 		}
 
-		const nextResponse = NextResponse.json({ access_token })
+		const nextResponse = NextResponse.json({
+			access_token
+		})
 
 		nextResponse.cookies.set(CookieStorageKeys.REFRESH_TOKEN, refresh_token, {
 			httpOnly: true,
@@ -44,11 +47,20 @@ export async function POST(request: Request) {
 
 		return nextResponse
 	} catch (error) {
+		if (error instanceof AxiosError) {
+			const status = error.response?.status ?? 500
+			const data = error.response?.data
+
+			return NextResponse.json(data ?? { message: "Authentication failed" }, {
+				status
+			})
+		}
+
 		console.error("Login failed:", error)
 
 		return NextResponse.json(
 			{ message: "Authentication failed" },
-			{ status: 401 }
+			{ status: 500 }
 		)
 	}
 }

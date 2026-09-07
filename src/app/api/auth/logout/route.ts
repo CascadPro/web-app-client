@@ -1,4 +1,4 @@
-import { cookies } from "next/headers"
+import { AxiosError } from "axios"
 import { NextResponse } from "next/server"
 
 import { serverService } from "@/api/server-instance"
@@ -10,14 +10,12 @@ export async function POST() {
 	})
 
 	try {
-		const cookieStore = await cookies()
-
-		const refreshToken = cookieStore.get(CookieStorageKeys.REFRESH_TOKEN)
-
-		if (refreshToken) {
-			await serverService.postAuthLogout({})
+		await serverService.postAuthLogout({})
+	} catch (error) {
+		if (error instanceof AxiosError) {
+			console.error("Logout failed:", error.response?.data)
 		}
-	} catch {}
+	}
 
 	response.cookies.delete(CookieStorageKeys.REFRESH_TOKEN)
 

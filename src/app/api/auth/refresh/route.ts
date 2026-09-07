@@ -1,3 +1,4 @@
+import { AxiosError } from "axios"
 import { cookies } from "next/headers"
 import { NextResponse } from "next/server"
 
@@ -26,10 +27,13 @@ export async function GET() {
 		}
 
 		return NextResponse.json({ access_token })
-	} catch {
+	} catch (error) {
 		const nextResponse = NextResponse.json(
 			{ message: "Refresh token is invalid" },
-			{ status: 401 }
+			{
+				status:
+					error instanceof AxiosError ? (error.response?.status ?? 401) : 401
+			}
 		)
 
 		nextResponse.cookies.delete(CookieStorageKeys.REFRESH_TOKEN)

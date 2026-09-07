@@ -12,8 +12,7 @@ type RetryConfig = InternalAxiosRequestConfig & {
 
 const instance = axios.create({
 	baseURL: API_URL,
-	headers: getContentType("json"),
-	withCredentials: true
+	headers: getContentType("json")
 })
 
 const service = getCascadeProAppAPI(instance)
