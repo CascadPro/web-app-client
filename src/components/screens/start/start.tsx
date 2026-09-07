@@ -6,7 +6,7 @@ export const StartPage = () => {
 		<>
 			<Title size="lg">Начать работу</Title>
 
-			<div className="absolute top-0 left-0 flex h-full w-full flex-col items-center justify-center gap-4 px-5">
+			<div className="absolute -top-4 left-0 flex h-full w-full flex-col items-center justify-center gap-4 px-5">
 				<Button
 					variant="default"
 					href={AppRoutes.LOGIN}

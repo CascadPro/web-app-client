@@ -1,9 +1,14 @@
-import axios, { AxiosError } from "axios"
+import axios, { type AxiosError, type InternalAxiosRequestConfig } from "axios"
 
-import { API_URL, CookieStorageKeys } from "@/libs/constants"
-import { CookieStorage, getContentType, ms } from "@/libs/utils"
+import { API_URL } from "@/libs/constants"
+import { getContentType } from "@/libs/utils"
+import { useAuthStore } from "@/store/auth"
 
 import { getCascadeProAppAPI } from "./generated"
+
+type RetryConfig = InternalAxiosRequestConfig & {
+	_retry?: boolean
+}
 
 const instance = axios.create({
 	baseURL: API_URL,
@@ -13,24 +18,50 @@ const instance = axios.create({
 
 const service = getCascadeProAppAPI(instance)
 
+let refreshPromise: Promise<string | null> | null = null
+
+const refreshAccessToken = async (): Promise<string | null> => {
+	if (refreshPromise) {
+		return refreshPromise
+	}
+
+	refreshPromise = (async () => {
+		try {
+			const response = await fetch("/api/refresh", {
+				method: "GET",
+				credentials: "include"
+			})
+
+			if (!response.ok) {
+				return null
+			}
+
+			const data = await response.json()
+
+			const accessToken = data.access_token
+
+			if (!accessToken) {
+				return null
+			}
+
+			useAuthStore.getState().setAccessToken(accessToken)
+
+			return accessToken
+		} catch {
+			return null
+		} finally {
+			refreshPromise = null
+		}
+	})()
+
+	return refreshPromise
+}
+
 instance.interceptors.request.use(
-	async config => {
-		const appName = "Cascade Pro"
-		const appVersion = "0.0.0"
+	config => {
+		const accessToken = useAuthStore.getState().accessToken
 
-		// const osInfo = `${capitalize(Platform.OS)} ${Platform.Version}`
-		// const deviceModel = `${Device.brand} ${Device.modelName}`
-
-		const osInfo = "Android 34"
-		const deviceModel = "Xiaomi 11T"
-
-		config.headers["User-Agent"] =
-			`${appName}/${appVersion} (${osInfo}; ${deviceModel}; 1)`
-
-		const storage = new CookieStorage(CookieStorageKeys.ACCESS_TOKEN)
-
-		const [ok, accessToken] = storage.get()
-		if (ok) {
+		if (accessToken) {
 			config.headers.Authorization = `Bearer ${accessToken}`
 		}
 
@@ -41,35 +72,32 @@ instance.interceptors.request.use(
 
 instance.interceptors.response.use(
 	response => response,
+
 	async (error: AxiosError) => {
-		if (error.response?.status === 401) {
-			const RStorage = new CookieStorage(CookieStorageKeys.REFRESH_TOKEN)
-			const AStorage = new CookieStorage(CookieStorageKeys.ACCESS_TOKEN)
+		const originalRequest = error.config as RetryConfig | undefined
 
-			const [ok, refreshToken] = RStorage.get()
-			if (!ok) {
-				AStorage.remove()
+		if (
+			error.response?.status !== 401 ||
+			!originalRequest ||
+			originalRequest._retry
+		) {
+			throw error
+		}
 
-				throw error
-			}
+		originalRequest._retry = true
 
-			const response = await service.getAuthLoginRefresh({
-				headers: {
-					"Set-Cookie": `${CookieStorageKeys.REFRESH_TOKEN}=${refreshToken}; Max-Age=${ms("5min") / 1000}; HttpOnly; SameSite=Lax`
-				}
-			})
+		const accessToken = await refreshAccessToken()
 
-			if (!response?.data?.access_token) throw error
-
-			AStorage.save(response.data.access_token, { expiresMs: "15min" })
-
-			if (error.config) {
-				return await instance(error.config)
-			}
+		if (!accessToken) {
+			useAuthStore.getState().setUnauthenticated()
 
 			throw error
 		}
+
+		originalRequest.headers.Authorization = `Bearer ${accessToken}`
+
+		return instance(originalRequest)
 	}
 )
 
-export { service }
+export { instance, service }

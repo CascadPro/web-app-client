@@ -39,7 +39,12 @@ const Title: FC<Props> = ({ children, size = "sm", className, ...props }) => {
 		{
 			className: cn(
 				mapClassNameBySize[size],
-				{ "text-shadow-[2px_2px_2px]": ["h1", "h2"].includes(type) },
+				{
+					"text-shadow-[1px_1px_2px] text-shadow-primary": [
+						"h1",
+						"h2"
+					].includes(type)
+				},
 				className
 			),
 			...props
