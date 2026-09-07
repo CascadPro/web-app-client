@@ -1,7 +1,8 @@
-import axios, { AxiosError, InternalAxiosRequestConfig } from "axios"
+import axios, { type AxiosError, type InternalAxiosRequestConfig } from "axios"
 
-import { API_URL, CookieStorageKeys } from "@/libs/constants"
-import { CookieStorage, getContentType } from "@/libs/utils"
+import { API_URL } from "@/libs/constants"
+import { getContentType } from "@/libs/utils"
+import { useAuthStore } from "@/store/auth"
 
 import { getCascadeProAppAPI } from "./generated"
 
@@ -17,44 +18,8 @@ const instance = axios.create({
 
 const service = getCascadeProAppAPI(instance)
 
-/**
- * Promise текущего refresh-запроса.
- *
- * Если несколько запросов одновременно получат 401,
- * они будут ждать один и тот же refresh.
- */
 let refreshPromise: Promise<string | null> | null = null
 
-const getAccessToken = () => {
-	const storage = new CookieStorage(CookieStorageKeys.ACCESS_TOKEN)
-
-	const [ok, token] = storage.get()
-
-	return ok ? token : null
-}
-
-const getRefreshToken = () => {
-	const storage = new CookieStorage(CookieStorageKeys.REFRESH_TOKEN)
-
-	const [ok, token] = storage.get()
-
-	return ok ? token : null
-}
-
-const saveAccessToken = (token: string) => {
-	const storage = new CookieStorage(CookieStorageKeys.ACCESS_TOKEN)
-
-	storage.save(token, { expiresMs: "15min" })
-}
-
-const clearAuthStorage = () => {
-	new CookieStorage(CookieStorageKeys.ACCESS_TOKEN).remove()
-	new CookieStorage(CookieStorageKeys.REFRESH_TOKEN).remove()
-}
-
-/**
- * Выполняет refresh только один раз.
- */
 const refreshAccessToken = async (): Promise<string | null> => {
 	if (refreshPromise) {
 		return refreshPromise
@@ -62,25 +27,24 @@ const refreshAccessToken = async (): Promise<string | null> => {
 
 	refreshPromise = (async () => {
 		try {
-			const refreshToken = getRefreshToken()
+			const response = await fetch("/api/refresh", {
+				method: "GET",
+				credentials: "include"
+			})
 
-			if (!refreshToken) {
+			if (!response.ok) {
 				return null
 			}
 
-			new CookieStorage(CookieStorageKeys.REFRESH_TOKEN).save(refreshToken, {
-				expiresMs: "30d"
-			})
+			const data = await response.json()
 
-			const response = await service.getAuthLoginRefresh()
-
-			const accessToken = response.data?.access_token
+			const accessToken = data.access_token
 
 			if (!accessToken) {
 				return null
 			}
 
-			saveAccessToken(accessToken)
+			useAuthStore.getState().setAccessToken(accessToken)
 
 			return accessToken
 		} catch {
@@ -94,19 +58,12 @@ const refreshAccessToken = async (): Promise<string | null> => {
 }
 
 instance.interceptors.request.use(
-	async config => {
-		const accessToken = getAccessToken()
+	config => {
+		const accessToken = useAuthStore.getState().accessToken
 
 		if (accessToken) {
 			config.headers.Authorization = `Bearer ${accessToken}`
 		}
-
-		/**
-		 * User-Agent браузер сам контролирует.
-		 *
-		 * Не пытаемся подменять его:
-		 * браузеры запрещают изменение User-Agent через fetch/XHR.
-		 */
 
 		return config
 	},
@@ -127,21 +84,12 @@ instance.interceptors.response.use(
 			throw error
 		}
 
-		/**
-		 * Не пытаемся refresh-ить сам refresh endpoint.
-		 */
-		if (originalRequest.url?.includes("/auth/login/refresh")) {
-			clearAuthStorage()
-
-			throw error
-		}
-
 		originalRequest._retry = true
 
 		const accessToken = await refreshAccessToken()
 
 		if (!accessToken) {
-			clearAuthStorage()
+			useAuthStore.getState().setUnauthenticated()
 
 			throw error
 		}

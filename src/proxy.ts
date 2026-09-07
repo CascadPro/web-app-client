@@ -27,22 +27,14 @@ export function proxy(request: NextRequest, response: NextResponse) {
 		return NextResponse.next()
 	}
 
-	const accessToken = request.cookies.get(CookieStorageKeys.ACCESS_TOKEN)?.value
+	const refreshToken = request.cookies.get(CookieStorageKeys.REFRESH_TOKEN)
 
-	const refreshToken = request.cookies.get(
-		CookieStorageKeys.REFRESH_TOKEN
-	)?.value
+	const authenticated = Boolean(refreshToken)
 
-	const authenticated = Boolean(accessToken) || Boolean(refreshToken)
-
-	/**
-	 * Неавторизованный пользователь
-	 * пытается открыть protected route.
-	 */
 	if (!authenticated && !isPublicRoute(pathname)) {
 		const url = request.nextUrl.clone()
 
-		url.pathname = "/auth/login"
+		url.pathname = AppRoutes.LOGIN
 		url.searchParams.set("redirect", pathname)
 
 		return NextResponse.redirect(url)
@@ -50,7 +42,7 @@ export function proxy(request: NextRequest, response: NextResponse) {
 
 	if (
 		authenticated &&
-		(pathname === "/auth/login" || pathname === "/auth/register")
+		(pathname === AppRoutes.LOGIN || pathname === AppRoutes.REGISTER)
 	) {
 		return NextResponse.redirect(new URL("/", request.url))
 	}
