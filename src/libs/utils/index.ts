@@ -1,6 +1,7 @@
 export * from "./api"
 export * from "./capitalize"
 export * from "./cn"
+export * from "./error-catch"
 export * from "./get-css-var"
 export * from "./get-viewport"
 export * from "./input-rule"
