@@ -6,6 +6,14 @@ export default defineConfig({
 		output: {
 			target: "./src/api/generated.ts",
 			client: "axios"
+
+			/* Just let it go... */
+			// override: {
+			// 	mutator: {
+			// 		path: "./src/api/axios.ts",
+			// 		name: "customInstance"
+			// 	}
+			// }
 		}
 	}
 })
