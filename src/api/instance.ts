@@ -1,12 +1,13 @@
-import axios, { type AxiosError, type InternalAxiosRequestConfig } from "axios"
+import axios, { type AxiosRequestConfig } from "axios"
 
 import { API_URL } from "@/libs/constants"
+import { parseApiError } from "@/libs/errors"
 import { getContentType } from "@/libs/utils"
 import { useAuthStore } from "@/store/auth"
 
 import { getCascadeProAppAPI } from "./generated"
 
-type RetryConfig = InternalAxiosRequestConfig & {
+interface RetryConfig extends AxiosRequestConfig {
 	_retry?: boolean
 }
 
@@ -26,7 +27,7 @@ const refreshAccessToken = async (): Promise<string | null> => {
 
 	refreshPromise = (async () => {
 		try {
-			const response = await fetch("/api/refresh", {
+			const response = await fetch("/api/auth/refresh", {
 				method: "GET",
 				credentials: "include"
 			})
@@ -72,28 +73,39 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
 	response => response,
 
-	async (error: AxiosError) => {
-		const originalRequest = error.config as RetryConfig | undefined
+	async error => {
+		const apiError = parseApiError(error)
 
-		if (
-			error.response?.status !== 401 ||
-			!originalRequest ||
-			originalRequest._retry
-		) {
-			throw error
+		if (!axios.isAxiosError(error) || error.response?.status !== 401) {
+			throw apiError
+		}
+
+		const originalRequest = error.config as RetryConfig
+
+		if (!originalRequest) {
+			throw apiError
+		}
+
+		if (originalRequest._retry) {
+			useAuthStore.getState().setUnauthenticated()
+
+			throw apiError
 		}
 
 		originalRequest._retry = true
 
-		const accessToken = await refreshAccessToken()
+		const token = await refreshAccessToken()
 
-		if (!accessToken) {
+		if (!token) {
 			useAuthStore.getState().setUnauthenticated()
 
-			throw error
+			throw apiError
 		}
 
-		originalRequest.headers.Authorization = `Bearer ${accessToken}`
+		originalRequest.headers = {
+			...originalRequest.headers,
+			Authorization: `Bearer ${token}`
+		}
 
 		return instance(originalRequest)
 	}
