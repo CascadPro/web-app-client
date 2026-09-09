@@ -8,7 +8,10 @@ import { getCascadeProAppAPI } from "./generated"
 
 const serverInstance = axios.create({
 	baseURL: API_URL,
-	headers: getContentType("json")
+	headers: {
+		"Accept-Language": "ru",
+		...getContentType("json")
+	}
 })
 
 serverInstance.interceptors.request.use(async config => {

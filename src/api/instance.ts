@@ -13,7 +13,10 @@ interface RetryConfig extends AxiosRequestConfig {
 
 const instance = axios.create({
 	baseURL: API_URL,
-	headers: getContentType("json")
+	headers: {
+		"Accept-Language": "ru",
+		...getContentType("json")
+	}
 })
 
 const service = getCascadeProAppAPI(instance)
