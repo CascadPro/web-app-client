@@ -1,10 +1,11 @@
-import { AxiosError } from "axios"
+import axios from "axios"
 import { headers } from "next/headers"
 import { NextResponse } from "next/server"
 
 import type { AuthTransportHttpLoginRequest } from "@/api/generated"
 import { serverService } from "@/api/server-instance"
 import { CookieStorageKeys } from "@/libs/constants"
+import { parseServerError } from "@/libs/errors"
 
 const REFRESH_TOKEN_MAX_AGE = 60 * 60 * 24 * 30
 
@@ -47,20 +48,18 @@ export async function POST(request: Request) {
 
 		return nextResponse
 	} catch (error) {
-		if (error instanceof AxiosError) {
-			const status = error.response?.status ?? 500
-			const data = error.response?.data
-
-			return NextResponse.json(data ?? { message: "Authentication failed" }, {
-				status
-			})
-		}
-
-		console.error("Login failed:", error)
+		const parsed = parseServerError(error)
+		const status = axios.isAxiosError(error)
+			? (error.response?.status ?? 500)
+			: 500
 
 		return NextResponse.json(
-			{ message: "Authentication failed" },
-			{ status: 500 }
+			{
+				code: parsed.code ?? "internal_error",
+				message: parsed.message ?? "Произошла внутренняя ошибка сервера",
+				fields: parsed.fields
+			},
+			{ status }
 		)
 	}
 }
