@@ -42,7 +42,9 @@ export function proxy(request: NextRequest, response: NextResponse) {
 
 	if (
 		authenticated &&
-		(pathname === AppRoutes.LOGIN || pathname === AppRoutes.REGISTER)
+		(pathname === AppRoutes.LOGIN ||
+			pathname === AppRoutes.REGISTER ||
+			pathname === AppRoutes.START)
 	) {
 		return NextResponse.redirect(new URL("/", request.url))
 	}
