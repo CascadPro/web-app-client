@@ -9,7 +9,7 @@ const Skeleton: FC<HTMLAttributes<HTMLDivElement>> = ({
 }) => {
 	return (
 		<div
-			className={cn("bg-muted/40 animate-pulse rounded-md", className)}
+			className={cn("bg-on-background/20 animate-pulse rounded-md", className)}
 			{...props}
 		/>
 	)
