@@ -1,4 +1,5 @@
 import {
+	CircleQuestionMarkIcon,
 	HomeIcon,
 	InfoIcon,
 	LucideIcon,
@@ -7,7 +8,7 @@ import {
 } from "lucide-react"
 import { usePathname, useRouter } from "next/navigation"
 
-import { TabsItemIconType } from "../components/tabs-item"
+export type TabsItemIconType = "about" | "menu" | "start" | "home"
 
 export const useTabsItem = (href: string, icon: TabsItemIconType) => {
 	const pathname = usePathname()
@@ -20,14 +21,17 @@ export const useTabsItem = (href: string, icon: TabsItemIconType) => {
 		case "about":
 			Icon = InfoIcon
 			break
-		case "menu":
-			Icon = MenuIcon
-			break
 		case "start":
 			Icon = PlayIcon
 			break
-		default:
+		case "menu":
+			Icon = MenuIcon
+			break
+		case "home":
 			Icon = HomeIcon
+			break
+		default:
+			Icon = CircleQuestionMarkIcon
 	}
 
 	return {

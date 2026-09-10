@@ -4,7 +4,7 @@ import type { FC } from "react"
 
 import { Button } from "@/components/ui"
 
-import { useTabsItem } from "../hooks/useTabsItem"
+import { type TabsItemIconType, useTabsItem } from "../hooks/useTabsItem"
 
 interface Props {
 	title: string
@@ -12,15 +12,13 @@ interface Props {
 	icon: TabsItemIconType
 }
 
-export type TabsItemIconType = "home" | "about" | "start" | "menu"
-
 export const TabsItem: FC<Props> = ({ title, href, icon }) => {
 	const { Icon, active, handleClick } = useTabsItem(href, icon)
 
 	return (
 		<Button
 			variant="ghost"
-			className="flex-col text-shadow-[0px_1px_6px]"
+			className="hover:bg-primary/10 flex-col text-shadow-[0px_1px_6px] active:[&_svg]:scale-[.90]"
 			onClick={handleClick}
 		>
 			<Icon
