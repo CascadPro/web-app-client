@@ -1,8 +1,8 @@
-export type UserAvatarSize = "sm" | "md" | "lg" | "xl"
+export type UserAvatarSize = "sm" | "md" | "lg" | "xl" | "2xl"
 
 export type UserAvatarProps = {
 	user?: UserAvatarUser
-	size?: "sm" | "md" | "lg" | "xl"
+	size?: UserAvatarSize
 	className?: string
 	alt?: string
 }

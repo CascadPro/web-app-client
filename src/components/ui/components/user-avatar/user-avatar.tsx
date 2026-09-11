@@ -1,11 +1,11 @@
 "use client"
 
 import Image from "next/image"
-import { FC } from "react"
+import type { FC } from "react"
 
 import { cn } from "@/libs/utils"
 
-import { UserAvatarProps } from "./types"
+import type { UserAvatarProps } from "./types"
 import { useUserAvatar } from "./useUserAvatar"
 
 export const UserAvatar: FC<UserAvatarProps> = ({
@@ -18,39 +18,35 @@ export const UserAvatar: FC<UserAvatarProps> = ({
 		avatarUrl,
 		initials,
 		placeholder,
-		showImage,
 		sizeConfig,
-		setImageError
+		hasAvatar,
+		showPlaceholder,
+		imageLoaded,
+		setImageError,
+		setImageLoaded
 	} = useUserAvatar(user, size)
 
 	return (
 		<div
 			className={cn(
-				"relative shrink-0 overflow-hidden rounded-full",
-				"bg-surface text-on-surface-variant",
+				"relative shrink-0 overflow-hidden rounded-full ring-4",
+				"bg-primary/10 text-primary ring-primary/5 font-semibold",
 				sizeConfig.container,
 				className
 			)}
 		>
-			{showImage ? (
-				<Image
-					src={avatarUrl || ""}
-					alt={alt ?? `${user?.name ?? ""} ${user?.surname ?? ""}`.trim()}
-					fill
-					sizes="64px"
-					className="object-cover"
-					onError={() => setImageError(true)}
-				/>
-			) : placeholder ? (
+			{/* Placeholder */}
+			{showPlaceholder && (
 				<img
-					src={placeholder}
+					src={placeholder || ""}
 					alt=""
 					aria-hidden="true"
-					className="absolute inset-0 size-full object-cover blur-[2px]"
+					className="absolute inset-0 size-full object-cover"
 				/>
-			) : null}
+			)}
 
-			{!showImage && !placeholder && (
+			{/* Initials */}
+			{!hasAvatar && !placeholder && (
 				<div
 					className={cn(
 						"flex size-full items-center justify-center",
@@ -60,6 +56,26 @@ export const UserAvatar: FC<UserAvatarProps> = ({
 				>
 					{initials}
 				</div>
+			)}
+
+			{/* Avatar */}
+			{hasAvatar && (
+				<Image
+					src={avatarUrl || ""}
+					alt={alt ?? `${user?.name ?? ""} ${user?.surname ?? ""}`.trim()}
+					fill
+					sizes="64px"
+					className={cn(
+						"object-cover",
+						"transition-opacity duration-200",
+						imageLoaded ? "opacity-100" : "opacity-0"
+					)}
+					onLoad={() => setImageLoaded(true)}
+					onError={() => {
+						setImageError(true)
+						setImageLoaded(false)
+					}}
+				/>
 			)}
 		</div>
 	)
