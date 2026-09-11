@@ -2,7 +2,6 @@ import type { ReactNode } from "react"
 
 import { Tabs } from "@/components/layouts/tabs/tabs"
 import { AuthProvider } from "@/components/providers/auth"
-import { Container } from "@/components/ui"
 import { AppRoutes } from "@/libs/constants"
 import { getViewport } from "@/libs/utils"
 
@@ -14,7 +13,7 @@ export default function Layout({
 	return (
 		<AuthProvider>
 			<main>
-				<Container className="px-3 py-2">{children}</Container>
+				{children}
 
 				<Tabs
 					data={[
