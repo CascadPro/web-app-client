@@ -1,5 +1,5 @@
-import { RegisterPage } from "@/components/screens/register/register"
+import { RegisterScreen } from "@/components/screens/register/register"
 
 export default function Register() {
-	return <RegisterPage />
+	return <RegisterScreen />
 }

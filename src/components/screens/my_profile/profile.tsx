@@ -1,12 +1,12 @@
 "use client"
 
-import { AccountInformation } from "./components/account-information"
-import { ProfileHeader } from "./components/profile-header"
-import { ProfileInformation } from "./components/profile-information"
-import { ProfileLoading } from "./components/profile-loading"
-import { useProfilePage } from "./hooks/useProfilePage"
+import { AccountInformation } from "./components/account-information";
+import { ProfileHeader } from "./components/profile-header";
+import { ProfileInformation } from "./components/profile-information";
+import { ProfileLoading } from "./components/profile-loading";
+import { useProfilePage } from "./hooks/useProfilePage";
 
-export const MyProfilePage = () => {
+export const MyProfileScreen = () => {
 	const { status, user, fullName, avatarUser } = useProfilePage()
 
 	if (status === "loading") {

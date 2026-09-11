@@ -1,5 +1,5 @@
-import { MenuPage } from "@/components/screens/menu/menu"
+import { MenuScreen } from "@/components/screens/menu/menu"
 
 export default function Menu() {
-	return <MenuPage />
+	return <MenuScreen />
 }

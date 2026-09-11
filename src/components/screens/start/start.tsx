@@ -1,7 +1,7 @@
-import { Button, Separator, Title } from "@/components/ui"
-import { AppRoutes } from "@/libs/constants"
+import { Button, Separator, Title } from "@/components/ui";
+import { AppRoutes } from "@/libs/constants";
 
-export const StartPage = () => {
+export const StartScreen = () => {
 	return (
 		<>
 			<Title size="lg">Начать работу</Title>

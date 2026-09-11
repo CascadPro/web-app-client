@@ -1,14 +1,14 @@
 "use client"
 
-import { FormProvider } from "react-hook-form"
+import { FormProvider } from "react-hook-form";
 
-import { Button, Title } from "@/components/ui"
-import { FormInput } from "@/components/ui/components/form-input"
-import { VALUES } from "@/libs/constants"
+import { Button, Title } from "@/components/ui";
+import { FormInput } from "@/components/ui/components/form-input";
+import { VALUES } from "@/libs/constants";
 
-import { useLoginPage } from "./hooks/useLogin"
+import { useLoginPage } from "./hooks/useLogin";
 
-export const LoginPage = () => {
+export const LoginScreen = () => {
 	const { form, handleSubmit } = useLoginPage()
 
 	return (
