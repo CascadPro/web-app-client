@@ -12,6 +12,8 @@ const buttonVariants = cva(
 			variant: {
 				default:
 					"bg-primary-container text-on-primary shadow shadow-primary hover:bg-primary-container/90 active:bg-primary-container/90 active:shadow-md",
+				"default-2":
+					"bg-primary/10 text-primary shadow shadow-tertiary rounded-lg p-1",
 				outline:
 					"gap-1 border border-outline text-on-background hover:bg-secondary/40 active:bg-secondary/40 active:scale-[.99]",
 				ghost: "",
@@ -22,7 +24,7 @@ const buttonVariants = cva(
 				destructive:
 					"bg-error-container text-on-error-container hover:bg-error hover:text-on-error active:bg-error active:text-on-error",
 				"destructive-outline":
-					"border border-error-container text-error bg-transparent hover:bg-error-container/40 active:bg-error-container/40 active:scale-[.99]"
+					"border border-error-container text-error bg-transparent shadow shadow-error active:shadow-none hover:bg-error-container/40 active:bg-error-container/40 active:scale-[.99]"
 			}
 		},
 		defaultVariants: {

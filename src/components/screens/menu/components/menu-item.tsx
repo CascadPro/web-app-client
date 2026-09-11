@@ -18,7 +18,7 @@ export const MenuItem: FC<Props> = ({ item }) => {
 	return (
 		<Button
 			variant="ghost"
-			className="bg-surface active:bg-tertiary/50 hover:shadow-tertiary justify-between rounded-lg p-3 hover:-translate-y-1 hover:shadow-md active:translate-x-1"
+			className="border-outline/20 bg-surface active:bg-tertiary/50 hover:shadow-tertiary justify-between rounded-lg border p-3 hover:-translate-y-1 hover:shadow-md active:translate-x-1"
 			onClick={handleClick}
 		>
 			<div className="flex items-center gap-2">
@@ -26,8 +26,8 @@ export const MenuItem: FC<Props> = ({ item }) => {
 				<span>{item.title}</span>
 			</div>
 
-			<div className="bg-primary rounded-md p-1">
-				<ChevronRightIcon size={24} className="text-on-primary" />
+			<div className="bg-primary/10 rounded-lg p-1">
+				<ChevronRightIcon size={24} className="text-primary" />
 			</div>
 		</Button>
 	)

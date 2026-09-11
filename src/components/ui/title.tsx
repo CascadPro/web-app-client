@@ -25,7 +25,7 @@ const Title: FC<Props> = ({ children, size = "sm", className, ...props }) => {
 
 	const mapClassNameBySize = {
 		xs: "text-[16px]",
-		sm: "text-[20px]",
+		sm: "text-[18px]",
 		md: "text-[22px]",
 		lg: "text-[26px]",
 		xl: "text-[35px]",

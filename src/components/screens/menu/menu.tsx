@@ -2,7 +2,7 @@
 
 import { LogOutIcon } from "lucide-react"
 
-import { Button, Separator } from "@/components/ui"
+import { Button, Container, Separator } from "@/components/ui"
 
 import { MenuItem } from "./components/menu-item"
 import { ProfileBadge } from "./components/profile-badge"
@@ -12,7 +12,7 @@ export const MenuPage = () => {
 	const { fullname, user, loading, logout, menuItemsData } = useMenuPage()
 
 	return (
-		<>
+		<Container className="px-3 py-2">
 			<ProfileBadge
 				fullname={fullname}
 				role={user?.role ?? ""}
@@ -37,6 +37,6 @@ export const MenuPage = () => {
 					Выйти из системы
 				</Button>
 			</div>
-		</>
+		</Container>
 	)
 }
