@@ -45,3 +45,5 @@ TODO.*
 todo.*
 
 /src/api/generated.*
+
+/src/components/ui/sheet.tsx
