@@ -31,8 +31,8 @@ export const useMenuPage = () => {
 				icon: CogIcon
 			},
 			{
-				title: "Устройства",
-				href: "/devices",
+				title: "Сеансы",
+				href: "/sessions",
 				icon: TabletSmartphoneIcon
 			},
 			{
