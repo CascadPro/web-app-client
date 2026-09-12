@@ -105,6 +105,11 @@ body {
 	font-family: var(--font-mulish);
 
 	min-height: calc(100vh - 4rem);
+	overflow-x: hidden;
+}
+
+body#scroll-locked {
+	overflow-y: hidden !important;
 }
 
 * {
