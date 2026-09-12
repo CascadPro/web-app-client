@@ -67,6 +67,10 @@ export const refreshSession = async () => {
 
 	useAuthStore.getState().setAccessToken(data.access_token)
 
+	return await refreshUser()
+}
+
+export const refreshUser = async () => {
 	const userResponse = await service.getUsersMy()
 
 	useAuthStore.getState().setAuthenticated(userResponse.data)

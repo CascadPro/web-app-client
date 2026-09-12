@@ -1,14 +1,20 @@
 import { useMutation, useQuery } from "@tanstack/react-query"
 
 import { service } from "@/api/instance"
+import { useAuthStore } from "@/store/auth"
 
 import { QueryKeys } from "../keys"
 
 export const useSessions = () => {
-	return useQuery({
+	const state = useAuthStore(state => state.status)
+
+	const { isLoading, ...other } = useQuery({
 		queryKey: QueryKeys.sessions.all,
-		queryFn: service.getSessions
+		queryFn: service.getSessions,
+		enabled: state === "authenticated"
 	})
+
+	return { isLoading: isLoading || state === "loading", ...other }
 }
 
 export const useDeleteSession = (id: string) => {
