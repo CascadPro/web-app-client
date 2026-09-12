@@ -162,3 +162,42 @@ hr {
 ul {
 	list-style: none;
 }
+
+@theme {
+	--animate-shine: shine 2.5s ease-in-out infinite;
+
+	@keyframes shine {
+		0% {
+			transform: translateX(-150%) skewX(-20deg);
+		}
+
+		50%,
+		100% {
+			transform: translateX(700%) skewX(-20deg);
+		}
+	}
+}
+
+@utility shine {
+	position: relative;
+	overflow: hidden;
+
+	&::after {
+		content: "";
+		position: absolute;
+		inset-block: -20%;
+		left: -30%;
+		width: 20%;
+		transform: skewX(-20deg);
+
+		background: linear-gradient(
+			90deg,
+			transparent,
+			rgb(255 255 255 / 25%),
+			transparent
+		);
+
+		animation: var(--animate-shine);
+		pointer-events: none;
+	}
+}
