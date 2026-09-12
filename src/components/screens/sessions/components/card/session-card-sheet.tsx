@@ -1,5 +1,11 @@
-import { Clock3Icon, Globe2Icon, MapPinIcon } from "lucide-react"
-import type { FC, MouseEvent } from "react"
+import {
+	Clock3Icon,
+	Globe2Icon,
+	HandIcon,
+	MapPinIcon,
+	ShieldCheckIcon
+} from "lucide-react"
+import { type FC, type MouseEvent, useEffect } from "react"
 import BottomSheet from "react-swipeable-bottom-sheet"
 
 import type { SessionsHttpDtoSessionDtoMetadataLocation } from "@/api/generated"
@@ -12,6 +18,7 @@ import { SessionCardInfo } from "./session-card-info"
 interface Props {
 	isOpen: boolean
 	onOpenChange: (state: boolean) => void
+	current: boolean
 	isDeleting: boolean
 	onDelete: (e: MouseEvent<HTMLButtonElement>) => Promise<void>
 	session: SessionCardSheetProps
@@ -27,6 +34,7 @@ export interface SessionCardSheetProps {
 export const SessionCardSheet: FC<Props> = ({
 	isOpen,
 	onOpenChange,
+	current,
 	isDeleting,
 	onDelete,
 	session: { ip, location, device, lastActiveAt }
@@ -34,6 +42,14 @@ export const SessionCardSheet: FC<Props> = ({
 	const locationValue = [location?.city, location?.country]
 		.filter(Boolean)
 		.join(", ")
+
+	useEffect(() => {
+		if (isOpen) {
+			document.body.classList.add("scroll-locked")
+		} else {
+			document.body.classList.remove("scroll-locked")
+		}
+	}, [isOpen])
 
 	return (
 		<BottomSheet
@@ -61,14 +77,22 @@ export const SessionCardSheet: FC<Props> = ({
 					value={`Последняя активность ${formatRelativeDate(lastActiveAt || "")}`}
 				/>
 
-				<Button
-					variant="destructive"
-					className="m-1 py-3"
-					onClick={onDelete}
-					isLoading={isDeleting}
-				>
-					Завершить сеанс
-				</Button>
+				{current ? (
+					<div className="bg-primary-container shine text-on-primary my-2 flex items-center justify-center gap-1 rounded-xl py-3">
+						<ShieldCheckIcon size={20} />
+						<span className="mb-0.5">Это текущий сеанс</span>
+					</div>
+				) : (
+					<Button
+						variant="destructive"
+						className="my-2 gap-2 rounded-xl py-3"
+						onClick={onDelete}
+						isLoading={isDeleting}
+					>
+						<HandIcon size={20} />
+						<span className="mb-0.5">Завершить сеанс</span>
+					</Button>
+				)}
 			</div>
 		</BottomSheet>
 	)

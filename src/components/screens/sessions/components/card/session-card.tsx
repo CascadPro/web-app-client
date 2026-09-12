@@ -93,6 +93,7 @@ export const SessionCard: FC<Props> = ({
 			<DynamicSessionCardSheet
 				isOpen={isOpen}
 				onOpenChange={setIsOpen}
+				current={current}
 				isDeleting={isDeleting}
 				onDelete={handleDelete}
 				session={sessionCardSheetProps}
