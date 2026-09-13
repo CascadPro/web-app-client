@@ -5,21 +5,23 @@ import { AnimatePresence, m } from "motion/react"
 
 import { RefreshControl } from "@/components/providers/refresh-control"
 import { Button } from "@/components/ui"
-import { useDeleteSessions, useSessions } from "@/libs/query/hooks"
 
 import { SessionCard } from "./components/card/session-card"
 import { SessionEmpty } from "./components/session-empty"
 import { SessionLoading } from "./components/session-loading"
+import { SessionModal } from "./components/session-modal"
 import { SessionSectionTitle } from "./components/session-section-title"
+import { useSessionPage } from "./hooks/useSessionPage"
 
 export function SessionsScreen() {
-	const { data, isLoading, refetch } = useSessions()
-	const { mutateAsync: deleteAllSessions, isPending } = useDeleteSessions()
-
-	const handleDeleteAllSessions = async () => {
-		await deleteAllSessions()
-		await refetch()
-	}
+	const {
+		data,
+		isLoading,
+		handleDeleteAllSessions,
+		isDeleting,
+		isOpen,
+		setIsOpen
+	} = useSessionPage()
 
 	return (
 		<RefreshControl>
@@ -29,10 +31,10 @@ export function SessionsScreen() {
 
 					{isLoading ? (
 						<SessionLoading />
-					) : data?.data.current_session ? (
+					) : data?.current_session ? (
 						<SessionCard
-							key={data.data.current_session.id}
-							session={data.data.current_session}
+							key={data.current_session.id}
+							session={data.current_session}
 							current
 						/>
 					) : (
@@ -44,15 +46,15 @@ export function SessionsScreen() {
 					<div className="mb-3 flex items-center justify-between gap-4">
 						<SessionSectionTitle Icon={Globe2} title="Другие сеансы" />
 
-						{data?.data.sessions && data.data.sessions.length > 0 && (
+						{data?.sessions && data.sessions.length > 0 && (
 							<Button
 								variant="ghost"
 								className="text-error active:bg-primary/20 gap-1 rounded-lg px-2 py-1.5 text-sm"
-								onClick={() => void handleDeleteAllSessions()}
-								disabled={isPending}
+								onClick={() => setIsOpen(true)}
+								disabled={isDeleting}
 							>
 								<LogOutIcon className="size-4" />
-								{isPending ? "Завершение..." : "Завершить все сеансы"}
+								{isDeleting ? "Завершение..." : "Завершить все сеансы"}
 							</Button>
 						)}
 					</div>
@@ -67,11 +69,11 @@ export function SessionsScreen() {
 								<SessionLoading />
 								<SessionLoading />
 							</m.div>
-						) : data?.data.sessions && data.data.sessions.length === 0 ? (
+						) : data?.sessions && data.sessions.length === 0 ? (
 							<SessionEmpty text="Нет других активных сеансов." />
 						) : (
 							<div className="space-y-4">
-								{data?.data.sessions?.map((session, index) => (
+								{data?.sessions?.map((session, index) => (
 									<SessionCard
 										key={session.id}
 										index={index}

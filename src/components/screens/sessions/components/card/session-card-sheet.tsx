@@ -5,13 +5,15 @@ import {
 	MapPinIcon,
 	ShieldCheckIcon
 } from "lucide-react"
-import { type FC, type MouseEvent, useEffect } from "react"
+import type { FC, MouseEvent } from "react"
 import BottomSheet from "react-swipeable-bottom-sheet"
 
 import type { SessionsHttpDtoSessionDtoMetadataLocation } from "@/api/generated"
 import { Button, Title } from "@/components/ui"
 import { formatRelativeDate } from "@/libs/utils"
 import { SessionParsedDevice } from "@/types/base"
+
+import { useSessionCardSheet } from "../../hooks/useSessionCardSheet"
 
 import { SessionCardInfo } from "./session-card-info"
 
@@ -39,17 +41,10 @@ export const SessionCardSheet: FC<Props> = ({
 	onDelete,
 	session: { ip, location, device, lastActiveAt }
 }) => {
-	const locationValue = [location?.city, location?.country]
-		.filter(Boolean)
-		.join(", ")
-
-	useEffect(() => {
-		if (isOpen) {
-			document.body.classList.add("scroll-locked")
-		} else {
-			document.body.classList.remove("scroll-locked")
-		}
-	}, [isOpen])
+	const { locationValue, locationCopyText } = useSessionCardSheet(
+		isOpen,
+		location
+	)
 
 	return (
 		<BottomSheet
@@ -66,9 +61,13 @@ export const SessionCardSheet: FC<Props> = ({
 					Детальная информация о сеансе
 				</Title>
 
-				<SessionCardInfo Icon={MapPinIcon} value={locationValue} />
+				<SessionCardInfo
+					Icon={MapPinIcon}
+					value={locationValue}
+					toCopy={locationCopyText}
+				/>
 
-				<SessionCardInfo Icon={Globe2Icon} value={ip || ""} />
+				<SessionCardInfo Icon={Globe2Icon} value={ip || ""} toCopy={ip} />
 
 				<SessionCardInfo Icon={device.os.icon} value={device.label} />
 
