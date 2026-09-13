@@ -3,7 +3,7 @@ import { m } from "motion/react"
 import type { FC } from "react"
 
 import type { DomainUserRole } from "@/api/generated"
-import { Title } from "@/components/ui"
+import { Button, Title } from "@/components/ui"
 import {
 	UserAvatar,
 	type UserAvatarUser
@@ -55,8 +55,9 @@ export const ProfileHeader: FC<Props> = ({ user, fullname, role, id }) => {
 						</span>
 					</div>
 
-					<div
-						className="text-on-surface-variant active:bg-primary/10 mt-2 flex w-fit cursor-pointer items-center justify-center gap-2 rounded-md p-1 text-sm select-none sm:justify-start"
+					<Button
+						variant="ghost"
+						className="text-on-surface-variant active:bg-primary/10 mt-2 justify-center gap-2 rounded-md p-1 text-sm select-none sm:justify-start"
 						onClick={handleCopy}
 					>
 						<span className="truncate">ID: {id?.slice(0, 20) + "..."}</span>
@@ -66,7 +67,7 @@ export const ProfileHeader: FC<Props> = ({ user, fullname, role, id }) => {
 						) : (
 							<CopyIcon size={14} className="shrink-0" />
 						)}
-					</div>
+					</Button>
 				</div>
 			</div>
 		</m.section>
