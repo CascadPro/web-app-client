@@ -26,10 +26,10 @@ const Title: FC<Props> = ({ children, size = "sm", className, ...props }) => {
 	const mapClassNameBySize = {
 		xs: "text-[16px]",
 		sm: "text-[18px]",
-		md: "text-[22px]",
-		lg: "text-[26px]",
-		xl: "text-[35px]",
-		"2xl": "text-[48px]"
+		md: "text-[22px] font-medium",
+		lg: "text-[26px] font-semibold",
+		xl: "text-[35px] font-bold",
+		"2xl": "text-[48px] font-extrabold"
 	} as const
 
 	const type = mapTagBySize[size]
@@ -39,12 +39,6 @@ const Title: FC<Props> = ({ children, size = "sm", className, ...props }) => {
 		{
 			className: cn(
 				mapClassNameBySize[size],
-				{
-					"text-shadow-[1px_1px_2px] text-shadow-primary": [
-						"h1",
-						"h2"
-					].includes(type)
-				},
 				className
 			),
 			...props
