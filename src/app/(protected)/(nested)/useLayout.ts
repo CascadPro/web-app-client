@@ -4,7 +4,8 @@ import { useState } from "react"
 import { useSwipe } from "@/libs/hooks"
 
 const paths = {
-	"/profile/me": "Мой профиль"
+	"/profile/me": "Мой профиль",
+	"/sessions": "Мои сеансы"
 } as const
 
 export const useNestedLayout = () => {
