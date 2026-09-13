@@ -1,129 +1,117 @@
-// Определение констант для различных единиц времени
-const s = 1000
-const m = s * 60
-const h = m * 60
-const d = h * 24
-const w = d * 7
-const y = d * 365.25
+const SECOND = 1000
+const MINUTE = SECOND * 60
+const HOUR = MINUTE * 60
+const DAY = HOUR * 24
+const WEEK = DAY * 7
+const YEAR = DAY * 365.25
 
-// Тип для различных единиц времени
-type Unit =
-	| "Years"
-	| "Year"
-	| "Yrs"
-	| "Yr"
-	| "Y"
-	| "Weeks"
-	| "Week"
-	| "W"
-	| "Days"
-	| "Day"
-	| "D"
-	| "Hours"
-	| "Hour"
-	| "Hrs"
-	| "Hr"
-	| "H"
-	| "Minutes"
-	| "Minute"
-	| "Mins"
-	| "Min"
-	| "M"
-	| "Seconds"
-	| "Second"
-	| "Secs"
-	| "Sec"
-	| "s"
-	| "Milliseconds"
-	| "Millisecond"
-	| "Msecs"
-	| "Msec"
-	| "Ms"
+const UNIT_VALUES: Record<string, number> = {
+	ms: 1,
+	msec: 1,
+	msecs: 1,
+	millisecond: 1,
+	milliseconds: 1,
 
-// Тип для единиц времени в любом регистре
-type UnitAnyCase = Unit | Uppercase<Unit> | Lowercase<Unit>
+	s: SECOND,
+	sec: SECOND,
+	secs: SECOND,
+	second: SECOND,
+	seconds: SECOND,
 
-// Тип для строкового значения, которое может содержать число и необязательную единицу времени
-export type StringValue =
-	`${number}` | `${number}${UnitAnyCase}` | `${number} ${UnitAnyCase}`
+	m: MINUTE,
+	min: MINUTE,
+	mins: MINUTE,
+	minute: MINUTE,
+	minutes: MINUTE,
+
+	h: HOUR,
+	hr: HOUR,
+	hrs: HOUR,
+	hour: HOUR,
+	hours: HOUR,
+
+	d: DAY,
+	day: DAY,
+	days: DAY,
+
+	w: WEEK,
+	week: WEEK,
+	weeks: WEEK,
+
+	y: YEAR,
+	yr: YEAR,
+	yrs: YEAR,
+	year: YEAR,
+	years: YEAR
+}
+
+const NUMBER_RE = /^-?(?:\d+(?:\.\d*)?|\.\d+)$/
 
 /**
- * Преобразует строковое значение, представляющее время, в миллисекунды.
+ * Converts a human-readable time string into milliseconds.
  *
- * @param str - Строка, представляющая количество времени, например, "1 hour", "60s", "500 milliseconds".
- * @returns Количество миллисекунд, соответствующее указанному времени.
- * @throws {Error} Если строка не соответствует ожидаемому формату или если единица времени не распознана.
+ * Supports:
+ * - "100"
+ * - "100ms"
+ * - "100 ms"
+ * - "2s"
+ * - "2 seconds"
+ * - "1.5h"
+ * - ".5 days"
+ * - "-2m"
  *
- * @example
- * ms('1 minute'); // вернет 60000
- * ms('2 hours'); // вернет 7200000
- * ms('500 ms'); // вернет 500
+ * @returns milliseconds, or NaN when the value is invalid
  */
-export function ms(str: StringValue): number {
-	// Проверка входных данных
-	if (typeof str !== "string" || str.length === 0 || str.length > 100) {
+export function ms(value: string): number {
+	if (value.length === 0 || value.length > 100) {
 		throw new Error(
-			"Value provided to ms() must be a string with length between 1 and 99."
+			"Value provided to ms() must be a string with length between 1 and 100."
 		)
 	}
 
-	// Регулярное выражение для сопоставления строки с числом и необязательной единицей времени
-	const match =
-		/^(?<value>-?(?:\d+)?\.?\d+) *(?<type>milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y)?$/i.exec(
-			str
-		)
+	const normalized = value.trim().toLowerCase()
 
-	// Извлечение значения и типа из совпадения
-	const groups = match?.groups as { value: string; type?: string } | undefined
-	if (!groups) {
+	if (!normalized) {
 		return Number.NaN
 	}
-	const n = Number(groups.value)
-	const type = (groups.type || "ms").toLowerCase() as Lowercase<Unit>
 
-	// Преобразование строкового значения в миллисекунды в зависимости от единицы времени
-	switch (type) {
-		case "years":
-		case "year":
-		case "yrs":
-		case "yr":
-		case "y":
-			return n * y
-		case "weeks":
-		case "week":
-		case "w":
-			return n * w
-		case "days":
-		case "day":
-		case "d":
-			return n * d
-		case "hours":
-		case "hour":
-		case "hrs":
-		case "hr":
-		case "h":
-			return n * h
-		case "minutes":
-		case "minute":
-		case "mins":
-		case "min":
-		case "m":
-			return n * m
-		case "seconds":
-		case "second":
-		case "secs":
-		case "sec":
-		case "s":
-			return n * s
-		case "milliseconds":
-		case "millisecond":
-		case "msecs":
-		case "msec":
-		case "ms":
-			return n
-		default:
-			throw new Error(
-				`Ошибка: единица времени ${type} была распознана, но не существует соответствующего случая. Пожалуйста, проверьте введенные данные.`
-			)
+	// "1.5 hours" / "1.5h"
+	const parts = normalized.split(/\s+/)
+
+	if (parts.length > 2) {
+		return Number.NaN
 	}
+
+	let amount = parts[0]
+	let unit = parts[1] ?? "ms"
+
+	// "1.5h" / ".5s" / "-2days"
+	if (!NUMBER_RE.test(amount)) {
+		let index = 0
+
+		while (index < amount.length) {
+			const char = amount[index]
+
+			if ((char >= "a" && char <= "z") || (char >= "A" && char <= "Z")) {
+				break
+			}
+
+			index++
+		}
+
+		unit = amount.slice(index)
+		amount = amount.slice(0, index)
+	}
+
+	if (!NUMBER_RE.test(amount)) {
+		return Number.NaN
+	}
+
+	const multiplier = UNIT_VALUES[unit]
+
+	if (multiplier === undefined) {
+		return Number.NaN
+	}
+
+	return Number(amount) * multiplier
 }

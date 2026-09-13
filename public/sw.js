@@ -72,7 +72,6 @@ self.addEventListener("fetch", event => {
 	// Страницы
 	if (request.mode === "navigate") {
 		event.respondWith(networkFirst(request))
-		return
 	}
 })
 
