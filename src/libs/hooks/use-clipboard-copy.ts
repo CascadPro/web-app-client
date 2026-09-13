@@ -18,6 +18,8 @@ export const useClipboardCopy = (): [
 				setIsCopied(false)
 			}, 2000)
 		} catch (error) {
+			console.error(error)
+
 			setIsCopied(false)
 		}
 	}, [])

@@ -69,7 +69,7 @@ export function SessionsScreen() {
 								<SessionLoading />
 								<SessionLoading />
 							</m.div>
-						) : data?.sessions && data.sessions.length === 0 ? (
+						) : data?.sessions?.length === 0 ? (
 							<SessionEmpty text="Нет других активных сеансов." />
 						) : (
 							<div className="space-y-4">

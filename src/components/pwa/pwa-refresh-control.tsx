@@ -1,7 +1,7 @@
 "use client"
 
 import { RefreshCwIcon } from "lucide-react"
-import { m } from "motion/react"
+import { m, type TargetAndTransition } from "motion/react"
 import type { FC, PropsWithChildren } from "react"
 
 import {
@@ -30,6 +30,18 @@ export const PullToRefresh: FC<Props> = ({
 		indicatorRotate
 	} = useRefreshControlValues(pull, threshold, maxPull)
 
+	const animateCond: TargetAndTransition =
+		isPulling && currentPull.current >= threshold
+			? {
+					scale: [1, 1.08, 1],
+					transition: {
+						duration: 0.45,
+						repeat: Infinity,
+						ease: "easeInOut"
+					}
+				}
+			: { scale: 1 }
+
 	return (
 		<div className="relative h-full">
 			<m.div
@@ -53,16 +65,7 @@ export const PullToRefresh: FC<Props> = ({
 										ease: "easeInOut"
 									}
 								}
-							: isPulling && currentPull.current >= threshold
-								? {
-										scale: [1, 1.08, 1],
-										transition: {
-											duration: 0.45,
-											repeat: Infinity,
-											ease: "easeInOut"
-										}
-									}
-								: { scale: 1 }
+							: animateCond
 					}
 				>
 					<m.div

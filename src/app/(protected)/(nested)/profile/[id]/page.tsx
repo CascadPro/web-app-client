@@ -7,7 +7,7 @@ interface Props {
 	params: Promise<{ id: string }>
 }
 
-export default async function Profile(props: Props) {
+export default async function Profile(props: Readonly<Props>) {
 	const { id } = await props.params
 
 	if (id === "me") return <MyProfileScreen />

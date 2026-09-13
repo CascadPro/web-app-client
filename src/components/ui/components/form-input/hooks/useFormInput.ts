@@ -21,15 +21,18 @@ export const useFormInput = (name: FormInputFieldNames) => {
 	const input = field?.ref as HTMLInputElement
 
 	const inputType = (): FormInputType => {
-		switch (name) {
-			case "email":
-				return "default"
-			case "password":
-				return "default"
+		return "default"
+		// switch (name) {
+		// 	case "email":
+		// 		return "default"
+		// 	case "password":
+		// 		return "default"
+		// 	case "token":
+		// 		return "default"
 
-			default:
-				return "default"
-		}
+		// 	default:
+		// 		return "default"
+		// }
 	}
 
 	return {

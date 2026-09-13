@@ -38,7 +38,7 @@ export const useModalContent = (
 			}
 
 			const first = focusable[0]
-			const last = focusable[focusable.length - 1]
+			const last = focusable.at(-1)
 
 			if (event.shiftKey) {
 				if (
@@ -46,16 +46,14 @@ export const useModalContent = (
 					!content.contains(document.activeElement)
 				) {
 					event.preventDefault()
-					last.focus()
+					last?.focus()
 				}
-			} else {
-				if (
-					document.activeElement === last ||
-					!content.contains(document.activeElement)
-				) {
-					event.preventDefault()
-					first.focus()
-				}
+			} else if (
+				document.activeElement === last ||
+				!content.contains(document.activeElement)
+			) {
+				event.preventDefault()
+				first.focus()
 			}
 		}
 

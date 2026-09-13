@@ -3,8 +3,6 @@ import { ThemeProvider } from "next-themes"
 import { JetBrains_Mono, Mulish } from "next/font/google"
 import type { ReactNode } from "react"
 
-import { Tabs } from "@/components/layouts/tabs/tabs"
-
 import "./globals.css"
 
 interface Props {

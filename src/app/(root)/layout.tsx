@@ -1,4 +1,3 @@
-import { InfoIcon, PlayIcon } from "lucide-react"
 import type { ReactNode } from "react"
 
 import { Tabs } from "@/components/layouts/tabs/tabs"
