@@ -3,6 +3,8 @@ import { ThemeProvider } from "next-themes"
 import { JetBrains_Mono, Mulish } from "next/font/google"
 import type { ReactNode } from "react"
 
+import { HapticProvider } from "@/components/providers/haptics"
+
 import "./globals.css"
 
 interface Props {
@@ -32,6 +34,8 @@ export default async function Layout({ children }: Readonly<Props>) {
 						{children}
 					</LazyMotion>
 				</ThemeProvider>
+
+				<HapticProvider />
 			</body>
 		</html>
 	)

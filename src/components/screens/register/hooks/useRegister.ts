@@ -6,6 +6,7 @@ import { service } from "@/api/instance"
 import { Toast } from "@/components/ui"
 import { register } from "@/libs/auth"
 import { AppRoutes } from "@/libs/constants"
+import { useHaptic } from "@/libs/haptics"
 import { RegisterFormFields, registerScheme } from "@/libs/schemes"
 import { errorCatch } from "@/libs/utils"
 import { useAuthStore } from "@/store/auth"
@@ -18,6 +19,8 @@ export const useRegisterPage = () => {
 	})
 
 	const { replace } = useRouter()
+
+	const { haptic } = useHaptic()
 
 	const stateLogin = useAuthStore(state => state.setAuthenticated)
 
@@ -35,11 +38,12 @@ export const useRegisterPage = () => {
 
 			setTimeout(() => replace(AppRoutes.MENU), 5000)
 		} catch (error) {
-			const e = errorCatch(error)
+			haptic("medium")
+
 			Toast.show({
 				type: "error",
 				text1: "Не удалось зарегистрироваться!",
-				text2: e.message
+				text2: errorCatch(error).message
 			})
 		}
 	}

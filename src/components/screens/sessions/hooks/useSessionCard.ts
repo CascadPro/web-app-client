@@ -3,6 +3,7 @@ import { type MouseEvent, useMemo, useState } from "react"
 
 import type { SessionsHttpDtoSessionDtoMetadata } from "@/api/generated"
 import { Toast } from "@/components/ui"
+import { useHaptic } from "@/libs/haptics"
 import { useDeleteSession } from "@/libs/query/hooks"
 import { QueryKeys } from "@/libs/query/keys"
 import { errorCatch, parseDevice } from "@/libs/utils"
@@ -20,6 +21,8 @@ export const useSessionCard = (
 
 	const [isOpen, setIsOpen] = useState<boolean>(false)
 
+	const { haptic } = useHaptic()
+
 	const client = useQueryClient()
 
 	const { mutateAsync, isPending } = useDeleteSession(id || "")
@@ -33,12 +36,12 @@ export const useSessionCard = (
 
 			client.invalidateQueries({ queryKey: QueryKeys.sessions.all })
 		} catch (error) {
-			const message = errorCatch(error).message
+			haptic("medium")
 
 			Toast.show({
 				type: "error",
 				text1: "Не удалось удалить сессию",
-				text2: message
+				text2: errorCatch(error).message
 			})
 		} finally {
 			setIsOpen(false)

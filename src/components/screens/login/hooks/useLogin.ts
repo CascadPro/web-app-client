@@ -6,6 +6,7 @@ import { service } from "@/api/instance"
 import { Toast } from "@/components/ui"
 import { login } from "@/libs/auth"
 import { AppRoutes } from "@/libs/constants"
+import { useHaptic } from "@/libs/haptics"
 import { type LoginFormFields, loginScheme } from "@/libs/schemes"
 import { errorCatch } from "@/libs/utils"
 import { useAuthStore } from "@/store/auth"
@@ -18,6 +19,8 @@ export const useLoginPage = () => {
 	})
 
 	const { replace } = useRouter()
+
+	const { haptic } = useHaptic()
 
 	const stateLogin = useAuthStore(state => state.setAuthenticated)
 
@@ -36,6 +39,8 @@ export const useLoginPage = () => {
 			setTimeout(() => replace(AppRoutes.MENU), 5000)
 		} catch (error) {
 			const e = ((error as any)?.message as string) || errorCatch(error).message
+
+			haptic("medium")
 
 			Toast.show({
 				type: "error",
