@@ -1,6 +1,8 @@
 import type { LucideIcon } from "lucide-react"
 import type { FC } from "react"
 
+import { Title } from "@/components/ui"
+
 interface Props {
 	Icon: LucideIcon
 	title: string
@@ -13,7 +15,9 @@ export const SessionSectionTitle: FC<Props> = ({ Icon, title }) => {
 				<Icon size={20} />
 			</span>
 
-			<h2 className="text-on-surface text-base font-medium">{title}</h2>
+			<Title size="sm" className="text-on-surface">
+				{title}
+			</Title>
 		</div>
 	)
 }

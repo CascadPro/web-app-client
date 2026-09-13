@@ -85,6 +85,13 @@ export function SessionsScreen() {
 					</AnimatePresence>
 				</section>
 			</div>
+
+			<SessionModal
+				isOpen={isOpen}
+				setIsOpen={() => setIsOpen(false)}
+				onDelete={handleDeleteAllSessions}
+				isDeleting={isDeleting}
+			/>
 		</RefreshControl>
 	)
 }
