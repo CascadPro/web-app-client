@@ -2,6 +2,8 @@ import type { ReactNode } from "react"
 
 import { Tabs } from "@/components/layouts/tabs/tabs"
 import { AuthProvider } from "@/components/providers/auth"
+import { QueryProvider } from "@/components/providers/query"
+import { ToastProvider } from "@/components/ui"
 import { AppRoutes } from "@/libs/constants"
 import { getViewport } from "@/libs/utils"
 
@@ -11,25 +13,29 @@ export default function Layout({
 	children
 }: Readonly<{ children: ReactNode }>) {
 	return (
-		<AuthProvider>
-			<main>
-				{children}
+		<QueryProvider>
+			<AuthProvider>
+				<main>
+					{children}
 
-				<Tabs
-					data={[
-						{
-							title: "Дом",
-							icon: "home",
-							href: AppRoutes.INDEX
-						},
-						{
-							title: "Меню",
-							icon: "menu",
-							href: AppRoutes.MENU
-						}
-					]}
-				/>
-			</main>
-		</AuthProvider>
+					<ToastProvider />
+
+					<Tabs
+						data={[
+							{
+								title: "Дом",
+								icon: "home",
+								href: AppRoutes.INDEX
+							},
+							{
+								title: "Меню",
+								icon: "menu",
+								href: AppRoutes.MENU
+							}
+						]}
+					/>
+				</main>
+			</AuthProvider>
+		</QueryProvider>
 	)
 }
