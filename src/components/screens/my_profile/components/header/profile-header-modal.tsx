@@ -1,4 +1,4 @@
-import { XIcon } from "lucide-react"
+import { PenIcon, XIcon } from "lucide-react"
 import { m } from "motion/react"
 import type { FC } from "react"
 
@@ -11,22 +11,29 @@ import { Modal } from "@/components/ui/modal"
 import { cn } from "@/libs/utils"
 import type { ReactStateHook } from "@/types/base"
 
-import { useAvatarSwipe } from "../hooks/useAvatarSwipe"
+import { useAvatarSwipe } from "../../hooks/useAvatarSwipe"
 
 interface Props {
 	isModalOpen: boolean
 	setIsModalOpen: ReactStateHook<boolean>
+	isSheetOpen: boolean
+	handleSheetOpen: () => void
 	user: UserAvatarUser | undefined
 }
 
 export const ProfileHeaderModal: FC<Props> = ({
 	isModalOpen,
 	setIsModalOpen,
+	isSheetOpen,
+	handleSheetOpen,
 	user
 }) => {
 	const handleModalClose = () => setIsModalOpen(false)
 
-	const translate = useAvatarSwipe(isModalOpen, handleModalClose)
+	const translate = useAvatarSwipe(
+		isModalOpen && !isSheetOpen,
+		handleModalClose
+	)
 
 	return (
 		<Modal
@@ -43,18 +50,30 @@ export const ProfileHeaderModal: FC<Props> = ({
 					}}
 					transition={{ duration: translate === 0 ? 0.3 : 0 }}
 				>
-					<Button
-						variant="ghost"
-						className={cn(
-							"pointer-events-none absolute top-[4%] left-3 p-1 opacity-0",
-							{
+					<div className="absolute top-[4%] left-0 flex w-full items-center justify-between px-4">
+						<Button
+							variant="ghost"
+							title="Закрыть"
+							className={cn(
+								"pointer-events-none p-1 opacity-0 active:translate-y-1",
+								{ "pointer-events-auto opacity-100": translate == 0 }
+							)}
+							onClick={handleModalClose}
+						>
+							<XIcon size={24} className="text-white" />
+						</Button>
+
+						<Button
+							variant="default"
+							title="Редактировать"
+							className={cn("pointer-events-none gap-2 p-2 opacity-0", {
 								"pointer-events-auto opacity-100": translate == 0
-							}
-						)}
-						onClick={handleModalClose}
-					>
-						<XIcon size={24} className="text-white" />
-					</Button>
+							})}
+							onClick={handleSheetOpen}
+						>
+							<PenIcon size={20} />
+						</Button>
+					</div>
 
 					<m.div
 						initial={false}
@@ -63,6 +82,7 @@ export const ProfileHeaderModal: FC<Props> = ({
 					>
 						<UserAvatar
 							user={user}
+							size="2xl"
 							className="h-[calc(100vw)] w-[calc(100vw)] rounded-none"
 						/>
 					</m.div>

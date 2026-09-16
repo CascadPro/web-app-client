@@ -1,7 +1,7 @@
 import { BadgeCheckIcon, CheckIcon, CopyIcon } from "lucide-react"
 import { m } from "motion/react"
 import dynamic from "next/dynamic"
-import { type FC, useState } from "react"
+import type { FC } from "react"
 
 import type { DomainUserRole } from "@/api/generated"
 import { Button, Title } from "@/components/ui"
@@ -9,11 +9,17 @@ import {
 	UserAvatar,
 	type UserAvatarUser
 } from "@/components/ui/components/user-avatar"
-import { useClipboardCopy } from "@/libs/hooks"
 import { roleName } from "@/libs/utils"
+
+import { useProfileHeader } from "../../hooks/useProfileHeader"
 
 const DynamicProfileHeaderModal = dynamic(
 	async () => (await import("./profile-header-modal")).ProfileHeaderModal,
+	{ ssr: false }
+)
+
+const DynamicProfileHeaderSheet = dynamic(
+	async () => (await import("./profile-header-sheet")).ProfileHeaderSheet,
 	{ ssr: false }
 )
 
@@ -25,11 +31,15 @@ interface Props {
 }
 
 export const ProfileHeader: FC<Props> = ({ user, fullname, role, id }) => {
-	const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
-	const [isCopied, copyToClipboard] = useClipboardCopy()
-
-	const handleCopy = () => copyToClipboard(id ?? "")
-	const handleModalOpen = () => setIsModalOpen(true)
+	const {
+		isModalOpen,
+		isSheetOpen,
+		setIsModalOpen,
+		setIsSheetOpen,
+		isCopied,
+		handleCopy,
+		handleAvatarClick
+	} = useProfileHeader(id, user?.avatar_file_id)
 
 	return (
 		<>
@@ -44,7 +54,7 @@ export const ProfileHeader: FC<Props> = ({ user, fullname, role, id }) => {
 						<UserAvatar
 							user={user}
 							size="2xl"
-							onClickAction={handleModalOpen}
+							onClickAction={handleAvatarClick}
 							className="cursor-pointer transition-opacity hover:opacity-60! active:opacity-60!"
 						/>
 
@@ -89,7 +99,16 @@ export const ProfileHeader: FC<Props> = ({ user, fullname, role, id }) => {
 			<DynamicProfileHeaderModal
 				isModalOpen={isModalOpen}
 				setIsModalOpen={setIsModalOpen}
+				isSheetOpen={isSheetOpen}
+				handleSheetOpen={() => setIsSheetOpen(true)}
 				user={user}
+			/>
+
+			<DynamicProfileHeaderSheet
+				isOpen={isSheetOpen}
+				setIsOpen={setIsSheetOpen}
+				hasAvatar={!!user?.avatar_file_id}
+				handleModalClose={() => setIsModalOpen(false)}
 			/>
 		</>
 	)
