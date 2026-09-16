@@ -108,7 +108,7 @@ body {
 	overflow-x: hidden;
 }
 
-body.scroll-locked {
+body[data-scroll-locked] {
 	overflow-y: hidden !important;
 }
 
