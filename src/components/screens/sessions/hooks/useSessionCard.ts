@@ -1,11 +1,9 @@
-import { useQueryClient } from "@tanstack/react-query"
 import { type MouseEvent, useMemo, useState } from "react"
 
 import type { SessionsHttpDtoSessionDtoMetadata } from "@/api/generated"
 import { Toast } from "@/components/ui"
 import { useHaptic } from "@/libs/haptics"
 import { useDeleteSession } from "@/libs/query/hooks"
-import { QueryKeys } from "@/libs/query/keys"
 import { errorCatch, parseDevice } from "@/libs/utils"
 
 export const useSessionCard = (
@@ -23,8 +21,6 @@ export const useSessionCard = (
 
 	const { haptic } = useHaptic()
 
-	const client = useQueryClient()
-
 	const { mutateAsync, isPending } = useDeleteSession(id || "")
 
 	const handleDelete = async (e: MouseEvent<HTMLButtonElement>) => {
@@ -33,8 +29,6 @@ export const useSessionCard = (
 
 		try {
 			await mutateAsync()
-
-			client.invalidateQueries({ queryKey: QueryKeys.sessions.all })
 		} catch (error) {
 			haptic("medium")
 

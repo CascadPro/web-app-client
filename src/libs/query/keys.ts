@@ -9,5 +9,11 @@ export const QueryKeys = {
 		all: ["sessions"] as const,
 		delete: (id: string) => [...QueryKeys.sessions.all, "delete", id] as const,
 		deleteAll: () => [...QueryKeys.sessions.all, "deleteAll"] as const
+	},
+
+	avatar: {
+		_default: ["avatar"] as const,
+		delete: () => [...QueryKeys.avatar._default, "delete"] as const,
+		upload: () => [...QueryKeys.avatar._default, "upload"] as const
 	}
 }

@@ -88,7 +88,10 @@ export const useRefreshControl = (
 				return
 			}
 
-			if (document.body.classList.contains("scroll-locked")) {
+			if (
+				document.body.dataset?.["scrollLocked"] &&
+				Number(document.body.dataset["scrollLocked"]) > 0
+			) {
 				return
 			}
 

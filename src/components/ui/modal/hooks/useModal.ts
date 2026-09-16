@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef } from "react"
 
+import { useScrollLocked } from "@/libs/hooks"
+
 export const useModal = (
 	isOpen: boolean,
 	onOpenChange: (open: boolean) => void
@@ -23,8 +25,6 @@ export const useModal = (
 		const scrollbarWidth =
 			window.innerWidth - document.documentElement.clientWidth
 
-		document.body.classList.add("scroll-locked")
-
 		if (scrollbarWidth > 0) {
 			document.body.style.paddingRight = `${scrollbarWidth}px`
 		}
@@ -39,7 +39,6 @@ export const useModal = (
 		document.addEventListener("keydown", handleKeyDown)
 
 		return () => {
-			document.body.classList.remove("scroll-locked")
 			document.body.style.paddingRight = originalPaddingRight
 
 			document.removeEventListener("keydown", handleKeyDown)
@@ -50,6 +49,8 @@ export const useModal = (
 			})
 		}
 	}, [isOpen, handleClose])
+
+	useScrollLocked(isOpen)
 
 	return {
 		handleClose
