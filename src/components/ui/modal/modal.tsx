@@ -45,7 +45,7 @@ export const Modal = ({
 	return createPortal(
 		<AnimatePresence>
 			{isOpen && (
-				<div className="fixed inset-0 z-9999" role="dialog" aria-modal="true">
+				<div className="fixed inset-0 z-8888" role="dialog" aria-modal="true">
 					<m.div
 						className="pointer-events-auto absolute inset-0 bg-black/50 backdrop-blur-xs"
 						variants={overlayVariants}

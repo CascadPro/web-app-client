@@ -6,7 +6,7 @@ import { type ButtonHTMLAttributes, forwardRef } from "react"
 import { cn } from "@/libs/utils"
 
 const buttonVariants = cva(
-	"relative inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm transition-all will-change-auto [&_svg]:pointer-events-none [&_svg]:select-none",
+	"relative inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm transition-all will-change-auto [&_svg]:pointer-events-none [&_svg]:select-none disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none",
 	{
 		variants: {
 			variant: {

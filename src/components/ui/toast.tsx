@@ -70,7 +70,7 @@ export const ToastProvider = () => {
 			draggableDirection="y"
 			limit={3}
 			toastClassName="w-full! bg-transparent! p-0! shadow-none!"
-			className="top-[calc(env(safe-area-inset-top)+1rem)]! px-4! sm:top-6! sm:min-w-96! sm:px-6!"
+			className="top-[calc(env(safe-area-inset-top)+1rem)]! z-9999! px-4! sm:top-6! sm:min-w-96! sm:px-6!"
 		/>
 	)
 }
