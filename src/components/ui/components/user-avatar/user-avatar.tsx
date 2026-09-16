@@ -11,8 +11,10 @@ import { useUserAvatar } from "./useUserAvatar"
 export const UserAvatar: FC<UserAvatarProps> = ({
 	user,
 	size = "md",
+	alt,
 	className,
-	alt
+	quick,
+	onClickAction
 }) => {
 	const {
 		avatarUrl,
@@ -34,6 +36,7 @@ export const UserAvatar: FC<UserAvatarProps> = ({
 				sizeConfig.container,
 				className
 			)}
+			onClick={onClickAction}
 		>
 			{/* Placeholder */}
 			{showPlaceholder && (
@@ -64,7 +67,7 @@ export const UserAvatar: FC<UserAvatarProps> = ({
 					src={avatarUrl || ""}
 					alt={alt ?? `${user?.name ?? ""} ${user?.surname ?? ""}`.trim()}
 					fill
-					sizes="64px"
+					loading={quick ? "eager" : "lazy"}
 					className={cn(
 						"object-cover",
 						"transition-opacity duration-200",
