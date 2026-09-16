@@ -1,6 +1,6 @@
-import { useEffect } from "react"
+import { useScrollLocked } from "@/libs/hooks"
 
-import type { SessionCardSheetProps } from "../components/card/session-card-sheet"
+import type { SessionCardSheetProps } from "../components/card/session-card-sheet";
 
 export const useSessionCardSheet = (
 	isOpen: boolean,
@@ -14,13 +14,7 @@ export const useSessionCardSheet = (
 		.filter(Boolean)
 		.join(", ")
 
-	useEffect(() => {
-		if (isOpen) {
-			document.body.classList.add("scroll-locked")
-		} else {
-			document.body.classList.remove("scroll-locked")
-		}
-	}, [isOpen])
+	useScrollLocked(isOpen)
 
 	return {
 		locationValue,
