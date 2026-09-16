@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRouter } from "next/navigation"
+import { useCallback, useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 
 import { service } from "@/api/instance"
@@ -10,6 +11,8 @@ import { useHaptic } from "@/libs/haptics"
 import { type LoginFormFields, loginScheme } from "@/libs/schemes"
 import { errorCatch } from "@/libs/utils"
 import { useAuthStore } from "@/store/auth"
+
+type Status = "default" | "loading" | "success" | "error"
 
 export const useLoginPage = () => {
 	const form = useForm({
@@ -22,38 +25,58 @@ export const useLoginPage = () => {
 
 	const { haptic } = useHaptic()
 
+	const [status, setStatus] = useState<Status>("default")
+
 	const stateLogin = useAuthStore(state => state.setAuthenticated)
 
-	const onSubmitFn = async (data: LoginFormFields) => {
-		const { email, password } = data
+	const onSubmitFn = useCallback(
+		async (data: LoginFormFields) => {
+			if (["loading", "success", "error"].includes(status)) return
 
-		try {
-			await login({ email, password })
+			setStatus("loading")
 
-			const user = await service.getUsersMy()
+			const { email, password } = data
 
-			stateLogin(user.data)
+			try {
+				await login({ email, password })
 
-			Toast.show({ type: "success", text1: "Успешный вход!" })
+				const user = await service.getUsersMy()
 
+				stateLogin(user.data)
+
+				Toast.show({ type: "success", text1: "Успешный вход!" })
+
+				setStatus("success")
+			} catch (error) {
+				const e =
+					((error as any)?.message as string) || errorCatch(error).message
+
+				haptic("medium")
+				setStatus("error")
+
+				Toast.show({
+					type: "error",
+					text1: "Не удалось войти!",
+					text2: e
+				})
+			}
+		},
+		[status]
+	)
+
+	useEffect(() => {
+		if (status === "success") {
 			setTimeout(() => replace(AppRoutes.MENU), 5000)
-		} catch (error) {
-			const e = ((error as any)?.message as string) || errorCatch(error).message
-
-			haptic("medium")
-
-			Toast.show({
-				type: "error",
-				text1: "Не удалось войти!",
-				text2: e
-			})
+		} else if (status === "error") {
+			setTimeout(() => setStatus("default"), 2000)
 		}
-	}
+	}, [status])
 
 	const handleSubmit = form.handleSubmit(onSubmitFn)
 
 	return {
 		form,
-		handleSubmit
+		handleSubmit,
+		status
 	}
 }

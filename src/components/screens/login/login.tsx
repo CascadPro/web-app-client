@@ -1,15 +1,18 @@
 "use client"
 
-import { FormProvider } from "react-hook-form";
+import { FormProvider } from "react-hook-form"
 
-import { Button, Title } from "@/components/ui";
-import { FormInput } from "@/components/ui/components/form-input";
-import { VALUES } from "@/libs/constants";
+import { Button, Title } from "@/components/ui"
+import { FormInput } from "@/components/ui/components/form-input"
+import { VALUES } from "@/libs/constants"
 
-import { useLoginPage } from "./hooks/useLogin";
+import { useLoginPage } from "./hooks/useLogin"
 
 export const LoginScreen = () => {
-	const { form, handleSubmit } = useLoginPage()
+	const { form, handleSubmit, status } = useLoginPage()
+
+	const isLoading = status === "loading"
+	const disabled = status === "error" || status === "success" || isLoading
 
 	return (
 		<FormProvider {...form}>
@@ -40,6 +43,8 @@ export const LoginScreen = () => {
 						variant="default"
 						type="submit"
 						className="w-[85%] self-center p-2"
+						isLoading={isLoading}
+						disabled={disabled}
 					>
 						Войти в систему
 					</Button>
