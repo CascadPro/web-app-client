@@ -1,12 +1,7 @@
-import type { UsersTransportHttpGetCurrentUserResponse } from "@/api/generated"
-
 export type AuthStoreStatus = "loading" | "authenticated" | "unauthenticated"
-
-export type AuthStoreUser = UsersTransportHttpGetCurrentUserResponse
 
 export interface AuthStore extends AuthStoreActions {
 	status: AuthStoreStatus
-	user: AuthStoreUser | null
 	accessToken: string | null
 }
 
@@ -15,7 +10,7 @@ interface AuthStoreActions {
 
 	setAccessToken: (accessToken: string) => void
 
-	setAuthenticated: (user: AuthStoreUser) => void
+	setAuthenticated: () => void
 
 	setUnauthenticated: () => void
 

@@ -27,13 +27,17 @@ export const useDeleteSession = (id: string) => {
 		mutationKey: QueryKeys.sessions.delete(id),
 		mutationFn: () => service.deleteSessionsId(id),
 		onSuccess: () =>
-			client.invalidateQueries({ queryKey: QueryKeys.sessions.all })
+			void client.invalidateQueries({ queryKey: QueryKeys.sessions.all })
 	})
 }
 
 export const useDeleteSessions = () => {
+	const client = useQueryClient()
+
 	return useMutation({
 		mutationKey: QueryKeys.sessions.deleteAll(),
-		mutationFn: () => service.deleteSessionsDelete()
+		mutationFn: () => service.deleteSessionsDelete(),
+		onSuccess: () =>
+			void client.invalidateQueries({ queryKey: QueryKeys.sessions.all })
 	})
 }
