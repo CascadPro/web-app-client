@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react"
 
 export type UseSwipeOptions = {
 	onSwipeLeft?: VoidFunction
@@ -49,7 +49,7 @@ export const useSwipe = ({
 		}
 
 		const handleTouchEnd = (event: TouchEvent) => {
-			if (document.body && document.body.classList.contains("scroll-locked")) {
+			if (document.body?.classList.contains("scroll-locked")) {
 				return
 			}
 
