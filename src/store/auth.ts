@@ -1,20 +1,19 @@
-import { create } from "zustand"
+import { create } from "zustand";
 
-import type { AuthStore } from "@/types/store"
+import type { AuthStore } from "@/types/store";
 
 export const useAuthStore = create<AuthStore>(set => ({
 	status: "loading",
-	user: null,
 	accessToken: null,
 
 	setLoading: () => set({ status: "loading" }),
 
 	setAccessToken: accessToken => set({ accessToken }),
 
-	setAuthenticated: user => set({ status: "authenticated", user }),
+	setAuthenticated: () => set({ status: "authenticated" }),
 
 	setUnauthenticated: () =>
-		set({ status: "unauthenticated", user: null, accessToken: null }),
+		set({ status: "unauthenticated", accessToken: null }),
 
-	reset: () => set({ status: "unauthenticated", user: null, accessToken: null })
+	reset: () => set({ status: "unauthenticated", accessToken: null })
 }))

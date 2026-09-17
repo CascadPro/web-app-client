@@ -1,35 +1,18 @@
 "use client"
 
-import { QueryClient } from "@tanstack/react-query"
-import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client"
-import { type PropsWithChildren, useState } from "react";
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
+import { type PropsWithChildren } from "react";
 
-import { persister } from "@/libs/query/persister"
-import { ms } from "@/libs/utils"
+import { queryClient } from "@/libs/query/client"
+import { queryPersister } from "@/libs/query/persister"
+import { ms } from "@/libs/utils";
 
 export function QueryProvider({ children }: PropsWithChildren) {
-	const [queryClient] = useState(
-		() =>
-			new QueryClient({
-				defaultOptions: {
-					queries: {
-						staleTime: ms("1min"),
-						gcTime: ms("24h"),
-
-						refetchOnWindowFocus: false,
-						refetchOnReconnect: true,
-
-						retry: 1
-					}
-				}
-			})
-	)
-
 	return (
 		<PersistQueryClientProvider
 			client={queryClient}
 			persistOptions={{
-				persister,
+				persister: queryPersister,
 				maxAge: ms("1d")
 			}}
 		>
