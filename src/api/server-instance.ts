@@ -2,7 +2,6 @@ import axios from "axios"
 import { cookies } from "next/headers"
 
 import { API_URL, CookieStorageKeys } from "@/libs/constants"
-import { getContentType } from "@/libs/utils"
 
 import { getCascadeProAppAPI } from "./generated"
 
@@ -10,7 +9,7 @@ const serverInstance = axios.create({
 	baseURL: API_URL,
 	headers: {
 		"Accept-Language": "ru",
-		...getContentType("json")
+		"Content-Type": "application/json"
 	}
 })
 

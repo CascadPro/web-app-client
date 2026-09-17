@@ -8,7 +8,7 @@ import { errorCatch } from "@/libs/utils"
 export const useSessionPage = () => {
 	const [isOpen, setIsOpen] = useState<boolean>(false)
 
-	const { data, isLoading, refetch } = useSessions()
+	const { data, isLoading } = useSessions()
 
 	const { mutateAsync: deleteAllSessions, isPending: isDeleting } =
 		useDeleteSessions()
@@ -18,7 +18,6 @@ export const useSessionPage = () => {
 	const handleDeleteAllSessions = async () => {
 		try {
 			await deleteAllSessions()
-			await refetch()
 		} catch (error) {
 			haptic("medium")
 

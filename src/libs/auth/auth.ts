@@ -3,9 +3,11 @@ import type {
 	AuthTransportHttpRegisterRequest
 } from "@/api/generated"
 import { service } from "@/api/instance"
+import { QueryKeys } from "@/libs/query/keys"
 import { useAuthStore } from "@/store/auth"
 
-import { getContentType } from "../utils"
+import { queryClient } from "../query/client"
+import { queryPersister } from "../query/persister"
 
 export type LoginRequestDTO = AuthTransportHttpLoginRequest
 
@@ -23,7 +25,7 @@ export const login = async ({ email, password }: LoginRequestDTO) => {
 
 	const response = await fetch("/api/auth/login", {
 		method: "POST",
-		headers: getContentType("json"),
+		headers: { "Content-Type": "application/json" },
 		body: request
 	})
 
@@ -34,6 +36,13 @@ export const login = async ({ email, password }: LoginRequestDTO) => {
 	const data = (await response.json()) as RefreshAccessTokenResponse
 
 	useAuthStore.getState().setAccessToken(data.access_token)
+	useAuthStore.getState().setAuthenticated()
+
+	await queryClient.query({
+		queryKey: QueryKeys.users.me(),
+		queryFn: service.getUsersMy,
+		staleTime: 5 * 60 * 1000
+	})
 
 	return data
 }
@@ -60,22 +69,16 @@ export const refreshSession = async () => {
 
 	if (!response.ok) {
 		useAuthStore.getState().setUnauthenticated()
+
 		throw new Error("Unable to refresh session")
 	}
 
 	const data = (await response.json()) as RefreshAccessTokenResponse
 
 	useAuthStore.getState().setAccessToken(data.access_token)
+	useAuthStore.getState().setAuthenticated()
 
-	return await refreshUser()
-}
-
-export const refreshUser = async () => {
-	const userResponse = await service.getUsersMy()
-
-	useAuthStore.getState().setAuthenticated(userResponse.data)
-
-	return userResponse.data
+	return data
 }
 
 export const logout = async () => {
@@ -86,5 +89,11 @@ export const logout = async () => {
 		})
 	} finally {
 		useAuthStore.getState().reset()
+
+		queryClient.cancelQueries()
+
+		queryClient.clear()
+
+		await queryPersister.removeClient()
 	}
 }

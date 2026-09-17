@@ -3,7 +3,6 @@ import { useRouter } from "next/navigation"
 import { useCallback, useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 
-import { service } from "@/api/instance"
 import { Toast } from "@/components/ui"
 import { login } from "@/libs/auth"
 import { AppRoutes } from "@/libs/constants"
@@ -40,9 +39,7 @@ export const useLoginPage = () => {
 			try {
 				await login({ email, password })
 
-				const user = await service.getUsersMy()
-
-				stateLogin(user.data)
+				stateLogin()
 
 				Toast.show({ type: "success", text1: "Успешный вход!" })
 

@@ -1,8 +1,10 @@
+import { useCurrentUser } from "@/libs/query/hooks"
 import { useAuthStore } from "@/store/auth"
 
 export const useProfilePage = () => {
 	const status = useAuthStore(state => state.status)
-	const user = useAuthStore(state => state.user)
+
+	const { data: user, refetch: refetchUser } = useCurrentUser()
 
 	const fullName = [user?.name, user?.surname, user?.last_name]
 		.filter(Boolean)
@@ -19,6 +21,7 @@ export const useProfilePage = () => {
 		status,
 		user,
 		fullName,
-		avatarUser
+		avatarUser,
+		refetchUser
 	}
 }

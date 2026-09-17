@@ -3,7 +3,6 @@
 import { MoveLeftIcon } from "lucide-react"
 import type { ReactNode } from "react"
 
-import { QueryProvider } from "@/components/providers/query"
 import { Button, Container, Title } from "@/components/ui"
 import { cn } from "@/libs/utils"
 
@@ -15,7 +14,7 @@ export default function Layout({
 	const { isActive, handleBack, title } = useNestedLayout()
 
 	return (
-		<QueryProvider>
+		<>
 			<header className="flex items-center gap-2 p-2">
 				<Button
 					variant="ghost"
@@ -37,6 +36,6 @@ export default function Layout({
 			</header>
 
 			<Container className="px-3 py-2">{children}</Container>
-		</QueryProvider>
+		</>
 	)
 }

@@ -5,7 +5,7 @@ export const useScrollLocked = (status: boolean) => {
 		if (!document?.body) return
 
 		const data = document.body.dataset?.["scrollLocked"] || "0"
-		const numericData = isNaN(Number(data)) ? 0 : Number(data)
+		const numericData = Number.isNaN(Number(data)) ? 0 : Number(data)
 
 		if (status) {
 			document.body.dataset["scrollLocked"] = (numericData + 1).toString()

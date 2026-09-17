@@ -9,6 +9,7 @@ import {
 import { useMemo } from "react"
 
 import { useLogout } from "@/libs/hooks/use-logout"
+import { useCurrentUser } from "@/libs/query/hooks"
 import { useAuthStore } from "@/store/auth"
 
 export interface MenuPageItemData {
@@ -49,8 +50,9 @@ export const useMenuPage = () => {
 		[]
 	)
 
-	const user = useAuthStore(state => state.user)
 	const status = useAuthStore(state => state.status)
+
+	const { data: user } = useCurrentUser()
 
 	const logout = useLogout()
 
