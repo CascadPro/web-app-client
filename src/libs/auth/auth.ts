@@ -8,7 +8,6 @@ import { useAuthStore } from "@/store/auth"
 
 import { queryClient } from "../query/client"
 import { queryPersister } from "../query/persister"
-import { getContentType } from "../utils";
 
 export type LoginRequestDTO = AuthTransportHttpLoginRequest
 
@@ -26,7 +25,7 @@ export const login = async ({ email, password }: LoginRequestDTO) => {
 
 	const response = await fetch("/api/auth/login", {
 		method: "POST",
-		headers: getContentType("json"),
+		headers: { "Content-Type": "application/json" },
 		body: request
 	})
 
@@ -39,7 +38,7 @@ export const login = async ({ email, password }: LoginRequestDTO) => {
 	useAuthStore.getState().setAccessToken(data.access_token)
 	useAuthStore.getState().setAuthenticated()
 
-	await queryClient.fetchQuery({
+	await queryClient.query({
 		queryKey: QueryKeys.users.me(),
 		queryFn: service.getUsersMy,
 		staleTime: 5 * 60 * 1000

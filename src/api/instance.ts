@@ -2,7 +2,6 @@ import axios, { type AxiosRequestConfig } from "axios"
 
 import { API_URL } from "@/libs/constants"
 import { parseApiError } from "@/libs/errors"
-import { getContentType } from "@/libs/utils"
 import { useAuthStore } from "@/store/auth"
 
 import { getCascadeProAppAPI } from "./generated"
@@ -15,7 +14,7 @@ const instance = axios.create({
 	baseURL: API_URL,
 	headers: {
 		"Accept-Language": "ru",
-		...getContentType("json")
+		"Content-Type": "application/json"
 	}
 })
 
