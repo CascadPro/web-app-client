@@ -91,6 +91,8 @@ export const logout = async () => {
 	} finally {
 		useAuthStore.getState().reset()
 
+		queryClient.cancelQueries()
+
 		queryClient.clear()
 
 		await queryPersister.removeClient()
