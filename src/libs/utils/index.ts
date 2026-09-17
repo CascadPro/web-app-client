@@ -1,4 +1,3 @@
-export * from "./api"
 export * from "./capitalize"
 export * from "./cn"
 export * from "./copy-text"
