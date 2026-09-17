@@ -1,4 +1,5 @@
 import { domAnimation, LazyMotion } from "motion/react"
+import type { Metadata } from "next"
 import { ThemeProvider } from "next-themes"
 import { JetBrains_Mono, Mulish } from "next/font/google"
 import type { ReactNode } from "react"
@@ -24,6 +25,14 @@ const jetbrains = JetBrains_Mono({
 	weight: ["400"],
 	preload: false
 })
+
+export const metadata: Metadata = {
+	applicationName: "Cascade Pro",
+	appleWebApp: {
+		title: "Cascade Pro",
+		startupImage: "/icons/icon-512.png"
+	}
+}
 
 export default async function Layout({ children }: Readonly<Props>) {
 	return (

@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { redirect, RedirectType } from "next/navigation"
 import { uuidv4 } from "zod"
 
@@ -5,6 +6,14 @@ import { MyProfileScreen } from "@/components/screens/my_profile/profile"
 
 interface Props {
 	params: Promise<{ id: string }>
+}
+
+export async function generateMetadata(props: Props): Promise<Metadata> {
+	const { id } = await props.params
+
+	return {
+		title: `${id === "me" ? "Ваш профиль" : "Профиль пользователя"} | CascadePro`
+	}
 }
 
 export default async function Profile(props: Readonly<Props>) {

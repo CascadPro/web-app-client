@@ -9,6 +9,8 @@ export default function manifest(): MetadataRoute.Manifest {
 		start_url: "/",
 		scope: "/",
 
+		lang: "ru",
+
 		display: "standalone",
 		orientation: "portrait",
 
