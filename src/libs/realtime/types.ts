@@ -1,31 +1,33 @@
-import type { SessionsHttpDtoSessionDTO } from "@/api/generated"
+import type { SessionsHttpDtoSessionDTO } from "@/api/generated";
 
-import { WS_EVENTS, type WsEventType } from "./events"
+import { WS_AUTH_EVENTS, WS_EVENTS } from "./events"
 
 export interface WsEvent<T = unknown> {
 	id: string
-	type: WsEventType
+	type: string
 	data: T
 	timestamp: string
 }
 
 export interface WsAuthMessage {
-	type: typeof WS_EVENTS.AUTH_REQUEST
+	type: typeof WS_AUTH_EVENTS.AUTH_REQUEST
 	token: string
 }
 
 export interface WsAuthSuccess {
-	type: typeof WS_EVENTS.AUTH_SUCCESS
+	type: typeof WS_AUTH_EVENTS.AUTH_SUCCESS
 	message: string
 }
 
 export interface WsAuthError {
-	type: typeof WS_EVENTS.AUTH_ERROR
+	type: typeof WS_AUTH_EVENTS.AUTH_ERROR
 	code: string
 	message: string
+	timestamp: number
 }
 
 export interface PresenceEventData {
+	uid: string
 	sid: string
 }
 
@@ -42,12 +44,36 @@ export interface SessionUpdatedEventData {
 	session: SessionsHttpDtoSessionDTO
 }
 
-export type PresenceEvent = WsEvent<PresenceEventData>
+export interface PresenceOnlineEvent extends WsEvent<PresenceEventData> {
+	type: typeof WS_EVENTS.PRESENCE_ONLINE
+}
 
-export type SessionRevokedEvent = WsEvent<SessionRevokedEventData>
+export interface PresenceOfflineEvent extends WsEvent<PresenceEventData> {
+	type: typeof WS_EVENTS.PRESENCE_OFFLINE
+}
 
-export type SessionCreatedEvent = WsEvent<SessionCreatedEventData>
+export interface SessionCreatedEvent extends WsEvent<SessionCreatedEventData> {
+	type: typeof WS_EVENTS.SESSION_CREATED
+}
 
-export type SessionUpdatedEvent = WsEvent<SessionUpdatedEventData>
+export interface SessionUpdatedEvent extends WsEvent<SessionUpdatedEventData> {
+	type: typeof WS_EVENTS.SESSION_UPDATED
+}
 
-export type WsMessage = WsEvent | WsAuthSuccess | WsAuthError
+export interface SessionRevokedEvent extends WsEvent<SessionRevokedEventData> {
+	type: typeof WS_EVENTS.SESSION_REVOKED
+}
+
+export interface SessionRevokedAllEvent extends WsEvent<SessionRevokedEventData> {
+	type: typeof WS_EVENTS.SESSION_REVOKED_ALL
+}
+
+export type WsServerEvent =
+	| PresenceOnlineEvent
+	| PresenceOfflineEvent
+	| SessionCreatedEvent
+	| SessionUpdatedEvent
+	| SessionRevokedEvent
+	| SessionRevokedAllEvent
+
+export type WsMessage = WsAuthSuccess | WsAuthError | WsServerEvent
