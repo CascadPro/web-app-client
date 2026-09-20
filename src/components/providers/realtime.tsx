@@ -1,30 +1,21 @@
 "use client"
 
-import { useRouter } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useRouter } from "next/navigation"
+import { useEffect, useRef } from "react"
 
-
-
-import { queryClient } from "@/libs/query/client";
-import { QueryKeys } from "@/libs/query/keys";
-import { WebSocketClient } from "@/libs/realtime";
-import { WS_EVENTS } from "@/libs/realtime/events";
-import { handlePresenceOffline, handlePresenceOnline, handleSessionCreated, handleSessionRevoked, handleSessionUpdated } from "@/libs/realtime/handlers/sessions";
-import { useAuthStore } from "@/store/auth";
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+import { AppRoutes } from "@/libs/constants"
+import { queryClient } from "@/libs/query/client"
+import { QueryKeys } from "@/libs/query/keys"
+import { WebSocketClient } from "@/libs/realtime"
+import { WS_EVENTS } from "@/libs/realtime/events"
+import {
+	handlePresenceOffline,
+	handlePresenceOnline,
+	handleSessionCreated,
+	handleSessionRevoked,
+	handleSessionUpdated
+} from "@/libs/realtime/handlers/sessions"
+import { useAuthStore } from "@/store/auth"
 
 interface RealtimeProviderProps {
 	children: React.ReactNode
@@ -54,22 +45,32 @@ export function RealtimeProvider({ children }: RealtimeProviderProps) {
 			getAccessToken: () => useAuthStore.getState().accessToken,
 
 			onAuthenticated: () => {
-				void queryClient.invalidateQueries({ queryKey: QueryKeys.sessions.all })
-			},
+				void queryClient.invalidateQueries({
+					queryKey: QueryKeys.sessions.all
+				})
+			}
 		})
 
 		clientRef.current = client
 
-		const unsubscribePresenceOnline = client.on<{ sid: string }>(
+		const unsubscribePresenceOnline = client.on(
 			WS_EVENTS.PRESENCE_ONLINE,
 			event => {
+				if (event.type !== WS_EVENTS.PRESENCE_ONLINE) {
+					return
+				}
+
 				handlePresenceOnline(queryClient, event.data.sid)
 			}
 		)
 
-		const unsubscribePresenceOffline = client.on<{ sid: string }>(
+		const unsubscribePresenceOffline = client.on(
 			WS_EVENTS.PRESENCE_OFFLINE,
 			event => {
+				if (event.type !== WS_EVENTS.PRESENCE_OFFLINE) {
+					return
+				}
+
 				handlePresenceOffline(queryClient, event.data.sid)
 			}
 		)
@@ -77,34 +78,63 @@ export function RealtimeProvider({ children }: RealtimeProviderProps) {
 		const unsubscribeSessionCreated = client.on(
 			WS_EVENTS.SESSION_CREATED,
 			event => {
-				handleSessionCreated(queryClient, event as never)
+				if (event.type !== WS_EVENTS.SESSION_CREATED) {
+					return
+				}
+
+				handleSessionCreated(queryClient, event)
 			}
 		)
 
 		const unsubscribeSessionUpdated = client.on(
 			WS_EVENTS.SESSION_UPDATED,
 			event => {
-				handleSessionUpdated(queryClient, event as never)
+				if (event.type !== WS_EVENTS.SESSION_UPDATED) {
+					return
+				}
+
+				handleSessionUpdated(queryClient, event)
 			}
 		)
 
-		const unsubscribeSessionRevoked = client.on<{
-			sid: string
-			reason?: string
-		}>(WS_EVENTS.SESSION_REVOKED, event => {
-			const currentSessionRevoked = handleSessionRevoked(queryClient, event)
+		const unsubscribeSessionRevoked = client.on(
+			WS_EVENTS.SESSION_REVOKED,
+			event => {
+				if (event.type !== WS_EVENTS.SESSION_REVOKED) {
+					return
+				}
 
-			if (!currentSessionRevoked) {
-				return
+				const currentSessionRevoked = handleSessionRevoked(queryClient, event)
+
+				if (!currentSessionRevoked) return
+
+				useAuthStore.getState().setUnauthenticated()
+
+				router.replace(AppRoutes.LOGIN)
 			}
+		)
 
-			useAuthStore.getState().setUnauthenticated()
+		const unsubscribeSessionRevokedAll = client.on(
+			WS_EVENTS.SESSION_REVOKED_ALL,
+			event => {
+				if (event.type !== WS_EVENTS.SESSION_REVOKED_ALL) {
+					return
+				}
 
-			router.replace("/login")
-		})
+				const isCurrentSession = handleSessionRevoked(queryClient, event)
+
+				if (isCurrentSession) return
+
+				useAuthStore.getState().setUnauthenticated()
+
+				router.replace(AppRoutes.LOGIN)
+			}
+		)
 
 		const handleBrowserOnline = () => {
-			client.reconnect()
+			if (!client.isAuthenticated()) {
+				client.reconnect()
+			}
 
 			void queryClient.invalidateQueries({
 				queryKey: QueryKeys.sessions.all
@@ -116,7 +146,7 @@ export function RealtimeProvider({ children }: RealtimeProviderProps) {
 				return
 			}
 
-			if (!client.isConnected()) {
+			if (!client.isAuthenticated()) {
 				client.reconnect()
 			}
 
@@ -137,6 +167,7 @@ export function RealtimeProvider({ children }: RealtimeProviderProps) {
 			unsubscribeSessionCreated()
 			unsubscribeSessionUpdated()
 			unsubscribeSessionRevoked()
+			unsubscribeSessionRevokedAll()
 
 			window.removeEventListener("online", handleBrowserOnline)
 
