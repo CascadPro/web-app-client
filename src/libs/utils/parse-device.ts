@@ -1,9 +1,9 @@
-import { GlobeIcon, MonitorIcon } from "lucide-react";
+import { GlobeIcon, MonitorIcon } from "lucide-react"
 
-import type { SessionsHttpDtoSessionDTOMetadataDevice } from "@/api/generated"
-import { BROWSERS, DEVICE_TYPES, OPERATING_SYSTEMS } from "@/libs/constants";
-import { capitalize } from "@/libs/utils";
-import type { DeviceType, SessionParsedDevice } from "@/types/base";
+import type { SessionsHttpDtoSessionDtoMetadataDevice } from "@/api/generated"
+import { BROWSERS, DEVICE_TYPES, OPERATING_SYSTEMS } from "@/libs/constants"
+import { capitalize } from "@/libs/utils"
+import type { DeviceType, SessionParsedDevice } from "@/types/base"
 
 function normalizeBrowser(value?: string) {
 	const key = value?.trim().toLowerCase() || "other"
@@ -56,7 +56,7 @@ function normalizeModel(
 }
 
 export function parseDevice(
-	device?: SessionsHttpDtoSessionDTOMetadataDevice
+	device?: SessionsHttpDtoSessionDtoMetadataDevice
 ): SessionParsedDevice {
 	const app = device?.app?.trim() || ""
 	const os = device?.os?.trim().toLowerCase() || ""

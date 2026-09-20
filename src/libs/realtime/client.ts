@@ -1,4 +1,4 @@
-import type { WsAuthError, WsAuthMessage, WsMessage } from "./types"
+import type { WsAuthError, WsAuthMessage, WsMessage } from "./types";
 
 type EventHandler<T = unknown> = (
 	event: Extract<WsMessage, { data: T }> | WsMessage
@@ -66,10 +66,11 @@ export class WebSocketClient {
 		})
 
 		socket.addEventListener("close", () => {
-			if (this.socket === socket) {
-				this.socket = null
+			if (this.socket !== socket) {
+				return
 			}
 
+			this.socket = null
 			this.handleClose()
 		})
 

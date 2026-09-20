@@ -13,6 +13,7 @@ import {
 	handlePresenceOnline,
 	handleSessionCreated,
 	handleSessionRevoked,
+	handleSessionRevokedAll,
 	handleSessionUpdated
 } from "@/libs/realtime/handlers/sessions"
 import { useAuthStore } from "@/store/auth"
@@ -56,10 +57,7 @@ export function RealtimeProvider({ children }: RealtimeProviderProps) {
 		const unsubscribePresenceOnline = client.on(
 			WS_EVENTS.PRESENCE_ONLINE,
 			event => {
-				if (event.type !== WS_EVENTS.PRESENCE_ONLINE) {
-					return
-				}
-
+				if (event.type !== WS_EVENTS.PRESENCE_ONLINE) return
 				handlePresenceOnline(queryClient, event.data.sid)
 			}
 		)
@@ -67,10 +65,7 @@ export function RealtimeProvider({ children }: RealtimeProviderProps) {
 		const unsubscribePresenceOffline = client.on(
 			WS_EVENTS.PRESENCE_OFFLINE,
 			event => {
-				if (event.type !== WS_EVENTS.PRESENCE_OFFLINE) {
-					return
-				}
-
+				if (event.type !== WS_EVENTS.PRESENCE_OFFLINE) return
 				handlePresenceOffline(queryClient, event.data.sid)
 			}
 		)
@@ -78,10 +73,7 @@ export function RealtimeProvider({ children }: RealtimeProviderProps) {
 		const unsubscribeSessionCreated = client.on(
 			WS_EVENTS.SESSION_CREATED,
 			event => {
-				if (event.type !== WS_EVENTS.SESSION_CREATED) {
-					return
-				}
-
+				if (event.type !== WS_EVENTS.SESSION_CREATED) return
 				handleSessionCreated(queryClient, event)
 			}
 		)
@@ -89,10 +81,7 @@ export function RealtimeProvider({ children }: RealtimeProviderProps) {
 		const unsubscribeSessionUpdated = client.on(
 			WS_EVENTS.SESSION_UPDATED,
 			event => {
-				if (event.type !== WS_EVENTS.SESSION_UPDATED) {
-					return
-				}
-
+				if (event.type !== WS_EVENTS.SESSION_UPDATED) return
 				handleSessionUpdated(queryClient, event)
 			}
 		)
@@ -100,9 +89,7 @@ export function RealtimeProvider({ children }: RealtimeProviderProps) {
 		const unsubscribeSessionRevoked = client.on(
 			WS_EVENTS.SESSION_REVOKED,
 			event => {
-				if (event.type !== WS_EVENTS.SESSION_REVOKED) {
-					return
-				}
+				if (event.type !== WS_EVENTS.SESSION_REVOKED) return
 
 				const currentSessionRevoked = handleSessionRevoked(queryClient, event)
 
@@ -117,11 +104,9 @@ export function RealtimeProvider({ children }: RealtimeProviderProps) {
 		const unsubscribeSessionRevokedAll = client.on(
 			WS_EVENTS.SESSION_REVOKED_ALL,
 			event => {
-				if (event.type !== WS_EVENTS.SESSION_REVOKED_ALL) {
-					return
-				}
+				if (event.type != WS_EVENTS.SESSION_REVOKED_ALL) return
 
-				const isCurrentSession = handleSessionRevoked(queryClient, event)
+				const isCurrentSession = handleSessionRevokedAll(queryClient, event)
 
 				if (isCurrentSession) return
 

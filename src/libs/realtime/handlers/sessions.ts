@@ -113,7 +113,7 @@ function updateSessionOnlineState(
 					...data,
 					sessions: data?.sessions?.map(session =>
 						session.id === sid
-							? { ...session, online, last_active_at: new Date().toUTCString() }
+							? { ...session, online, last_active_at: new Date().toISOString() }
 							: session
 					)
 				}
