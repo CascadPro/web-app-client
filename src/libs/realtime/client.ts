@@ -1,6 +1,8 @@
-import type { WsAuthError, WsAuthMessage, WsEvent, WsMessage } from "./types"
+import type { WsAuthError, WsAuthMessage, WsMessage } from "./types"
 
-type EventHandler<T = unknown> = (event: WsEvent<T>) => void
+type EventHandler<T = unknown> = (
+	event: Extract<WsMessage, { data: T }> | WsMessage
+) => void
 
 interface WebSocketClientOptions {
 	url: string
@@ -21,7 +23,7 @@ export class WebSocketClient {
 	private manuallyClosed = false
 	private authenticated = false
 
-	private readonly handlers = new Map<string, Set<EventHandler>>()
+	private readonly handlers = new Map<string, Set<(event: WsMessage) => void>>()
 
 	private readonly options: WebSocketClientOptions
 
@@ -41,15 +43,14 @@ export class WebSocketClient {
 			return
 		}
 
-		this.manuallyClosed = false
-		this.clearReconnectTimer()
-
 		const accessToken = this.options.getAccessToken()
 
 		if (!accessToken) {
 			return
 		}
 
+		this.manuallyClosed = false
+		this.clearReconnectTimer()
 		this.authenticated = false
 
 		const socket = new WebSocket(this.options.url)
@@ -65,6 +66,10 @@ export class WebSocketClient {
 		})
 
 		socket.addEventListener("close", () => {
+			if (this.socket === socket) {
+				this.socket = null
+			}
+
 			this.handleClose()
 		})
 
@@ -80,7 +85,6 @@ export class WebSocketClient {
 		this.clearReconnectTimer()
 
 		const socket = this.socket
-
 		this.socket = null
 
 		if (!socket) {
@@ -99,11 +103,23 @@ export class WebSocketClient {
 		this.connect()
 	}
 
-	isConnected(): boolean {
-		return this.socket?.readyState === WebSocket.OPEN && this.authenticated
+	isOpen(): boolean {
+		return this.socket?.readyState === WebSocket.OPEN
 	}
 
-	on<T = unknown>(eventType: string, handler: EventHandler<T>): () => void {
+	isConnecting(): boolean {
+		return this.socket?.readyState === WebSocket.CONNECTING
+	}
+
+	isAuthenticated(): boolean {
+		return this.isOpen() && this.authenticated
+	}
+
+	isConnected(): boolean {
+		return this.isAuthenticated()
+	}
+
+	on(eventType: string, handler: (event: WsMessage) => void): () => void {
 		let handlers = this.handlers.get(eventType)
 
 		if (!handlers) {
@@ -111,10 +127,10 @@ export class WebSocketClient {
 			this.handlers.set(eventType, handlers)
 		}
 
-		handlers.add(handler as EventHandler)
+		handlers.add(handler)
 
 		return () => {
-			handlers?.delete(handler as EventHandler)
+			handlers?.delete(handler)
 
 			if (handlers?.size === 0) {
 				this.handlers.delete(eventType)
@@ -123,7 +139,7 @@ export class WebSocketClient {
 	}
 
 	private sendAuth(accessToken: string): void {
-		if (!this.socket) {
+		if (!this.socket || this.socket.readyState !== WebSocket.OPEN) {
 			return
 		}
 
@@ -150,7 +166,7 @@ export class WebSocketClient {
 		}
 
 		if (message.type === "auth.error") {
-			this.handleAuthError(message as WsAuthError)
+			this.handleAuthError(message)
 			return
 		}
 
@@ -171,23 +187,20 @@ export class WebSocketClient {
 	}
 
 	private handleAuthError(message: WsAuthError): void {
-		console.error(
-			"WebSocket authentication failed:",
-			message.data.code,
-			message.data.message
-		)
-
 		this.authenticated = false
 		this.manuallyClosed = true
 
-		this.socket?.close()
+		const socket = this.socket
+
+		this.socket = null
+
+		socket?.close()
 	}
 
 	private handleClose(): void {
 		const wasAuthenticated = this.authenticated
 
 		this.authenticated = false
-		this.socket = null
 
 		this.options.onDisconnected?.()
 
@@ -211,6 +224,13 @@ export class WebSocketClient {
 			return
 		}
 
+		if (
+			this.socket?.readyState === WebSocket.OPEN ||
+			this.socket?.readyState === WebSocket.CONNECTING
+		) {
+			return
+		}
+
 		this.clearReconnectTimer()
 
 		const exponentialDelay = Math.min(
@@ -219,7 +239,6 @@ export class WebSocketClient {
 		)
 
 		const jitter = Math.random() * 500
-
 		const delay = exponentialDelay + jitter
 
 		this.reconnectAttempt += 1
@@ -238,7 +257,7 @@ export class WebSocketClient {
 		this.reconnectTimer = null
 	}
 
-	private emit<T>(event: WsEvent<T>): void {
+	private emit(event: WsMessage): void {
 		const handlers = this.handlers.get(event.type)
 
 		if (!handlers) {
