@@ -20,17 +20,10 @@ export function useRealtime() {
 		})
 	}, [])
 
-	const onAuthenticated = useCallback(() => {
-		invalidateSessions()
-	}, [invalidateSessions])
-
-	const onReconnect = useCallback(() => {
-		invalidateSessions()
-	}, [invalidateSessions])
-
 	const subscribe = useCallback(
 		(client: WebSocketClient) => {
 			const unsubscribePresence = subscribeToPresence(client)
+
 			const unsubscribeSessions = subscribeToSessions(client, logout)
 
 			return () => {
@@ -44,10 +37,8 @@ export function useRealtime() {
 	return useMemo(
 		() => ({
 			subscribe,
-			onAuthenticated,
-			onReconnect,
 			invalidateSessions
 		}),
-		[subscribe, onAuthenticated, onReconnect, invalidateSessions]
+		[subscribe, invalidateSessions]
 	)
 }

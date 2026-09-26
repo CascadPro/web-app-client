@@ -2,16 +2,12 @@
 
 import { useEffect, useRef } from "react"
 
-import { WebSocketClient } from "@/libs/realtime"
+import { realtimeClient } from "@/libs/realtime"
 import { useAuthStore } from "@/store/auth"
 
 import { useRealtime } from "./useRealtime"
 
-const WS_URL = process.env.NEXT_PUBLIC_WS_URL ?? "ws://localhost:8000/ws"
-
 export function useRealtimeLifecycle(): void {
-	const clientRef = useRef<WebSocketClient | null>(null)
-
 	const status = useAuthStore(state => state.status)
 	const accessToken = useAuthStore(state => state.accessToken)
 
@@ -22,34 +18,18 @@ export function useRealtimeLifecycle(): void {
 
 	useEffect(() => {
 		if (status !== "authenticated" || !accessToken) {
-			clientRef.current?.disconnect()
-			clientRef.current = null
+			realtimeClient.disconnect()
+
 			return
 		}
 
-		const client = new WebSocketClient({
-			url: WS_URL,
+		const unsubscribe = setupRealtimeRef.current.subscribe(realtimeClient)
 
-			getAccessToken: () => useAuthStore.getState().accessToken,
-
-			onAuthenticated: () => {
-				setupRealtimeRef.current.onAuthenticated()
-			},
-
-			onReconnect: () => {
-				setupRealtimeRef.current.onReconnect()
-			}
-		})
-
-		clientRef.current = client
-
-		const unsubscribe = setupRealtimeRef.current.subscribe(client)
-
-		client.connect()
+		realtimeClient.connect()
 
 		const handleOnline = () => {
-			if (!client.isAuthenticated() && !client.isConnecting()) {
-				client.connect()
+			if (!realtimeClient.isAuthenticated() && !realtimeClient.isConnecting()) {
+				realtimeClient.connect()
 			}
 
 			setupRealtimeRef.current.invalidateSessions()
@@ -60,27 +40,25 @@ export function useRealtimeLifecycle(): void {
 				return
 			}
 
-			if (!client.isAuthenticated() && !client.isConnecting()) {
-				client.connect()
+			if (!realtimeClient.isAuthenticated() && !realtimeClient.isConnecting()) {
+				realtimeClient.connect()
 			}
 
 			setupRealtimeRef.current.invalidateSessions()
 		}
 
 		window.addEventListener("online", handleOnline)
+
 		document.addEventListener("visibilitychange", handleVisibilityChange)
 
 		return () => {
 			unsubscribe()
 
 			window.removeEventListener("online", handleOnline)
+
 			document.removeEventListener("visibilitychange", handleVisibilityChange)
 
-			client.disconnect()
-
-			if (clientRef.current === client) {
-				clientRef.current = null
-			}
+			realtimeClient.disconnect()
 		}
 	}, [status, accessToken])
 }

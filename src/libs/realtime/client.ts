@@ -10,16 +10,24 @@ import type {
 	WsAuthMessage,
 	WsEvent,
 	WsEventHandler,
-    WsServerEvent
+	WsServerEvent
 } from "./types"
 import { isWsServerEvent } from "./utils"
 
 interface WebSocketClientOptions {
 	url: string
 	getAccessToken: () => string | null
+
+	onConnecting?: () => void
+	onAuthorizing?: () => void
+
 	onAuthenticated?: () => void
-	onDisconnected?: () => void
+
+	onReconnecting?: (attempt: number) => void
 	onReconnect?: () => void
+
+	onDisconnected?: () => void
+	onError?: (error: Event) => void
 }
 
 const INITIAL_RECONNECT_DELAY = 1000
@@ -59,6 +67,7 @@ export class WebSocketClient {
 		const accessToken = this.options.getAccessToken()
 
 		if (!accessToken) {
+			this.options.onDisconnected?.()
 			return
 		}
 
@@ -66,15 +75,27 @@ export class WebSocketClient {
 		this.clearReconnectTimer()
 		this.authenticated = false
 
+		this.options.onConnecting?.()
+
 		const socket = new WebSocket(this.options.url)
 
 		this.socket = socket
 
 		socket.addEventListener("open", () => {
+			if (this.socket !== socket) {
+				return
+			}
+
+			this.options.onAuthorizing?.()
+
 			this.sendAuth(accessToken)
 		})
 
 		socket.addEventListener("message", event => {
+			if (this.socket !== socket) {
+				return
+			}
+
 			this.handleMessage(event.data)
 		})
 
@@ -84,10 +105,17 @@ export class WebSocketClient {
 			}
 
 			this.socket = null
+
 			this.handleClose()
 		})
 
-		socket.addEventListener("error", () => {
+		socket.addEventListener("error", event => {
+			if (this.socket !== socket) {
+				return
+			}
+
+			this.options.onError?.(event)
+
 			socket.close()
 		})
 	}
@@ -99,13 +127,17 @@ export class WebSocketClient {
 		this.clearReconnectTimer()
 
 		const socket = this.socket
+
 		this.socket = null
 
 		if (!socket) {
+			this.options.onDisconnected?.()
 			return
 		}
 
 		socket.close()
+
+		this.options.onDisconnected?.()
 	}
 
 	reconnect(): void {
@@ -141,6 +173,7 @@ export class WebSocketClient {
 
 		if (!handlers) {
 			handlers = new Set<(event: WsServerEvent) => void>()
+
 			this.handlers.set(eventType, handlers)
 		}
 
@@ -169,7 +202,7 @@ export class WebSocketClient {
 		}
 
 		const body: WsAuthMessage = {
-			type: "auth.request",
+			type: WS_AUTH_EVENTS.AUTH_REQUEST,
 			token: accessToken
 		}
 
@@ -182,7 +215,7 @@ export class WebSocketClient {
 		}
 
 		const body: WsEvent = {
-			id: randomUUID().toString(),
+			id: randomUUID(),
 			type: eventType,
 			data,
 			timestamp: new Date().toISOString()
@@ -256,9 +289,13 @@ export class WebSocketClient {
 	private handleClose(): void {
 		this.authenticated = false
 
-		this.options.onDisconnected?.()
-
 		if (this.manuallyClosed) {
+			this.options.onDisconnected?.()
+			return
+		}
+
+		if (!this.options.getAccessToken()) {
+			this.options.onDisconnected?.()
 			return
 		}
 
@@ -271,6 +308,7 @@ export class WebSocketClient {
 		}
 
 		if (!this.options.getAccessToken()) {
+			this.options.onDisconnected?.()
 			return
 		}
 
@@ -293,6 +331,8 @@ export class WebSocketClient {
 
 		this.reconnectAttempt += 1
 
+		this.options.onReconnecting?.(this.reconnectAttempt)
+
 		this.reconnectTimer = setTimeout(() => {
 			this.connect()
 		}, delay)
@@ -304,6 +344,7 @@ export class WebSocketClient {
 		}
 
 		clearTimeout(this.reconnectTimer)
+
 		this.reconnectTimer = null
 	}
 

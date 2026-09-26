@@ -1,4 +1,5 @@
 export * from "./client"
 export * from "./events"
+export * from "./instance"
 export * from "./types"
 export * from "./utils"
