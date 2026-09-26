@@ -1,5 +1,5 @@
 import type { QueryClient } from "@tanstack/react-query"
-import { AxiosResponse } from "axios"
+import type { AxiosResponse } from "axios"
 
 import type { SessionsHttpDtoSessionDTO } from "@/api/generated"
 import { QueryKeys } from "@/libs/query/keys"
@@ -15,45 +15,29 @@ interface SessionsData {
 	sessions: SessionsHttpDtoSessionDTO[]
 }
 
-function updateSession(
-	data: SessionsData | undefined,
-	session: SessionsHttpDtoSessionDTO
-): SessionsData | undefined {
-	if (!data) return data
-
-	if (data.current_session.id === session.id) {
-		return {
-			...data,
-			current_session: session
-		}
-	}
-
-	return {
-		...data,
-		sessions: data.sessions.map(item =>
-			item.id === session.id ? session : item
-		)
-	}
-}
-
 export function handleSessionCreated(
-	queryClient: QueryClient,
+	client: QueryClient,
 	event: { data: SessionCreatedEventData }
 ): void {
-	queryClient.setQueryData<AxiosResponse<SessionsData>>(
+	client.setQueryData<AxiosResponse<SessionsData>>(
 		QueryKeys.sessions.all,
-		r => {
-			const data = r?.data
-			if (!data) return r
+		response => {
+			const data = response?.data
+
+			if (!data) {
+				return response
+			}
 
 			const exists = data.sessions.some(
 				session => session.id === event.data.session.id
 			)
 
-			if (exists) return r
+			if (exists) {
+				return response
+			}
 
 			return {
-				...r,
+				...response,
 				data: {
 					...data,
 					sessions: [...data.sessions, event.data.session]
@@ -67,54 +51,33 @@ export function handleSessionUpdated(
 	client: QueryClient,
 	event: { data: SessionUpdatedEventData }
 ): void {
-	client.setQueryData<AxiosResponse<SessionsData | undefined>>(
-		QueryKeys.sessions.all,
-		r => {
-			const data = r?.data
-			if (!data) return r
-
-			return { ...r, data: updateSession(data, event.data.session) }
-		}
-	)
-}
-
-export function handlePresenceOnline(client: QueryClient, sid: string): void {
-	updateSessionOnlineState(client, sid, true)
-}
-
-export function handlePresenceOffline(client: QueryClient, sid: string): void {
-	updateSessionOnlineState(client, sid, false)
-}
-
-function updateSessionOnlineState(
-	client: QueryClient,
-	sid: string,
-	online: boolean
-): void {
 	client.setQueryData<AxiosResponse<SessionsData>>(
 		QueryKeys.sessions.all,
-		r => {
-			const data = r?.data
-			if (!data) return r
+		response => {
+			const data = response?.data
 
-			if (data?.current_session.id === sid) {
+			if (!data) {
+				return response
+			}
+
+			const session = event.data.session
+
+			if (data.current_session.id === session.id) {
 				return {
-					...r,
+					...response,
 					data: {
 						...data,
-						current_session: { ...data.current_session, online }
+						current_session: session
 					}
 				}
 			}
 
 			return {
-				...r,
+				...response,
 				data: {
 					...data,
-					sessions: data?.sessions?.map(session =>
-						session.id === sid
-							? { ...session, online, last_active_at: new Date().toISOString() }
-							: session
+					sessions: data.sessions.map(item =>
+						item.id === session.id ? session : item
 					)
 				}
 			}
@@ -126,21 +89,24 @@ export function handleSessionRevoked(
 	client: QueryClient,
 	event: { data: SessionRevokedEventData }
 ): boolean {
-	let currentSessionRevoked = false
+	let isCurrentSession = false
 
 	client.setQueryData<AxiosResponse<SessionsData>>(
 		QueryKeys.sessions.all,
-		r => {
-			const data = r?.data
-			if (!data) return r
+		response => {
+			const data = response?.data
+
+			if (!data) {
+				return response
+			}
 
 			if (data.current_session.id === event.data.sid) {
-				currentSessionRevoked = true
+				isCurrentSession = true
 				return undefined
 			}
 
 			return {
-				...r,
+				...response,
 				data: {
 					...data,
 					sessions: data.sessions.filter(
@@ -151,7 +117,7 @@ export function handleSessionRevoked(
 		}
 	)
 
-	return currentSessionRevoked
+	return isCurrentSession
 }
 
 export function handleSessionRevokedAll(
@@ -162,16 +128,22 @@ export function handleSessionRevokedAll(
 
 	client.setQueryData<AxiosResponse<SessionsData>>(
 		QueryKeys.sessions.all,
-		r => {
-			const data = r?.data
-			if (!data) return r
+		response => {
+			const data = response?.data
+
+			if (!data) {
+				return response
+			}
 
 			if (data.current_session.id === event.data.sid) {
 				isCurrentSession = true
 
 				return {
-					...r,
-					data: { ...data, sessions: [] }
+					...response,
+					data: {
+						...data,
+						sessions: []
+					}
 				}
 			}
 
