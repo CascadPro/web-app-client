@@ -1,8 +1,8 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState } from "react"
 
-import { SERVER_URL } from "@/libs/constants";
+import { SERVER_URL } from "@/libs/constants"
 
-import type { UserAvatarSize, UserAvatarUser } from "./types";
+import type { UserAvatarSize, UserAvatarUser } from "./types"
 
 const sizes = {
 	sm: {

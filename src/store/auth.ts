@@ -1,6 +1,6 @@
-import { create } from "zustand";
+import { create } from "zustand"
 
-import type { AuthStore } from "@/types/store";
+import type { AuthStore } from "@/types/store"
 
 export const useAuthStore = create<AuthStore>(set => ({
 	status: "loading",

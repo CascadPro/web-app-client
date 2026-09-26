@@ -1,4 +1,4 @@
-import type { SessionsHttpDtoSessionDTO } from "@/api/generated";
+import type { SessionsHttpDtoSessionDTO } from "@/api/generated"
 
 import { WS_AUTH_EVENTS, WS_EVENTS, type WsEventType } from "./events"
 

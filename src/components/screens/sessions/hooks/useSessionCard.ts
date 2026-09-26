@@ -1,10 +1,10 @@
-import { type MouseEvent, useMemo, useState } from "react";
+import { type MouseEvent, useMemo, useState } from "react"
 
 import type { SessionsHttpDtoSessionDTOMetadata } from "@/api/generated"
-import { Toast } from "@/components/ui";
-import { useHaptic } from "@/libs/haptics";
-import { useDeleteSession } from "@/libs/query/hooks";
-import { errorCatch, parseDevice } from "@/libs/utils";
+import { Toast } from "@/components/ui"
+import { useHaptic } from "@/libs/haptics"
+import { useDeleteSession } from "@/libs/query/hooks"
+import { errorCatch, parseDevice } from "@/libs/utils"
 
 export const useSessionCard = (
 	id?: string,

@@ -1,6 +1,6 @@
 import { useScrollLocked } from "@/libs/hooks"
 
-import type { SessionCardSheetProps } from "../components/card/session-card-sheet";
+import type { SessionCardSheetProps } from "../components/card/session-card-sheet"
 
 export const useSessionCardSheet = (
 	isOpen: boolean,

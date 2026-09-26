@@ -4,7 +4,7 @@ import { service } from "@/api/instance"
 import { ms } from "@/libs/utils"
 import { useAuthStore } from "@/store/auth"
 
-import { QueryKeys } from "../keys";
+import { QueryKeys } from "../keys"
 
 export const useSessions = () => {
 	const state = useAuthStore(state => state.status)

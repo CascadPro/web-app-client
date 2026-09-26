@@ -1,15 +1,15 @@
-import { MoreVerticalIcon } from "lucide-react";
-import { m } from "motion/react";
-import dynamic from "next/dynamic";
-import type { FC } from "react";
+import { MoreVerticalIcon } from "lucide-react"
+import { m } from "motion/react"
+import dynamic from "next/dynamic"
+import type { FC } from "react"
 
-import type { SessionsHttpDtoSessionDTO } from "@/api/generated";
-import { Title } from "@/components/ui";
-import { capitalize, cn, formatRelativeDate } from "@/libs/utils";
+import type { SessionsHttpDtoSessionDTO } from "@/api/generated"
+import { Title } from "@/components/ui"
+import { capitalize, cn, formatRelativeDate } from "@/libs/utils"
 
-import { useSessionCard } from "../../hooks/useSessionCard";
+import { useSessionCard } from "../../hooks/useSessionCard"
 
-import type { SessionCardSheetProps } from "./session-card-sheet";
+import type { SessionCardSheetProps } from "./session-card-sheet"
 
 const DynamicSessionCardSheet = dynamic(
 	async () => (await import("./session-card-sheet")).SessionCardSheet,
