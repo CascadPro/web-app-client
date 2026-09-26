@@ -1,9 +1,16 @@
-import { WS_AUTH_EVENTS, type WsEventType } from "./events"
+import { randomUUID } from "crypto"
+
+import {
+	WS_AUTH_EVENTS,
+	type WsAuthEventType,
+	type WsEventType
+} from "./events"
 import type {
 	WsAuthError,
 	WsAuthMessage,
+	WsEvent,
 	WsEventHandler,
-	WsServerEvent
+    WsServerEvent
 } from "./types"
 import { isWsServerEvent } from "./utils"
 
@@ -169,6 +176,21 @@ export class WebSocketClient {
 		this.socket.send(JSON.stringify(body))
 	}
 
+	private sendMessage<T = unknown>(eventType: WsAuthEventType, data: T): void {
+		if (!this.socket || this.socket.readyState !== WebSocket.OPEN) {
+			return
+		}
+
+		const body: WsEvent = {
+			id: randomUUID().toString(),
+			type: eventType,
+			data,
+			timestamp: new Date().toISOString()
+		}
+
+		this.socket.send(JSON.stringify(body))
+	}
+
 	private handleMessage(rawMessage: string): void {
 		let message: unknown
 
@@ -232,18 +254,12 @@ export class WebSocketClient {
 	}
 
 	private handleClose(): void {
-		const wasAuthenticated = this.authenticated
-
 		this.authenticated = false
 
 		this.options.onDisconnected?.()
 
 		if (this.manuallyClosed) {
 			return
-		}
-
-		if (wasAuthenticated) {
-			this.reconnectAttempt = 0
 		}
 
 		this.scheduleReconnect()

@@ -16,12 +16,14 @@ export function useRealtimeLifecycle(): void {
 	const accessToken = useAuthStore(state => state.accessToken)
 
 	const setupRealtime = useRealtime()
+	const setupRealtimeRef = useRef(setupRealtime)
+
+	setupRealtimeRef.current = setupRealtime
 
 	useEffect(() => {
 		if (status !== "authenticated" || !accessToken) {
 			clientRef.current?.disconnect()
 			clientRef.current = null
-
 			return
 		}
 
@@ -30,23 +32,27 @@ export function useRealtimeLifecycle(): void {
 
 			getAccessToken: () => useAuthStore.getState().accessToken,
 
-			onAuthenticated: setupRealtime.onAuthenticated,
+			onAuthenticated: () => {
+				setupRealtimeRef.current.onAuthenticated()
+			},
 
-			onReconnect: setupRealtime.onReconnect
+			onReconnect: () => {
+				setupRealtimeRef.current.onReconnect()
+			}
 		})
 
 		clientRef.current = client
 
-		const unsubscribe = setupRealtime.subscribe(client)
+		const unsubscribe = setupRealtimeRef.current.subscribe(client)
 
 		client.connect()
 
 		const handleOnline = () => {
-			if (!client.isAuthenticated()) {
-				client.reconnect()
+			if (!client.isAuthenticated() && !client.isConnecting()) {
+				client.connect()
 			}
 
-			setupRealtime.invalidateSessions()
+			setupRealtimeRef.current.invalidateSessions()
 		}
 
 		const handleVisibilityChange = () => {
@@ -54,11 +60,11 @@ export function useRealtimeLifecycle(): void {
 				return
 			}
 
-			if (!client.isAuthenticated()) {
-				client.reconnect()
+			if (!client.isAuthenticated() && !client.isConnecting()) {
+				client.connect()
 			}
 
-			setupRealtime.invalidateSessions()
+			setupRealtimeRef.current.invalidateSessions()
 		}
 
 		window.addEventListener("online", handleOnline)
@@ -76,5 +82,5 @@ export function useRealtimeLifecycle(): void {
 				clientRef.current = null
 			}
 		}
-	}, [status, accessToken, setupRealtime])
+	}, [status, accessToken])
 }
