@@ -1,6 +1,3 @@
-import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime"
-
-import { AppRoutes } from "@/libs/constants"
 import { queryClient } from "@/libs/query/client"
 import type { WebSocketClient } from "@/libs/realtime"
 import { WS_EVENTS } from "@/libs/realtime/events"
@@ -10,11 +7,10 @@ import {
 	handleSessionRevokedAll,
 	handleSessionUpdated
 } from "@/libs/realtime/handlers"
-import { useAuthStore } from "@/store/auth"
 
 export function subscribeToSessions(
 	client: WebSocketClient,
-	router: AppRouterInstance
+	logout: () => void
 ): () => void {
 	const unsubscribeCreated = client.on(WS_EVENTS.SESSION_CREATED, event => {
 		handleSessionCreated(queryClient, event)
@@ -31,7 +27,7 @@ export function subscribeToSessions(
 			return
 		}
 
-		logout(router)
+		logout()
 	})
 
 	const unsubscribeRevokedAll = client.on(
@@ -39,11 +35,11 @@ export function subscribeToSessions(
 		event => {
 			const isCurrentSession = handleSessionRevokedAll(queryClient, event)
 
-			if (!isCurrentSession) {
+			if (isCurrentSession) {
 				return
 			}
 
-			logout(router)
+			logout()
 		}
 	)
 
@@ -53,10 +49,4 @@ export function subscribeToSessions(
 		unsubscribeRevoked()
 		unsubscribeRevokedAll()
 	}
-}
-
-function logout(router: AppRouterInstance): void {
-	useAuthStore.getState().setUnauthenticated()
-
-	router.replace(AppRoutes.LOGIN)
 }

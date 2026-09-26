@@ -5,6 +5,32 @@ import { useEffect, useRef } from "react"
 import { refreshSession } from "@/libs/auth/auth"
 import { useAuthStore } from "@/store/auth"
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 interface AuthProviderProps {
 	children: React.ReactNode
 }

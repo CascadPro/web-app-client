@@ -38,10 +38,8 @@ export const login = async ({ email, password }: LoginRequestDTO) => {
 	useAuthStore.getState().setAccessToken(data.access_token)
 	useAuthStore.getState().setAuthenticated()
 
-	await queryClient.query({
-		queryKey: QueryKeys.users.me(),
-		queryFn: service.getUsersMy,
-		staleTime: 5 * 60 * 1000
+	queryClient.invalidateQueries({
+		queryKey: QueryKeys.users.me()
 	})
 
 	return data
