@@ -1,6 +1,6 @@
 import type { SessionsHttpDtoSessionDTO } from "@/api/generated";
 
-import { WS_AUTH_EVENTS, WS_EVENTS } from "./events"
+import { WS_AUTH_EVENTS, WS_EVENTS, type WsEventType } from "./events"
 
 export interface WsEvent<T = unknown> {
 	id: string
@@ -77,3 +77,18 @@ export type WsServerEvent =
 	| SessionRevokedAllEvent
 
 export type WsMessage = WsAuthSuccess | WsAuthError | WsServerEvent
+
+/**
+ * Тип события по его имени.
+ *
+ * WsEventByType<"presence.online"> -> PresenceOnlineEvent
+ * WsEventByType<"session.created"> -> SessionCreatedEvent
+ */
+export type WsEventByType<T extends WsEventType> = Extract<
+	WsServerEvent,
+	{ type: T }
+>
+
+export type WsEventHandler<T extends WsEventType> = (
+	event: WsEventByType<T>
+) => void

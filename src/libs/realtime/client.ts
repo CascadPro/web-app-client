@@ -1,8 +1,11 @@
-import type { WsAuthError, WsAuthMessage, WsMessage } from "./types";
-
-type EventHandler<T = unknown> = (
-	event: Extract<WsMessage, { data: T }> | WsMessage
-) => void
+import { WS_AUTH_EVENTS, type WsEventType } from "./events"
+import type {
+	WsAuthError,
+	WsAuthMessage,
+	WsEventHandler,
+	WsServerEvent
+} from "./types"
+import { isWsServerEvent } from "./utils"
 
 interface WebSocketClientOptions {
 	url: string
@@ -23,7 +26,10 @@ export class WebSocketClient {
 	private manuallyClosed = false
 	private authenticated = false
 
-	private readonly handlers = new Map<string, Set<(event: WsMessage) => void>>()
+	private readonly handlers = new Map<
+		WsEventType,
+		Set<(event: WsServerEvent) => void>
+	>()
 
 	private readonly options: WebSocketClientOptions
 
@@ -120,20 +126,31 @@ export class WebSocketClient {
 		return this.isAuthenticated()
 	}
 
-	on(eventType: string, handler: (event: WsMessage) => void): () => void {
+	on<T extends WsEventType>(
+		eventType: T,
+		handler: WsEventHandler<T>
+	): () => void {
 		let handlers = this.handlers.get(eventType)
 
 		if (!handlers) {
-			handlers = new Set()
+			handlers = new Set<(event: WsServerEvent) => void>()
 			this.handlers.set(eventType, handlers)
 		}
 
-		handlers.add(handler)
+		const typedHandler = handler as (event: WsServerEvent) => void
+
+		handlers.add(typedHandler)
 
 		return () => {
-			handlers?.delete(handler)
+			const currentHandlers = this.handlers.get(eventType)
 
-			if (handlers?.size === 0) {
+			if (!currentHandlers) {
+				return
+			}
+
+			currentHandlers.delete(typedHandler)
+
+			if (currentHandlers.size === 0) {
 				this.handlers.delete(eventType)
 			}
 		}
@@ -153,21 +170,37 @@ export class WebSocketClient {
 	}
 
 	private handleMessage(rawMessage: string): void {
-		let message: WsMessage
+		let message: unknown
 
 		try {
-			message = JSON.parse(rawMessage) as WsMessage
+			message = JSON.parse(rawMessage)
 		} catch {
 			return
 		}
 
-		if (message.type === "auth.success") {
-			this.handleAuthenticated()
+		if (
+			typeof message !== "object" ||
+			message === null ||
+			!("type" in message) ||
+			typeof message.type !== "string"
+		) {
 			return
 		}
 
-		if (message.type === "auth.error") {
-			this.handleAuthError(message)
+		switch (message.type) {
+			case WS_AUTH_EVENTS.AUTH_SUCCESS:
+				this.handleAuthenticated()
+				return
+
+			case WS_AUTH_EVENTS.AUTH_ERROR:
+				this.handleAuthError(message as WsAuthError)
+				return
+
+			default:
+				break
+		}
+
+		if (!isWsServerEvent(message)) {
 			return
 		}
 
@@ -258,7 +291,7 @@ export class WebSocketClient {
 		this.reconnectTimer = null
 	}
 
-	private emit(event: WsMessage): void {
+	private emit(event: WsServerEvent): void {
 		const handlers = this.handlers.get(event.type)
 
 		if (!handlers) {
