@@ -2,6 +2,8 @@
 
 import type { ReactNode } from "react"
 
+import { RealtimeStatusIndicator } from "../ui/components/realtime-indicator"
+
 import { useRealtimeLifecycle } from "./hooks/realtime"
 
 interface RealtimeProviderProps {
@@ -11,5 +13,10 @@ interface RealtimeProviderProps {
 export function RealtimeProvider({ children }: RealtimeProviderProps) {
 	useRealtimeLifecycle()
 
-	return children
+	return (
+		<>
+			{children}
+			<RealtimeStatusIndicator />
+		</>
+	)
 }

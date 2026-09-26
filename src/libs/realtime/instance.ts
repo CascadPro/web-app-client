@@ -3,8 +3,10 @@ import { useRealtimeStore } from "@/store/realtime"
 
 import { WebSocketClient } from "./client"
 
+const WS_URL = process.env.NEXT_PUBLIC_WS_URL ?? "ws://localhost:8000/ws"
+
 export const realtimeClient = new WebSocketClient({
-	url: process.env.NEXT_PUBLIC_WS_URL!,
+	url: WS_URL,
 
 	getAccessToken: () => {
 		return useAuthStore.getState().accessToken
@@ -22,13 +24,13 @@ export const realtimeClient = new WebSocketClient({
 		useRealtimeStore.getState().setConnected()
 	},
 
+	onReconnect: () => {
+		useRealtimeStore.getState().setConnected()
+	},
+
 	onReconnecting: attempt => {
 		useRealtimeStore.getState().setReconnectAttempt(attempt)
 		useRealtimeStore.getState().setStatus("reconnecting")
-	},
-
-	onReconnected: () => {
-		useRealtimeStore.getState().setConnected()
 	},
 
 	onDisconnected: () => {
@@ -36,6 +38,6 @@ export const realtimeClient = new WebSocketClient({
 	},
 
 	onError: () => {
-		useRealtimeStore.getState().setStatus("error")
+		useRealtimeStore.getState().setError("WebSocket connection error")
 	}
 })
