@@ -63,7 +63,7 @@ export const useLoginPage = () => {
 
 	useEffect(() => {
 		if (status === "success") {
-			setTimeout(() => replace(AppRoutes.MENU), 5000)
+			setTimeout(() => replace(AppRoutes.MENU), 2000)
 		} else if (status === "error") {
 			setTimeout(() => setStatus("default"), 2000)
 		}

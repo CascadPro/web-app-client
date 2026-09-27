@@ -3,7 +3,7 @@ import { m } from "motion/react"
 import dynamic from "next/dynamic"
 import type { FC } from "react"
 
-import type { SessionsHttpDtoSessionDto } from "@/api/generated"
+import type { SessionsHttpDtoSessionDTO } from "@/api/generated"
 import { Title } from "@/components/ui"
 import { capitalize, cn, formatRelativeDate } from "@/libs/utils"
 
@@ -17,7 +17,7 @@ const DynamicSessionCardSheet = dynamic(
 )
 
 interface Props {
-	session: SessionsHttpDtoSessionDto
+	session: SessionsHttpDtoSessionDTO
 	current?: boolean
 	index?: number
 }
@@ -80,7 +80,9 @@ export const SessionCard: FC<Props> = ({
 									{location?.country && capitalize(location.country)}
 									{location?.city && `, ${location.city}`}
 									&nbsp;&nbsp;•&nbsp;&nbsp;
-									{formatRelativeDate(session.last_active_at || "")}
+									{session?.online
+										? "В сети"
+										: formatRelativeDate(session.last_active_at || "")}
 								</p>
 							</div>
 

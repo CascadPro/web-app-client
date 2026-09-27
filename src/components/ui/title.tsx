@@ -37,10 +37,7 @@ const Title: FC<Props> = ({ children, size = "sm", className, ...props }) => {
 	return createElement(
 		type,
 		{
-			className: cn(
-				mapClassNameBySize[size],
-				className
-			),
+			className: cn(mapClassNameBySize[size], className),
 			...props
 		},
 		children

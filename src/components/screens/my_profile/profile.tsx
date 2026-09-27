@@ -1,12 +1,12 @@
 "use client"
 
-import { PullToRefresh } from "@/components/pwa/pwa-refresh-control";
+import { PullToRefresh } from "@/components/pwa/pwa-refresh-control"
 
-import { AccountInformation } from "./components/account-information";
-import { ProfileHeader } from "./components/header/profile-header";
-import { ProfileInformation } from "./components/profile-information";
-import { ProfileLoading } from "./components/profile-loading";
-import { useProfilePage } from "./hooks/useProfilePage";
+import { AccountInformation } from "./components/account-information"
+import { ProfileHeader } from "./components/header/profile-header"
+import { ProfileInformation } from "./components/profile-information"
+import { ProfileLoading } from "./components/profile-loading"
+import { useProfilePage } from "./hooks/useProfilePage"
 
 export const MyProfileScreen = () => {
 	const { status, user, refetchUser, fullName, avatarUser } = useProfilePage()
@@ -31,21 +31,21 @@ export const MyProfileScreen = () => {
 						id={user?.id}
 					/>
 
-				{/* Personal information */}
-				<ProfileInformation
-					name={user?.name}
-					surname={user?.surname}
-					last_name={user?.last_name}
-					email={user?.email}
-				/>
+					{/* Personal information */}
+					<ProfileInformation
+						name={user?.name}
+						surname={user?.surname}
+						last_name={user?.last_name}
+						email={user?.email}
+					/>
 
-				{/* Account information */}
-				<AccountInformation
-					role={user?.role}
-					last_active_at={user?.last_active_at}
-				/>
-			</div>
-		</main>
+					{/* Account information */}
+					<AccountInformation
+						role={user?.role}
+						last_active_at={user?.last_active_at}
+					/>
+				</div>
+			</main>
 		</PullToRefresh>
 	)
 }

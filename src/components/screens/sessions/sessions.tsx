@@ -75,7 +75,7 @@ export function SessionsScreen() {
 							<div className="space-y-4">
 								{data?.sessions?.map((session, index) => (
 									<SessionCard
-										key={session.id}
+										key={session?.id || index}
 										index={index}
 										session={session}
 									/>

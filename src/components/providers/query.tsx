@@ -1,13 +1,13 @@
 "use client"
 
-import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
-import { type PropsWithChildren } from "react";
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client"
+import { type PropsWithChildren } from "react"
 
 import { queryClient } from "@/libs/query/client"
 import { queryPersister } from "@/libs/query/persister"
-import { ms } from "@/libs/utils";
+import { ms } from "@/libs/utils"
 
-export function QueryProvider({ children }: PropsWithChildren) {
+export function QueryProvider({ children }: Readonly<PropsWithChildren>) {
 	return (
 		<PersistQueryClientProvider
 			client={queryClient}

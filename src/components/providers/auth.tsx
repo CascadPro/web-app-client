@@ -9,7 +9,7 @@ interface AuthProviderProps {
 	children: React.ReactNode
 }
 
-export function AuthProvider({ children }: AuthProviderProps) {
+export function AuthProvider({ children }: Readonly<AuthProviderProps>) {
 	const initialized = useRef(false)
 
 	const setLoading = useAuthStore(state => state.setLoading)

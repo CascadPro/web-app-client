@@ -59,7 +59,7 @@ export const Modal = ({
 						onPointerDown={
 							overlayInteractive
 								? event => {
-							if (event.target === event.currentTarget) handleClose()
+										if (event.target === event.currentTarget) handleClose()
 									}
 								: undefined
 						}
