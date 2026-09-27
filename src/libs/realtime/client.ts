@@ -1,4 +1,4 @@
-import { randomUUID } from "crypto"
+import { randomUUID } from "node:crypto"
 
 import {
 	WS_AUTH_EVENTS,
@@ -197,7 +197,7 @@ export class WebSocketClient {
 	}
 
 	private sendAuth(accessToken: string): void {
-		if (!this.socket || this.socket.readyState !== WebSocket.OPEN) {
+		if (this.socket?.readyState !== WebSocket.OPEN) {
 			return
 		}
 
@@ -210,7 +210,7 @@ export class WebSocketClient {
 	}
 
 	private sendMessage<T = unknown>(eventType: WsAuthEventType, data: T): void {
-		if (!this.socket || this.socket.readyState !== WebSocket.OPEN) {
+		if (this.socket?.readyState !== WebSocket.OPEN) {
 			return
 		}
 

@@ -7,8 +7,7 @@ import { cn } from "@/libs/utils"
 import { useRealtimeIndicator } from "./hook"
 
 export function RealtimeStatusIndicator() {
-	const { Icon, status, config, lastError, reconnectAttempt, visible } =
-		useRealtimeIndicator()
+	const { Icon, status, description, config, visible } = useRealtimeIndicator()
 
 	return (
 		<AnimatePresence>
@@ -47,11 +46,7 @@ export function RealtimeStatusIndicator() {
 							</p>
 
 							<p className="text-on-surface-variant truncate text-sm leading-4">
-								{status === "reconnecting"
-									? `Попытка ${reconnectAttempt}`
-									: status === "error" && lastError
-										? lastError
-										: config.description}
+								{description}
 							</p>
 						</div>
 

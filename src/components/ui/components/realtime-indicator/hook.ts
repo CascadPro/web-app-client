@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 
 import { useRealtimeStore } from "@/store/realtime"
 
@@ -13,6 +13,16 @@ export const useRealtimeIndicator = () => {
 
 	const config = STATUS_CONFIG[status]
 	const Icon = config.icon
+
+	const description = useMemo(() => {
+		if (status === "reconnecting") {
+			return `Попытка ${reconnectAttempt}`
+		} else if (status === "error" && lastError) {
+			return lastError
+		} else {
+			return config.description
+		}
+	}, [status, lastError, reconnectAttempt])
 
 	useEffect(() => {
 		if (status === "idle") {
@@ -34,11 +44,10 @@ export const useRealtimeIndicator = () => {
 	}, [status])
 
 	return {
-		lastError,
-		reconnectAttempt,
 		visible,
 		config,
 		Icon,
-		status
+		status,
+		description
 	}
 }

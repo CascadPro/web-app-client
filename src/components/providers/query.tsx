@@ -7,7 +7,7 @@ import { queryClient } from "@/libs/query/client"
 import { queryPersister } from "@/libs/query/persister"
 import { ms } from "@/libs/utils"
 
-export function QueryProvider({ children }: PropsWithChildren) {
+export function QueryProvider({ children }: Readonly<PropsWithChildren>) {
 	return (
 		<PersistQueryClientProvider
 			client={queryClient}

@@ -5,7 +5,7 @@ import type { PropsWithChildren } from "react"
 
 import { PullToRefresh } from "@/components/pwa/pwa-refresh-control"
 
-export function RefreshControl({ children }: PropsWithChildren) {
+export function RefreshControl({ children }: Readonly<PropsWithChildren>) {
 	const queryClient = useQueryClient()
 
 	const handleRefresh = async () => {

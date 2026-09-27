@@ -80,7 +80,7 @@ export const SessionCard: FC<Props> = ({
 									{location?.country && capitalize(location.country)}
 									{location?.city && `, ${location.city}`}
 									&nbsp;&nbsp;•&nbsp;&nbsp;
-									{!!session?.online
+									{session?.online
 										? "В сети"
 										: formatRelativeDate(session.last_active_at || "")}
 								</p>
