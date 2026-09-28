@@ -7,6 +7,7 @@ import { useSwipe } from "@/libs/hooks"
 const paths = {
 	[AppRoutes.MY_PROFILE]: "Мой профиль",
 	[AppRoutes.SESSIONS]: "Мои сеансы",
+	[AppRoutes.REQUESTS]: "Входящие заявки"
 } as const
 
 export const useNestedLayout = () => {
