@@ -3,11 +3,17 @@ export const AppRoutes = {
 	START: "/start",
 	ABOUT: "/about",
 	OFFLINE: "/offline",
+
 	MENU: "/menu",
+	SESSIONS: "/sessions",
+	REQUESTS: "/requests",
+
+	PROFILE: "/profile",
+	MY_PROFILE: "/profile/me",
 
 	AUTH: "/auth",
 	REGISTER: "/auth/register",
 	LOGIN: "/auth/login"
 } as const
 
-export type AppRoutes = (typeof AppRoutes)[keyof typeof AppRoutes]
+export type AppRoutesKeys = (typeof AppRoutes)[keyof typeof AppRoutes]

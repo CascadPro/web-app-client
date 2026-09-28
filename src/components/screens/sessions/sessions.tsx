@@ -13,7 +13,7 @@ import { SessionModal } from "./components/session-modal"
 import { SessionSectionTitle } from "./components/session-section-title"
 import { useSessionPage } from "./hooks/useSessionPage"
 
-export function SessionsScreen() {
+export const SessionsScreen = () => {
 	const {
 		data,
 		isLoading,

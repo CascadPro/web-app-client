@@ -8,13 +8,14 @@ import {
 } from "lucide-react"
 import { useMemo } from "react"
 
+import { AppRoutes, type AppRoutesKeys } from "@/libs/constants"
 import { useLogout } from "@/libs/hooks/use-logout"
 import { useCurrentUser } from "@/libs/query/hooks"
 import { useAuthStore } from "@/store/auth"
 
 export interface MenuPageItemData {
 	title: string
-	href: string
+	href: AppRoutesKeys
 	icon: LucideIcon
 }
 
@@ -23,27 +24,27 @@ export const useMenuPage = () => {
 		() => [
 			{
 				title: "Профиль",
-				href: "/profile/me",
+				href: AppRoutes.MY_PROFILE,
 				icon: CircleUserRoundIcon
 			},
 			{
 				title: "Настройки",
-				href: "/settings",
+				href: AppRoutes.INDEX,
 				icon: CogIcon
 			},
 			{
 				title: "Сеансы",
-				href: "/sessions",
+				href: AppRoutes.SESSIONS,
 				icon: TabletSmartphoneIcon
 			},
 			{
 				title: "Входящие заявки",
-				href: "/requests",
+				href: AppRoutes.REQUESTS,
 				icon: FileTextIcon
 			},
 			{
 				title: "О нас",
-				href: "/about",
+				href: AppRoutes.ABOUT,
 				icon: InfoIcon
 			}
 		],

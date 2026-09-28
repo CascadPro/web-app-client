@@ -1,11 +1,12 @@
 import { usePathname, useRouter } from "next/navigation"
 import { useState } from "react"
 
+import { AppRoutes } from "@/libs/constants"
 import { useSwipe } from "@/libs/hooks"
 
 const paths = {
-	"/profile/me": "Мой профиль",
-	"/sessions": "Мои сеансы"
+	[AppRoutes.MY_PROFILE]: "Мой профиль",
+	[AppRoutes.SESSIONS]: "Мои сеансы",
 } as const
 
 export const useNestedLayout = () => {
