@@ -11,6 +11,7 @@ export const useRealtimeIndicator = () => {
 	const reconnectAttempt = useRealtimeStore(state => state.reconnectAttempt)
 
 	const [visible, setVisible] = useState(false)
+	const [collapsed, setCollapsed] = useState(false)
 
 	const config = STATUS_CONFIG[status]
 	const Icon = config.icon
@@ -27,39 +28,57 @@ export const useRealtimeIndicator = () => {
 				default:
 					return "Проверяем качество соединения"
 			}
-		} else if (status === "reconnecting") {
-			return `Попытка ${reconnectAttempt}`
-		} else if (status === "error" && lastError) {
-			return lastError
-		} else {
-			return config.description
 		}
-	}, [status, lastError, reconnectAttempt, metrics.quality, metrics.rtt])
+
+		if (status === "reconnecting") {
+			return `Попытка ${reconnectAttempt}`
+		}
+
+		if (status === "error" && lastError) {
+			return lastError
+		}
+
+		return config.description
+	}, [
+		status,
+		lastError,
+		reconnectAttempt,
+		metrics.quality,
+		metrics.rtt,
+		config.description
+	])
 
 	useEffect(() => {
 		if (status === "idle") {
 			setVisible(false)
+			setCollapsed(false)
 			return
 		}
 
-		if (status === "online") {
-			setVisible(true)
+		setVisible(true)
 
-			const timer = setTimeout(() => {
-				setVisible(false)
-			}, 10000)
-
-			return () => clearTimeout(timer)
+		if (status !== "online") {
+			setCollapsed(false)
+			return
 		}
 
-		setVisible(true)
+		setCollapsed(false)
+
+		const timer = setTimeout(() => {
+			setCollapsed(true)
+		}, 5_000)
+
+		return () => clearTimeout(timer)
 	}, [status])
 
 	return {
 		visible,
+		collapsed,
+		setCollapsed,
 		config,
 		Icon,
 		status,
+		quality: metrics.quality,
 		description
 	}
 }
