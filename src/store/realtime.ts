@@ -12,6 +12,13 @@ export const useRealtimeStore = create<RealtimeStore>(set => ({
 	lastConnectedAt: null,
 	lastDisconnectedAt: null,
 
+	metrics: {
+		quality: "unknown",
+		rtt: null,
+		jitter: null,
+		missedPongs: 0
+	},
+
 	setStatus: status =>
 		set({
 			status,
@@ -41,6 +48,18 @@ export const useRealtimeStore = create<RealtimeStore>(set => ({
 		set({
 			status: "offline",
 			lastDisconnectedAt: Date.now()
+		}),
+
+	setMetrics: metrics => set({ metrics }),
+
+	resetMetrics: () =>
+		set({
+			metrics: {
+				quality: "unknown",
+				rtt: null,
+				jitter: null,
+				missedPongs: 0
+			}
 		}),
 
 	reset: () =>
