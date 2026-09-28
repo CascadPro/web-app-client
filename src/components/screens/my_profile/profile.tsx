@@ -21,7 +21,7 @@ export const MyProfileScreen = () => {
 
 	return (
 		<PullToRefresh onRefresh={handleRefresh}>
-			<main className="mx-auto mb-20 w-full max-w-3xl px-4 sm:px-6 sm:py-10">
+			<main className="mx-auto mb-20 w-full max-w-3xl px-1 sm:px-6 sm:py-10">
 				<div className="space-y-6">
 					{/* Profile header */}
 					<ProfileHeader
