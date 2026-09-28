@@ -6,7 +6,6 @@ export interface WsEvent<T = unknown> {
 	id: string
 	type: string
 	data: T
-	timestamp: string
 }
 
 export interface WsAuthMessage {

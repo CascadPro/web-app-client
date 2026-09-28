@@ -4,6 +4,11 @@ export const WS_AUTH_EVENTS = {
 	AUTH_ERROR: "auth.error"
 } as const
 
+export const WS_HEARTBEAT_EVENTS = {
+	PING: "realtime.ping",
+	PONG: "realtime.pong"
+} as const
+
 export const WS_EVENTS = {
 	PRESENCE_ONLINE: "presence.online",
 	PRESENCE_OFFLINE: "presence.offline",

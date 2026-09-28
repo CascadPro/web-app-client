@@ -6,6 +6,7 @@ import { STATUS_CONFIG } from "./data"
 
 export const useRealtimeIndicator = () => {
 	const status = useRealtimeStore(state => state.status)
+	const metrics = useRealtimeStore(state => state.metrics)
 	const lastError = useRealtimeStore(state => state.lastError)
 	const reconnectAttempt = useRealtimeStore(state => state.reconnectAttempt)
 
@@ -15,14 +16,25 @@ export const useRealtimeIndicator = () => {
 	const Icon = config.icon
 
 	const description = useMemo(() => {
-		if (status === "reconnecting") {
+		if (status === "online") {
+			switch (metrics.quality) {
+				case "good":
+					return `Хорошее соединение · ${Math.round(metrics.rtt ?? 0)} мс`
+				case "degraded":
+					return `Задержка сети · ${Math.round(metrics.rtt ?? 0)} мс`
+				case "poor":
+					return `Плохое соединение · ${Math.round(metrics.rtt ?? 0)} мс`
+				default:
+					return "Проверяем качество соединения"
+			}
+		} else if (status === "reconnecting") {
 			return `Попытка ${reconnectAttempt}`
 		} else if (status === "error" && lastError) {
 			return lastError
 		} else {
 			return config.description
 		}
-	}, [status, lastError, reconnectAttempt])
+	}, [status, lastError, reconnectAttempt, metrics.quality, metrics.rtt])
 
 	useEffect(() => {
 		if (status === "idle") {
@@ -35,7 +47,7 @@ export const useRealtimeIndicator = () => {
 
 			const timer = setTimeout(() => {
 				setVisible(false)
-			}, 3000)
+			}, 10000)
 
 			return () => clearTimeout(timer)
 		}

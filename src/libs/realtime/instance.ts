@@ -35,6 +35,11 @@ export const realtimeClient = new WebSocketClient({
 
 	onDisconnected: () => {
 		useRealtimeStore.getState().setDisconnected()
+		useRealtimeStore.getState().resetMetrics()
+	},
+
+	onMetrics: metrics => {
+		useRealtimeStore.getState().setMetrics(metrics)
 	},
 
 	onError: () => {
