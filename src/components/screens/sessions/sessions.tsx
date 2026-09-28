@@ -5,6 +5,7 @@ import { AnimatePresence, m } from "motion/react"
 
 import { RefreshControl } from "@/components/providers/refresh-control"
 import { Button } from "@/components/ui"
+import { QueryKeys } from "@/libs/query/keys"
 
 import { SessionCard } from "./components/card/session-card"
 import { SessionEmpty } from "./components/session-empty"
@@ -24,7 +25,7 @@ export const SessionsScreen = () => {
 	} = useSessionPage()
 
 	return (
-		<RefreshControl>
+		<RefreshControl queryKey={QueryKeys.sessions.all as any}>
 			<div className="mx-auto mb-20 w-full max-w-3xl space-y-8">
 				<section>
 					<SessionSectionTitle Icon={ShieldCheck} title="Текущий сеанс" />
