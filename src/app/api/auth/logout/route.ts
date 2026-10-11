@@ -4,6 +4,7 @@ import { NextResponse } from "next/server"
 import { serverService } from "@/api/server-instance"
 import { CookieStorageKeys } from "@/libs/constants"
 import { parseServerError } from "@/libs/errors"
+import { isDev } from "@/libs/utils"
 
 export async function POST() {
 	const response = NextResponse.json({
@@ -17,6 +18,10 @@ export async function POST() {
 		const status = axios.isAxiosError(error)
 			? (error.response?.status ?? 500)
 			: 500
+
+		if (isDev()) {
+			console.error(parsed)
+		}
 
 		return NextResponse.json(
 			{

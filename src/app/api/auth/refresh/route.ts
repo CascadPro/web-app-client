@@ -1,9 +1,11 @@
-import { AxiosError } from "axios"
+import axios from "axios"
 import { cookies } from "next/headers"
 import { NextResponse } from "next/server"
 
 import { serverService } from "@/api/server-instance"
 import { CookieStorageKeys } from "@/libs/constants"
+import { parseServerError } from "@/libs/errors"
+import { isDev } from "@/libs/utils"
 
 export async function GET() {
 	const cookieStore = await cookies()
@@ -28,15 +30,23 @@ export async function GET() {
 
 		return NextResponse.json({ access_token })
 	} catch (error) {
+		const parsed = parseServerError(error)
+		const status = axios.isAxiosError(error)
+			? (error.response?.status ?? 500)
+			: 500
+
+		if (isDev()) {
+			console.error(parsed)
+		}
+
 		const nextResponse = NextResponse.json(
-			{ message: "Refresh token is invalid" },
-			{
-				status:
-					error instanceof AxiosError ? (error.response?.status ?? 401) : 401
-			}
+			{ message: parsed.message ?? "Ошибка обновления ключа" },
+			{ status }
 		)
 
-		nextResponse.cookies.delete(CookieStorageKeys.REFRESH_TOKEN)
+		if (status < 500 && status != 429) {
+			nextResponse.cookies.delete(CookieStorageKeys.REFRESH_TOKEN)
+		}
 
 		return nextResponse
 	}

@@ -6,6 +6,7 @@ import type { AuthTransportHttpLoginRequest } from "@/api/generated"
 import { serverService } from "@/api/server-instance"
 import { CookieStorageKeys } from "@/libs/constants"
 import { parseServerError } from "@/libs/errors"
+import { isDev } from "@/libs/utils"
 
 const REFRESH_TOKEN_MAX_AGE = 60 * 60 * 24 * 30
 
@@ -52,6 +53,10 @@ export async function POST(request: Request) {
 		const status = axios.isAxiosError(error)
 			? (error.response?.status ?? 500)
 			: 500
+
+		if (isDev()) {
+			console.error(parsed)
+		}
 
 		return NextResponse.json(
 			{
