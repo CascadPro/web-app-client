@@ -1,9 +1,13 @@
-import axios, { type AxiosRequestConfig } from "axios"
+import axios, { type AxiosRequestConfig, type AxiosResponse } from "axios"
 
 import { API_URL } from "@/libs/constants"
 import { parseApiError } from "@/libs/errors"
 import { useAuthStore } from "@/store/auth"
 
+import type {
+	RequestsTransportHttpGetRequestsRequest as GetRequestsRequest,
+	RequestsTransportHttpGetRequestsResponse as GetRequestsResponse
+} from "./generated"
 import { getCascadeProAppAPI } from "./generated"
 
 interface RetryConfig extends AxiosRequestConfig {
@@ -19,6 +23,13 @@ const instance = axios.create({
 })
 
 const service = getCascadeProAppAPI(instance)
+
+service.getRequests = (
+	request?: GetRequestsRequest,
+	options?: AxiosRequestConfig
+): Promise<AxiosResponse<GetRequestsResponse>> => {
+	return instance.query(`/requests`, request, options)
+}
 
 let refreshPromise: Promise<string | null> | null = null
 
@@ -59,12 +70,18 @@ const refreshAccessToken = async (): Promise<string | null> => {
 	return refreshPromise
 }
 
+const ROOT_ROUTER_PATHS = new Set(["sessions", "requests", "auth", "users"])
+
 instance.interceptors.request.use(
 	config => {
 		const accessToken = useAuthStore.getState().accessToken
 
 		if (accessToken) {
 			config.headers.Authorization = `Bearer ${accessToken}`
+		}
+
+		if (ROOT_ROUTER_PATHS.has(config.url?.split("/").at(-1) || "")) {
+			config.url += "/"
 		}
 
 		return config

@@ -15,8 +15,7 @@ export const useRequests = (params?: GetRequestsParams) => {
 
 	const { data, ...other } = useQuery({
 		queryKey: QueryKeys.requests.list(params),
-		queryFn: async () =>
-			(await service.getRequests(params, { method: "QUERY" })).data,
+		queryFn: async () => (await service.getRequests(params)).data,
 		staleTime: ms("5min"),
 		gcTime: ms("15min"),
 		placeholderData: previous => previous
