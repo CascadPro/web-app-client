@@ -2,7 +2,6 @@ import { usePathname, useRouter } from "next/navigation"
 import { useState } from "react"
 
 import { AppRoutes } from "@/libs/constants"
-import { useSwipe } from "@/libs/hooks"
 
 const paths = {
 	[AppRoutes.MY_PROFILE]: "Мой профиль",
@@ -25,12 +24,6 @@ export const useNestedLayout = () => {
 	}
 
 	const title = paths[pathname as keyof typeof paths]
-
-	useSwipe({
-		onSwipeRight: handleBack,
-		threshold: 0.3,
-		edgeThreshold: 128
-	})
 
 	return { title, handleBack, isActive }
 }
