@@ -8,7 +8,7 @@ import {
 import type { FC, MouseEvent } from "react"
 
 import type { SessionsHttpDtoSessionDtoMetadataLocation } from "@/api/generated"
-import { BottomSheet, Button, Title } from "@/components/ui"
+import { BottomSheet, Button } from "@/components/ui"
 import { formatRelativeDate } from "@/libs/utils"
 import { SessionParsedDevice } from "@/types/base"
 
@@ -47,12 +47,10 @@ export const SessionCardSheet: FC<Props> = ({
 			open={isOpen}
 			onChange={onOpenChange}
 			zIndex={200}
-			className="grid gap-2 p-5 text-sm"
+			className="grid gap-2 text-sm"
+			title="Детальная информация"
+			titleCN="px-1 mb-2"
 		>
-			<Title size="md" className="mb-2">
-				Детальная информация о сеансе
-			</Title>
-
 			<SessionCardInfo
 				Icon={MapPinIcon}
 				value={locationValue}
@@ -69,14 +67,14 @@ export const SessionCardSheet: FC<Props> = ({
 			/>
 
 			{current ? (
-				<div className="bg-primary-container shine text-on-primary my-2 flex items-center justify-center gap-1 rounded-xl py-3">
+				<div className="bg-primary-container shine text-on-primary mt-2 flex items-center justify-center gap-1 rounded-xl py-3">
 					<ShieldCheckIcon size={20} />
 					<span className="mb-0.5">Это текущий сеанс</span>
 				</div>
 			) : (
 				<Button
 					variant="destructive"
-					className="my-2 gap-2 rounded-xl py-3"
+					className="mt-2 gap-2 rounded-xl py-3"
 					onClick={onDelete}
 					isLoading={isDeleting}
 				>

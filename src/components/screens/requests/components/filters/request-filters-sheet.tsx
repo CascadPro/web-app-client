@@ -28,8 +28,10 @@ export const RequestFiltersSheet: FC<Props> = ({
 			open={isOpen}
 			onChange={setIsOpen}
 			zIndex={8888 + 1}
-			offset={0}
-			className="flex flex-col gap-4 px-3 py-5"
+			offset={-24}
+			className="flex flex-col gap-4 px-3 pb-5"
+			title="Сортировка"
+			titleCN="px-1"
 		>
 			{data.map(item => (
 				<Button

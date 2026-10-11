@@ -26,7 +26,7 @@ export const SessionsScreen = () => {
 
 	return (
 		<RefreshControl queryKey={QueryKeys.sessions.all as any}>
-			<div className="mx-auto mb-20 w-full max-w-3xl space-y-8">
+			<div className="mx-auto w-full max-w-3xl space-y-8 px-1">
 				<section>
 					<SessionSectionTitle Icon={ShieldCheck} title="Текущий сеанс" />
 

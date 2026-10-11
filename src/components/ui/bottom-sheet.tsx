@@ -6,6 +6,8 @@ import BottomSheet from "react-swipeable-bottom-sheet"
 import { useScrollLocked } from "@/libs/hooks"
 import { cn } from "@/libs/utils"
 
+import { Title } from "./title"
+
 interface Props extends PropsWithChildren {
 	open: boolean
 	onChange: (isOpen: boolean) => void
@@ -13,6 +15,9 @@ interface Props extends PropsWithChildren {
 	zIndex?: number
 	offset?: number
 	className?: string
+
+	title?: string
+	titleCN?: string
 
 	indicator?: boolean
 	indicatorCN?: string
@@ -26,7 +31,9 @@ const BottomSheetComponent: FC<Props> = ({
 	offset = -12,
 	zIndex = 100,
 	indicator = true,
-	indicatorCN
+	indicatorCN,
+	title,
+	titleCN
 }) => {
 	useScrollLocked(open)
 
@@ -38,7 +45,19 @@ const BottomSheetComponent: FC<Props> = ({
 			bodyStyle={{ backgroundColor: "var(--background)" }}
 			defaultOpen={false}
 		>
-			<div className={cn("text-on-background mt-4", className)}>
+			<div
+				className={cn(
+					"text-on-background pwa:mb-6 px-4 py-3",
+					indicator && "mt-4",
+					className
+				)}
+			>
+				{title && (
+					<Title size="md" className={titleCN}>
+						{title}
+					</Title>
+				)}
+
 				{indicator && (
 					<div
 						className={cn(

@@ -47,7 +47,7 @@ export const Modal = ({
 			{isOpen && (
 				<div className="fixed inset-0 z-8888" role="dialog" aria-modal="true">
 					<m.div
-						className="pointer-events-auto absolute inset-0 bg-black/50 backdrop-blur-xs"
+						className="pointer-events-auto absolute inset-0 bg-black/50 backdrop-blur-xs select-none"
 						variants={overlayVariants}
 						initial="hidden"
 						animate="visible"
@@ -63,6 +63,7 @@ export const Modal = ({
 									}
 								: undefined
 						}
+						onContextMenu={e => e.preventDefault()}
 					/>
 
 					<div className="pointer-events-none absolute top-1/2 left-1/2 flex w-full -translate-1/2 flex-col items-center *:pointer-events-auto!">
