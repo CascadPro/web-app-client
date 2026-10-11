@@ -1,60 +1,61 @@
 "use client"
 
-import { type HTMLMotionProps, m } from "motion/react"
-import type { FC, ReactNode } from "react"
+import { type HTMLMotionProps, m, useReducedMotion } from "motion/react"
+import { memo, type ReactNode } from "react"
+
+import { cn } from "@/libs/utils"
 
 import { useModalContent } from "../hooks/useModalContent"
+import { getModalTransition } from "../utils"
 
-const contentVariants = {
-	hidden: {
-		opacity: 0,
-		y: 32,
-		scale: 0.98
-	},
-	visible: {
-		opacity: 1,
-		y: 0,
-		scale: 1
-	},
-	exit: {
-		opacity: 0,
-		y: 20,
-		scale: 0.98
-	}
-}
-
-interface Props extends HTMLMotionProps<"div"> {
+interface ModalContentProps extends HTMLMotionProps<"div"> {
 	children: ReactNode
 	className?: string
 }
 
-export const ModalContent: FC<Props> = ({
+const ModalContentComponent = memo(function ModalContent({
 	children,
-	className = "",
+	className,
 	onFocus,
 	...props
-}) => {
+}: Readonly<ModalContentProps>) {
+	const reducedMotion = useReducedMotion() === true
 	const { contentRef, handleFocus } = useModalContent(onFocus)
 
 	return (
 		<m.div
-			ref={contentRef}
-			tabIndex={-1}
-			variants={contentVariants}
-			initial="hidden"
-			animate="visible"
-			exit="exit"
-			transition={{
-				type: "spring",
-				stiffness: 420,
-				damping: 32,
-				mass: 0.7
-			}}
-			className={`bg-surface text-on-surface relative overflow-hidden rounded-2xl shadow-2xl outline-none sm:max-w-lg ${className} `}
-			onFocus={handleFocus}
 			{...props}
+			ref={contentRef}
+			role="document"
+			tabIndex={-1}
+			initial={{
+				opacity: 0,
+				y: reducedMotion ? 0 : 24,
+				scale: reducedMotion ? 1 : 0.98
+			}}
+			animate={{
+				opacity: 1,
+				y: 0,
+				scale: 1
+			}}
+			exit={{
+				opacity: 0,
+				y: reducedMotion ? 0 : 16,
+				scale: reducedMotion ? 1 : 0.98
+			}}
+			transition={getModalTransition(reducedMotion)}
+			className={cn(
+				"relative flex max-h-[calc(100dvh-2rem)]",
+				"w-full flex-col overflow-hidden",
+				"bg-surface text-on-surface rounded-2xl shadow-2xl",
+				"outline-none sm:max-w-lg sm:rounded-2xl",
+				className
+			)}
+			onFocus={handleFocus}
 		>
 			{children}
 		</m.div>
 	)
-}
+})
+
+export const ModalContent = ModalContentComponent

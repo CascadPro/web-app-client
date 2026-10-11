@@ -1,9 +1,10 @@
 "use client"
 
-import { AnimatePresence, m } from "motion/react"
-import { type ReactNode, ReactPortal } from "react"
+import { AnimatePresence } from "motion/react"
+import { memo, type ReactNode, type ReactPortal, useCallback } from "react"
 import { createPortal } from "react-dom"
 
+import { ModalBackdrop } from "./components/modal-backdrop"
 import { ModalBody } from "./components/modal-body"
 import { ModalContent } from "./components/modal-content"
 import { ModalFooter } from "./components/modal-footer"
@@ -11,59 +12,53 @@ import { ModalHeader } from "./components/modal-header"
 import { ModalTitle } from "./components/modal-title"
 import { useModal } from "./hooks/useModal"
 
-const overlayVariants = {
-	hidden: {
-		opacity: 0
-	},
-	visible: {
-		opacity: 1
-	},
-	exit: {
-		opacity: 0
-	}
-}
-
-interface Props {
+interface ModalProps {
 	open: boolean
 	onOpenChange: (open: boolean) => void
 	children: ReactNode
 	overlayInteractive?: boolean
+	closeOnEscape?: boolean
+	ariaLabel?: string
 }
 
-export const Modal = ({
-	open: isOpen,
+const ModalComponent = memo(function ModalComponent({
+	open,
 	onOpenChange,
 	children,
-	overlayInteractive = true
-}: Props): ReactPortal | null => {
-	const { handleClose } = useModal(isOpen, onOpenChange)
+	overlayInteractive = true,
+	closeOnEscape = true,
+	ariaLabel = "Диалоговое окно"
+}: Readonly<ModalProps>): ReactPortal | null {
+	const { reducedMotion, handleClose } = useModal(
+		open,
+		onOpenChange,
+		closeOnEscape
+	)
 
-	if (typeof document === "undefined") {
-		return null
-	}
+	const handleOverlayPointerDown = useCallback(
+		(event: React.PointerEvent<HTMLDivElement>) => {
+			if (overlayInteractive && event.target === event.currentTarget) {
+				handleClose()
+			}
+		},
+		[handleClose, overlayInteractive]
+	)
+
+	if (typeof document === "undefined") return null
 
 	return createPortal(
-		<AnimatePresence>
-			{isOpen && (
-				<div className="fixed inset-0 z-8888" role="dialog" aria-modal="true">
-					<m.div
-						className="pointer-events-auto absolute inset-0 bg-black/50 backdrop-blur-xs select-none"
-						variants={overlayVariants}
-						initial="hidden"
-						animate="visible"
-						exit="exit"
-						transition={{
-							duration: 0.2,
-							ease: "easeOut"
-						}}
-						onPointerDown={
-							overlayInteractive
-								? event => {
-										if (event.target === event.currentTarget) handleClose()
-									}
-								: undefined
-						}
-						onContextMenu={e => e.preventDefault()}
+		<AnimatePresence initial={false}>
+			{open && (
+				<div
+					className="fixed inset-0 z-8888"
+					role="dialog"
+					aria-modal="true"
+					aria-label={ariaLabel}
+					aria-describedby={undefined}
+				>
+					<ModalBackdrop
+						reducedMotion={reducedMotion}
+						onClick={handleOverlayPointerDown}
 					/>
 
 					<div className="pointer-events-none absolute top-1/2 left-1/2 flex w-full -translate-1/2 flex-col items-center *:pointer-events-auto!">
@@ -74,10 +69,12 @@ export const Modal = ({
 		</AnimatePresence>,
 		document.body
 	)
-}
+})
 
-Modal.Content = ModalContent
-Modal.Header = ModalHeader
-Modal.Title = ModalTitle
-Modal.Body = ModalBody
-Modal.Footer = ModalFooter
+export const Modal = Object.assign(ModalComponent, {
+	Content: ModalContent,
+	Header: ModalHeader,
+	Title: ModalTitle,
+	Body: ModalBody,
+	Footer: ModalFooter
+})

@@ -1,57 +1,53 @@
-import { type FocusEvent, useEffect, useRef } from "react"
+import { type FocusEvent, useCallback, useEffect, useRef } from "react"
 
 import { getFocusableElements } from "../utils"
 
 export const useModalContent = (
-	onFocus: ((event: FocusEvent<HTMLDivElement>) => void) | undefined
+	onFocus?: (event: FocusEvent<HTMLDivElement>) => void
 ) => {
 	const contentRef = useRef<HTMLDivElement>(null)
 
 	useEffect(() => {
 		const content = contentRef.current
-
 		if (!content) return
 
-		const focusable = getFocusableElements(content)
+		const focusFirstElement = () => {
+			const focusable = getFocusableElements(content)
+			const target = focusable[0] ?? content
 
-		if (focusable.length > 0) {
-			focusable[0].focus()
-		} else {
-			content.focus()
+			target.focus({ preventScroll: true })
 		}
+
+		// Дать браузеру завершить вставку содержимого перед фокусировкой.
+		focusFirstElement()
 	}, [])
 
 	useEffect(() => {
 		const content = contentRef.current
-
 		if (!content) return
 
 		const handleKeyDown = (event: KeyboardEvent) => {
 			if (event.key !== "Tab") return
 
 			const focusable = getFocusableElements(content)
+			const first = focusable[0]
+			const last = focusable.at(-1)
 
-			if (focusable.length === 0) {
+			if (!first || !last) {
 				event.preventDefault()
 				content.focus()
 				return
 			}
 
-			const first = focusable[0]
-			const last = focusable.at(-1)
+			const activeElement = document.activeElement
+			const focusIsOutside = !content.contains(activeElement)
 
 			if (event.shiftKey) {
-				if (
-					document.activeElement === first ||
-					!content.contains(document.activeElement)
-				) {
+				if (activeElement === first || focusIsOutside) {
 					event.preventDefault()
-					last?.focus()
+					last.focus()
 				}
-			} else if (
-				document.activeElement === last ||
-				!content.contains(document.activeElement)
-			) {
+			} else if (activeElement === last || focusIsOutside) {
 				event.preventDefault()
 				first.focus()
 			}
@@ -64,9 +60,12 @@ export const useModalContent = (
 		}
 	}, [])
 
-	const handleFocus = (event: FocusEvent<HTMLDivElement>) => {
-		onFocus?.(event)
-	}
+	const handleFocus = useCallback(
+		(event: FocusEvent<HTMLDivElement>) => {
+			onFocus?.(event)
+		},
+		[onFocus]
+	)
 
 	return {
 		contentRef,

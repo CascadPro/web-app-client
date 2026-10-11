@@ -1,11 +1,15 @@
+import { useReducedMotion } from "motion/react"
 import { useCallback, useEffect, useRef } from "react"
 
 import { useScrollLocked } from "@/libs/hooks"
 
 export const useModal = (
 	isOpen: boolean,
-	onOpenChange: (open: boolean) => void
+	onOpenChange: (open: boolean) => void,
+	closeOnEscape = true
 ) => {
+	const reducedMotion = useReducedMotion() === true
+
 	const previousActiveElement = useRef<HTMLElement | null>(null)
 
 	const handleClose = useCallback(() => {
@@ -21,7 +25,6 @@ export const useModal = (
 				: null
 
 		const originalPaddingRight = document.body.style.paddingRight
-
 		const scrollbarWidth =
 			window.innerWidth - document.documentElement.clientWidth
 
@@ -30,29 +33,31 @@ export const useModal = (
 		}
 
 		const handleKeyDown = (event: KeyboardEvent) => {
-			if (event.key === "Escape") {
-				event.preventDefault()
-				handleClose()
-			}
+			if (event.key !== "Escape" || !closeOnEscape) return
+
+			event.preventDefault()
+			event.stopPropagation()
+			handleClose()
 		}
 
 		document.addEventListener("keydown", handleKeyDown)
 
 		return () => {
 			document.body.style.paddingRight = originalPaddingRight
-
 			document.removeEventListener("keydown", handleKeyDown)
 
-			requestAnimationFrame(() => {
-				previousActiveElement.current?.focus()
-				previousActiveElement.current = null
-			})
+			const previousElement = previousActiveElement.current
+			previousActiveElement.current = null
+
+			if (previousElement?.isConnected) {
+				requestAnimationFrame(() => {
+					previousElement.focus({ preventScroll: true })
+				})
+			}
 		}
-	}, [isOpen, handleClose])
+	}, [isOpen, closeOnEscape, handleClose])
 
 	useScrollLocked(isOpen)
 
-	return {
-		handleClose
-	}
+	return { reducedMotion: !!reducedMotion, handleClose }
 }

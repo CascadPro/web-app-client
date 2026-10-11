@@ -17,3 +17,21 @@ export function getFocusableElements(container: HTMLElement): HTMLElement[] {
 			element.offsetParent !== null
 	)
 }
+
+export const MODAL_SPRING = {
+	type: "spring" as const,
+	stiffness: 420,
+	damping: 32,
+	mass: 0.7
+}
+
+export const BACKDROP_TRANSITION = {
+	duration: 0.2,
+	ease: "easeOut" as const
+}
+
+export const getModalTransition = (reducedMotion: boolean) =>
+	reducedMotion ? { duration: 0 } : MODAL_SPRING
+
+export const getBackdropTransition = (reducedMotion: boolean) =>
+	reducedMotion ? { duration: 0 } : BACKDROP_TRANSITION
