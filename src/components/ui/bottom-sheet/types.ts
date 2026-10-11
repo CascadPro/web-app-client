@@ -24,6 +24,9 @@ export interface BottomSheetProps extends PropsWithChildren {
 	/** Разрешить закрытие перетаскиванием вниз. */
 	dragToClose?: boolean
 
+	/** Разрешить регистрацию перетаскивания по всему контенту */
+	dragAnywhere?: boolean
+
 	/** Порог закрытия в пикселях. */
 	dismissThreshold?: number
 
@@ -63,6 +66,7 @@ export interface BottomSheetPanelProps {
 	indicator: boolean
 	indicatorCN?: string
 	dragToClose: boolean
+	dragAnywhere: boolean
 	dismissThreshold: number
 	reducedMotion: boolean
 	onClose: () => void

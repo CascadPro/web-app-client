@@ -1,11 +1,12 @@
 "use client"
 
-import { m, type PanInfo, useDragControls } from "motion/react"
+import { m } from "motion/react"
 import type { FC } from "react"
 
 import { cn } from "@/libs/utils"
 
 import { Title } from "../../title"
+import { useBottomSheetPanel } from "../hooks/useBottomSheetPanel"
 import type { BottomSheetPanelProps } from "../types"
 import { getSheetTransition } from "../utils"
 
@@ -22,27 +23,15 @@ export const BottomSheetPanel: FC<BottomSheetPanelProps> = ({
 	indicator,
 	indicatorCN,
 	dragToClose,
+	dragAnywhere,
 	dismissThreshold,
 	reducedMotion,
 	onClose,
 	children,
 	panelRef
 }) => {
-	const dragControls = useDragControls()
-
-	const handleDragEnd = (
-		_: MouseEvent | TouchEvent | PointerEvent,
-		info: PanInfo
-	) => {
-		if (!dragToClose) return
-
-		if (
-			info.offset.y > dismissThreshold ||
-			(info.offset.y > 30 && info.velocity.y > 700)
-		) {
-			onClose()
-		}
-	}
+	const { contentRef, dragControls, handleDragEnd, handlePointerDown } =
+		useBottomSheetPanel(dismissThreshold, dragToClose, dragAnywhere, onClose)
 
 	return (
 		<m.div
@@ -74,8 +63,14 @@ export const BottomSheetPanel: FC<BottomSheetPanelProps> = ({
 			dragControls={dragControls}
 			dragListener={false}
 			dragMomentum={false}
-			dragElastic={reducedMotion ? 0 : { top: 0, bottom: 0.7 }}
+			dragSnapToOrigin
+			dragConstraints={{
+				top: 0,
+				bottom: Math.max(dismissThreshold + 80, 240)
+			}}
+			dragElastic={reducedMotion ? 0 : { top: 0, bottom: 0.25 }}
 			onDragEnd={handleDragEnd}
+			onPointerDown={dragAnywhere ? handlePointerDown : undefined}
 		>
 			<BottomSheetHandle
 				visible={indicator}
@@ -85,6 +80,7 @@ export const BottomSheetPanel: FC<BottomSheetPanelProps> = ({
 			/>
 
 			<div
+				ref={contentRef}
 				className={cn(
 					"min-h-0 overflow-y-auto overscroll-contain",
 					"pwa:mb-10 px-4 py-5 [-webkit-overflow-scrolling:touch]",

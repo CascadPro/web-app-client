@@ -1,6 +1,6 @@
 "use client"
 
-import { AnimatePresence } from "motion/react"
+import { AnimatePresence, domMax, LazyMotion } from "motion/react"
 import { memo } from "react"
 import { createPortal } from "react-dom"
 
@@ -23,6 +23,7 @@ const BottomSheetComponent = memo(function BottomSheetComponent({
 	closeOnBackdropClick = true,
 	closeOnEscape = true,
 	dragToClose = true,
+	dragAnywhere = true,
 	dismissThreshold = 120,
 	showBackdrop = true,
 	keepMounted = false,
@@ -35,6 +36,7 @@ const BottomSheetComponent = memo(function BottomSheetComponent({
 		reducedMotion,
 		mounted,
 		hasOpened,
+		close,
 		handleBackdropClick
 	} = useBottomSheet(open, onChange, closeOnBackdropClick, closeOnEscape)
 
@@ -43,47 +45,50 @@ const BottomSheetComponent = memo(function BottomSheetComponent({
 	const shouldRenderPanel = open || (keepMounted && hasOpened)
 
 	return createPortal(
-		<div
-			className="pointer-events-none fixed inset-0"
-			style={{ zIndex }}
-			aria-hidden={!open}
-			inert={!open}
-		>
-			<AnimatePresence initial={false}>
-				{open && showBackdrop && (
-					<BottomSheetBackdrop
-						key="backdrop"
-						className={backdropCN}
-						onClick={handleBackdropClick}
-						reducedMotion={reducedMotion}
-					/>
-				)}
-			</AnimatePresence>
+		<LazyMotion features={domMax}>
+			<div
+				className="pointer-events-none fixed inset-0"
+				style={{ zIndex }}
+				aria-hidden={!open}
+				inert={!open}
+			>
+				<AnimatePresence initial={false}>
+					{open && showBackdrop && (
+						<BottomSheetBackdrop
+							key="backdrop"
+							className={backdropCN}
+							onClick={handleBackdropClick}
+							reducedMotion={reducedMotion}
+						/>
+					)}
+				</AnimatePresence>
 
-			<AnimatePresence initial={false}>
-				{shouldRenderPanel && (
-					<BottomSheetPanel
-						key="panel"
-						open={open}
-						offset={offset}
-						title={title}
-						titleId={titleId}
-						titleCN={titleCN}
-						className={className}
-						panelCN={panelCN}
-						indicator={indicator}
-						indicatorCN={indicatorCN}
-						dragToClose={dragToClose}
-						dismissThreshold={dismissThreshold}
-						reducedMotion={reducedMotion}
-						onClose={close}
-						panelRef={panelRef}
-					>
-						{children}
-					</BottomSheetPanel>
-				)}
-			</AnimatePresence>
-		</div>,
+				<AnimatePresence initial={false}>
+					{shouldRenderPanel && (
+						<BottomSheetPanel
+							key="panel"
+							open={open}
+							offset={offset}
+							title={title}
+							titleId={titleId}
+							titleCN={titleCN}
+							className={className}
+							panelCN={panelCN}
+							indicator={indicator}
+							indicatorCN={indicatorCN}
+							dragToClose={dragToClose}
+							dragAnywhere={dragAnywhere}
+							dismissThreshold={dismissThreshold}
+							reducedMotion={reducedMotion}
+							onClose={close}
+							panelRef={panelRef}
+						>
+							{children}
+						</BottomSheetPanel>
+					)}
+				</AnimatePresence>
+			</div>
+		</LazyMotion>,
 		document.body
 	)
 })

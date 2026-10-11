@@ -51,6 +51,7 @@ export const useBottomSheet = (
 		reducedMotion,
 		mounted,
 		hasOpened,
+		close,
 		handleBackdropClick
 	}
 }
