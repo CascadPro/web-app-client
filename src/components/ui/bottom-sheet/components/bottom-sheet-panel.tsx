@@ -47,7 +47,7 @@ export const BottomSheetPanel: FC<BottomSheetPanelProps> = ({
 				"flex max-h-[calc(100dvh-env(safe-area-inset-top)-1rem)]",
 				"flex-col overflow-hidden rounded-t-3xl",
 				"bg-background text-on-background",
-				"shadow-[0_-8px_40px_rgba(0,0,0,0.12)] outline-none",
+				"shadow-3xl outline-none",
 				panelCN
 			)}
 			style={{

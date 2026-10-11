@@ -16,13 +16,12 @@ export const BottomSheetBackdrop: FC<Props> = ({
 	reducedMotion
 }) => {
 	return (
-		<m.button
-			type="button"
+		<m.div
 			tabIndex={-1}
 			aria-label="Закрыть панель"
 			className={cn(
-				"pointer-events-auto absolute inset-0 cursor-default",
-				"bg-black/40 backdrop-blur-[2px]",
+				"pointer-events-auto absolute inset-0 cursor-default select-none",
+				"bg-black/50 backdrop-blur-xs",
 				className
 			)}
 			initial={{ opacity: 0 }}
@@ -30,6 +29,7 @@ export const BottomSheetBackdrop: FC<Props> = ({
 			exit={{ opacity: 0 }}
 			transition={getBackdropTransition(reducedMotion)}
 			onClick={onClick}
+			onContextMenu={e => e.preventDefault()}
 		/>
 	)
 }
