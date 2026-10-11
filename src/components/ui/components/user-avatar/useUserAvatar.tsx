@@ -5,6 +5,11 @@ import { SERVER_URL } from "@/libs/constants"
 import type { UserAvatarSize, UserAvatarUser } from "./types"
 
 const sizes = {
+	xs: {
+		container: "size-6",
+		text: "text-xs",
+		size: 64
+	},
 	sm: {
 		container: "size-8",
 		text: "text-xs",

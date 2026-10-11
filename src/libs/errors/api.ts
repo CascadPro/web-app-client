@@ -22,6 +22,7 @@ export type ApiErrorCode =
 	| "request_already_exists"
 	| "request_access_denied"
 	| "request_already_handled"
+	| "request_not_enough_fields"
 	| "session_not_found"
 	| "session_expired"
 	| "session_revoked"

@@ -1,6 +1,6 @@
 import type { MouseEvent } from "react"
 
-export type UserAvatarSize = "sm" | "md" | "lg" | "xl" | "2xl"
+export type UserAvatarSize = "xs" | "sm" | "md" | "lg" | "xl" | "2xl"
 
 export type UserAvatarProps = {
 	user?: UserAvatarUser

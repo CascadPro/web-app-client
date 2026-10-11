@@ -1,10 +1,16 @@
 "use client"
 
+import dynamic from "next/dynamic"
 import type { ReactNode } from "react"
 
-import { RealtimeStatusIndicator } from "../ui/components/realtime-indicator"
-
 import { useRealtimeLifecycle } from "./hooks/realtime"
+
+const DynamicRealtimeStatusIndicator = dynamic(
+	async () =>
+		(await import("@/components/ui/components/realtime-indicator"))
+			.RealtimeStatusIndicator,
+	{ ssr: false }
+)
 
 interface RealtimeProviderProps {
 	children: ReactNode
@@ -18,7 +24,7 @@ export function RealtimeProvider({
 	return (
 		<>
 			{children}
-			<RealtimeStatusIndicator />
+			<DynamicRealtimeStatusIndicator />
 		</>
 	)
 }

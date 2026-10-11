@@ -1,9 +1,6 @@
-import { useScrollLocked } from "@/libs/hooks"
-
 import type { SessionCardSheetProps } from "../components/card/session-card-sheet"
 
 export const useSessionCardSheet = (
-	isOpen: boolean,
 	location: SessionCardSheetProps["location"]
 ) => {
 	const locationValue = [location?.city, location?.country]
@@ -13,8 +10,6 @@ export const useSessionCardSheet = (
 	const locationCopyText = [location?.lat, location?.lng]
 		.filter(Boolean)
 		.join(", ")
-
-	useScrollLocked(isOpen)
 
 	return {
 		locationValue,
