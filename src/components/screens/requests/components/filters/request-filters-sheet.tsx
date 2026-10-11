@@ -1,6 +1,6 @@
 import type { FC } from "react"
 
-import { DomainSortType } from "@/api/generated"
+import type { DomainSortType } from "@/api/generated"
 import { BottomSheet, Button } from "@/components/ui"
 import { getSortLabel } from "@/libs/utils"
 import type { ReactStateHook } from "@/types/base"
@@ -18,6 +18,11 @@ export const RequestFiltersSheet: FC<Props> = ({
 	setIsOpen,
 	setSortType
 }) => {
+	const handleClick = (value: DomainSortType) => {
+		setSortType(value)
+		setIsOpen(false)
+	}
+
 	return (
 		<BottomSheet
 			open={isOpen}
@@ -31,10 +36,7 @@ export const RequestFiltersSheet: FC<Props> = ({
 					key={item}
 					variant="default-2"
 					className="py-2"
-					onClick={() => {
-						setSortType(item)
-						setIsOpen(false)
-					}}
+					onClick={() => handleClick(item)}
 				>
 					{getSortLabel(item)}
 				</Button>
