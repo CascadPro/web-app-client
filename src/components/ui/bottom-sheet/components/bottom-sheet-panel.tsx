@@ -14,7 +14,6 @@ import { BottomSheetHandle } from "./bottom-sheet-handle"
 
 export const BottomSheetPanel: FC<BottomSheetPanelProps> = ({
 	open,
-	offset,
 	title,
 	titleId,
 	titleCN,
@@ -51,7 +50,7 @@ export const BottomSheetPanel: FC<BottomSheetPanelProps> = ({
 				panelCN
 			)}
 			style={{
-				bottom: offset,
+				bottom: 0,
 				paddingBottom: "env(safe-area-inset-bottom)",
 				pointerEvents: open ? "auto" : "none"
 			}}

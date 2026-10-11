@@ -6,7 +6,6 @@ export interface BottomSheetProps extends PropsWithChildren {
 	onChange: (isOpen: boolean) => void
 
 	zIndex?: number
-	offset?: number
 	className?: string
 
 	title?: string
@@ -57,7 +56,6 @@ export interface BottomSheetHandleProps {
 
 export interface BottomSheetPanelProps {
 	open: boolean
-	offset: number
 	title?: string
 	titleId: string
 	titleCN?: string

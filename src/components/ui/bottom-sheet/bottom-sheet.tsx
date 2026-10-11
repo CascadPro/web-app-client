@@ -14,7 +14,6 @@ const BottomSheetComponent = memo(function BottomSheetComponent({
 	open,
 	onChange,
 	className,
-	offset = -12,
 	zIndex = 100,
 	indicator = true,
 	indicatorCN,
@@ -68,7 +67,6 @@ const BottomSheetComponent = memo(function BottomSheetComponent({
 						<BottomSheetPanel
 							key="panel"
 							open={open}
-							offset={offset}
 							title={title}
 							titleId={titleId}
 							titleCN={titleCN}

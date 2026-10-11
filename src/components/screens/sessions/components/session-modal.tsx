@@ -34,7 +34,7 @@ export const SessionModal: FC<SessionModalProps> = ({
 					</p>
 				</Modal.Body>
 
-				<Modal.Footer>
+				<Modal.Footer className="gap-3">
 					<Button
 						variant="outline"
 						className="p-2"

@@ -47,6 +47,7 @@ export const SessionCardSheet: FC<Props> = ({
 			open={isOpen}
 			onChange={onOpenChange}
 			zIndex={200}
+			dismissThreshold={200}
 			className="grid gap-2 text-sm"
 			title="Детальная информация"
 			titleCN="px-1 mb-2"

@@ -48,8 +48,7 @@ export const ProfileHeaderSheet: FC<Props> = ({
 			open={isOpen}
 			onChange={setIsOpen}
 			zIndex={8888 + 1}
-			offset={-32}
-			className="flex flex-col gap-2 px-3 py-5 [&>button]:gap-1 [&>button]:p-2 [&>button]:text-base"
+			className="flex flex-col gap-2 px-3 py-6 [&>button]:gap-1 [&>button]:p-2 [&>button]:text-base"
 			indicator={false}
 		>
 			<Button
