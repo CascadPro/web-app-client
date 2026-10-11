@@ -30,6 +30,8 @@ export const API_ERROR_MESSAGES: Record<ApiErrorCode, string> = {
 	request_already_exists: "Такой запрос уже существует",
 	request_access_denied: "Нет доступа к запросу",
 	request_already_handled: "Запрос уже обработан",
+	request_not_enough_fields:
+		"Чтобы одобрить запрос, сначала заполните обязательные поля",
 
 	session_not_found: "Сессия не найдена",
 	session_expired: "Сессия истекла",

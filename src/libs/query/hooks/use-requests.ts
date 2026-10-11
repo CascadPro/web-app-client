@@ -41,3 +41,28 @@ export const useRequestStats = () => {
 	return { statistics: data ?? null, ...other }
 }
 
+export const useRequestPatchStatus = (id: string) => {
+	const client = useQueryClient()
+
+	const refreshRequests = () => {
+		void client.refetchQueries({ queryKey: QueryKeys.requests.all })
+	}
+
+	const approveMutation = useMutation({
+		mutationFn: () => service.patchRequestsIdApprove(id),
+		onSuccess: refreshRequests,
+		onError: refreshRequests
+	})
+
+	const rejectMutation = useMutation({
+		mutationFn: () => service.patchRequestsIdReject(id),
+		onSuccess: refreshRequests
+	})
+
+	return {
+		approve: approveMutation.mutateAsync,
+		reject: rejectMutation.mutateAsync,
+		isApproveLoading: approveMutation.isPending,
+		isRejectLoading: rejectMutation.isPending
+	}
+}
