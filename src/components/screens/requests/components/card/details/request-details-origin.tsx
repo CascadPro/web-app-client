@@ -24,10 +24,10 @@ export const RequestDetailsOrigin: FC<Props> = ({ type, value }) => {
 
 	const [isCopied, copyText] = useClipboardCopy()
 
-	const handleClick = () => {
+	const handleClick = async () => {
 		if (isCopied || !value) return
 
-		copyText(value)
+		await copyText(value)
 	}
 
 	return (
