@@ -20,7 +20,7 @@ import type {
 	SessionBrowser,
 	SessionDeviceType,
 	SessionOperatingSystem
-} from "@/types/base"
+} from "@/types/screens/sessions"
 
 export const BROWSERS: Record<string, SessionBrowser> = {
 	chrome: {

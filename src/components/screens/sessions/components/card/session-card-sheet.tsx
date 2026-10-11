@@ -9,8 +9,8 @@ import type { FC, MouseEvent } from "react"
 
 import type { SessionsHttpDtoSessionDtoMetadataLocation } from "@/api/generated"
 import { BottomSheet, Button } from "@/components/ui"
-import { formatRelativeDate } from "@/libs/utils"
-import { SessionParsedDevice } from "@/types/base"
+import { formatRelativeDate } from "@/libs/utils/screens/sessions"
+import type { SessionParsedDevice } from "@/types/screens/sessions"
 
 import { useSessionCardSheet } from "../../hooks/useSessionCardSheet"
 

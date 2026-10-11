@@ -5,7 +5,8 @@ import type { FC } from "react"
 
 import type { SessionsHttpDtoSessionDTO } from "@/api/generated"
 import { Title } from "@/components/ui"
-import { capitalize, cn, formatRelativeDate } from "@/libs/utils"
+import { capitalize, cn } from "@/libs/utils"
+import { formatRelativeDate } from "@/libs/utils/screens/sessions"
 
 import { useSessionCard } from "../../hooks/useSessionCard"
 

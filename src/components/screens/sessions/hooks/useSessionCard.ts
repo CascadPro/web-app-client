@@ -1,14 +1,15 @@
 import { type MouseEvent, useMemo, useState } from "react"
 
-import type { SessionsHttpDtoSessionDTOMetadata } from "@/api/generated"
+import type { SessionsHttpDtoSessionDtoMetadata } from "@/api/generated"
 import { Toast } from "@/components/ui"
 import { useHaptic } from "@/libs/haptics"
 import { useDeleteSession } from "@/libs/query/hooks"
-import { errorCatch, parseDevice } from "@/libs/utils"
+import { errorCatch } from "@/libs/utils"
+import { parseDevice } from "@/libs/utils/screens/sessions"
 
 export const useSessionCard = (
 	id?: string,
-	metadata?: SessionsHttpDtoSessionDTOMetadata
+	metadata?: SessionsHttpDtoSessionDtoMetadata
 ) => {
 	const location = metadata?.location
 
