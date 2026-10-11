@@ -1,13 +1,12 @@
 import { ChevronDownIcon, SortDescIcon, XIcon } from "lucide-react"
-import { m } from "motion/react"
 import dynamic from "next/dynamic"
-import { type FC, useState } from "react"
+import type { FC } from "react"
 
-import { type DomainRequestStatus, DomainSortType } from "@/api/generated"
+import { REQUEST_STATUSES } from "@/components/screens/requests/libs"
 import { Button, Separator } from "@/components/ui"
 import { cn, getSortLabel } from "@/libs/utils"
 
-import { REQUEST_STATUSES } from "../../constants"
+import { useRequestFilters } from "../../hooks/useRequestFilters"
 
 const DynamicRequestFiltersSheet = dynamic(
 	async () => (await import("./request-filters-sheet")).RequestFiltersSheet,
@@ -15,48 +14,30 @@ const DynamicRequestFiltersSheet = dynamic(
 )
 
 interface Props {
-	sortType: DomainSortType
-	onSortTypeChange: (value: DomainSortType) => void
-
-	statuses: DomainRequestStatus[]
-	onStatusesChange: (value: DomainRequestStatus[]) => void
-
-	clearDisabled: boolean
-	clearFilters: (() => void) | undefined
+	isLoading: boolean
 }
 
-export const RequestFilters: FC<Props> = ({
-	sortType,
-	onSortTypeChange,
-	statuses,
-	onStatusesChange,
-	clearDisabled,
-	clearFilters
-}) => {
-	const [isOpen, setIsOpen] = useState(false)
-
-	const toggleStatus = (status: DomainRequestStatus) => {
-		onStatusesChange(
-			statuses.includes(status)
-				? statuses.filter(item => item !== status)
-				: [...statuses, status]
-		)
-	}
-
-	const isActive = (value: DomainRequestStatus) => statuses.includes(value)
+export const RequestFilters: FC<Props> = ({ isLoading }) => {
+	const {
+		sortType,
+		isOpen,
+		isClearDisabled,
+		isActive,
+		setIsOpen,
+		toggleStatus,
+		setSortType,
+		clearFilters
+	} = useRequestFilters()
 
 	return (
 		<>
-			<m.section
-				initial={{ opacity: 0, y: 10 }}
-				animate={{ opacity: 1, y: 0 }}
-				className="border-outline/20 bg-surface rounded-3xl border p-5 shadow-sm sm:p-6"
-			>
+			<section className="border-outline/20 bg-surface rounded-3xl border p-5 shadow-sm sm:p-6">
 				<div className="flex items-center justify-between">
 					<Button
 						variant="default-2"
 						className="gap-1 p-2"
 						onClick={() => setIsOpen(true)}
+						disabled={isLoading}
 					>
 						<SortDescIcon
 							size={18}
@@ -75,7 +56,7 @@ export const RequestFilters: FC<Props> = ({
 						variant="destructive"
 						className="p-2"
 						onClick={clearFilters}
-						disabled={clearDisabled}
+						disabled={isClearDisabled || isLoading}
 					>
 						<XIcon size={18} />
 					</Button>
@@ -89,6 +70,7 @@ export const RequestFilters: FC<Props> = ({
 							key={status.value}
 							variant="outline"
 							onClick={() => toggleStatus(status.value)}
+							disabled={isLoading}
 							className={cn("p-2", {
 								"bg-primary/10 border-primary text-primary": isActive(
 									status.value
@@ -99,12 +81,12 @@ export const RequestFilters: FC<Props> = ({
 						</Button>
 					))}
 				</div>
-			</m.section>
+			</section>
 
 			<DynamicRequestFiltersSheet
 				isOpen={isOpen}
 				setIsOpen={setIsOpen}
-				setSortType={onSortTypeChange}
+				setSortType={setSortType}
 			/>
 		</>
 	)
