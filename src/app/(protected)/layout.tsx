@@ -3,6 +3,7 @@ import type { ReactNode } from "react"
 
 import { Tabs, TabsData } from "@/components/layouts/tabs/tabs"
 import { AuthProvider } from "@/components/providers/auth"
+import { NavigationProgress } from "@/components/providers/navigation-progress"
 import { QueryProvider } from "@/components/providers/query"
 import { RealtimeProvider } from "@/components/providers/realtime"
 import { ToastProvider } from "@/components/ui"
@@ -34,6 +35,8 @@ export default function Layout({
 			<AuthProvider>
 				<RealtimeProvider>
 					<main className="mb-24 sm:mb-0 sm:pt-4">
+						<NavigationProgress />
+
 						{children}
 
 						<ToastProvider />

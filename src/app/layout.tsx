@@ -34,7 +34,7 @@ export const metadata: Metadata = {
 	}
 }
 
-export default async function Layout({ children }: Readonly<Props>) {
+export default function Layout({ children }: Readonly<Props>) {
 	return (
 		<html lang="ru" data-scroll-behavior="smooth" suppressHydrationWarning>
 			<body className={`${poppins.variable} antialiased`}>
