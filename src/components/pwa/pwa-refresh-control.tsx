@@ -87,7 +87,7 @@ export const PullToRefresh: FC<Props> = ({
 				</m.div>
 			</m.div>
 
-			<div>{children}</div>
+			{children}
 
 			<m.div
 				className="-origin-left pointer-events-none fixed top-0 left-1/2 z-199 h-0.5 -translate-x-1/2 bg-current"
