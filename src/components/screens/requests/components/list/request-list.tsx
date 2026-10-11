@@ -4,6 +4,7 @@ import { AnimatePresence, m } from "motion/react"
 import type { FC } from "react"
 
 import type { RequestHttpDtoGetRequestsResponseRequest } from "@/api/generated"
+import type { ErrorCatchResult } from "@/libs/utils"
 
 import { RequestCard } from "../card/request-card"
 
@@ -14,14 +15,15 @@ import { RequestLoading } from "./request-loading"
 interface Props {
 	requests: RequestHttpDtoGetRequestsResponseRequest[]
 	isPending: boolean
+	error: ErrorCatchResult | null
 }
 
-export const RequestsList: FC<Props> = ({ requests, isPending }) => {
+export const RequestsList: FC<Props> = ({ requests, isPending, error }) => {
 	if (isPending) {
 		return <RequestLoading />
 	}
 
-	if (false) {
+	if (error) {
 		return <RequestError />
 	}
 

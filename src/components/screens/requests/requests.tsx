@@ -10,7 +10,7 @@ import { RequestsStats } from "./components/request-stats"
 import { useRequestsScreen } from "./hooks/useRequestsScreen"
 
 export const RequestsScreen = () => {
-	const { requests, isLoading, isPending } = useRequestsScreen()
+	const { requests, error, isLoading, isPending } = useRequestsScreen()
 
 	return (
 		<RefreshControl queryKey={QueryKeys.requests.all as any}>
@@ -19,7 +19,7 @@ export const RequestsScreen = () => {
 
 				<RequestFilters isLoading={isLoading} />
 
-				<RequestsList requests={requests} isPending={isPending} />
+				<RequestsList requests={requests} isPending={isPending} error={error} />
 
 				<RequestCreateButton />
 			</div>
