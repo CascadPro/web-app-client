@@ -1,21 +1,29 @@
 import { useEffect } from "react"
 
-export const useScrollLocked = (status: boolean) => {
+let lockCount = 0
+
+const lockBody = () => {
+	lockCount += 1
+
+	if (lockCount > 0) {
+		document.body.dataset["scrollLocked"] = String(lockCount)
+	}
+}
+
+const unlockBody = () => {
+	lockCount = Math.max(0, lockCount - 1)
+
+	if (lockCount === 0) {
+		delete document.body.dataset["scrollLocked"]
+	}
+}
+
+export const useScrollLocked = (enabled: boolean) => {
 	useEffect(() => {
-		if (!document?.body) return
+		if (!enabled) return
 
-		const data = document.body.dataset?.["scrollLocked"] || "0"
-		const numericData = Number.isNaN(Number(data)) ? 0 : Number(data)
+		lockBody()
 
-		if (status) {
-			document.body.dataset["scrollLocked"] = (numericData + 1).toString()
-		} else {
-			const result = Math.min(0, numericData - 1)
-			if (result <= 0) {
-				delete document.body.dataset["scrollLocked"]
-			} else {
-				document.body.dataset["scrollLocked"] = result.toString()
-			}
-		}
-	}, [status])
+		return unlockBody
+	}, [enabled])
 }
