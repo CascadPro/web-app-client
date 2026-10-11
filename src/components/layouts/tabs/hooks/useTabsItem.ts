@@ -6,7 +6,9 @@ import {
 	MenuIcon,
 	PlayIcon
 } from "lucide-react"
-import { usePathname, useRouter } from "next/navigation"
+import { usePathname } from "next/navigation"
+
+import { useNavigation } from "@/libs/hooks"
 
 export type TabsItemIconType = "about" | "menu" | "start" | "home"
 
@@ -14,7 +16,7 @@ export const useTabsItem = (href: string, icon: TabsItemIconType) => {
 	const pathname = usePathname()
 	const active = pathname === href
 
-	const { push } = useRouter()
+	const { push } = useNavigation()
 
 	let Icon: LucideIcon
 	switch (icon) {

@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useRouter } from "next/navigation"
 import { useCallback, useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 
@@ -7,6 +6,7 @@ import { Toast } from "@/components/ui"
 import { register } from "@/libs/auth"
 import { AppRoutes } from "@/libs/constants"
 import { useHaptic } from "@/libs/haptics"
+import { useNavigation } from "@/libs/hooks"
 import { RegisterFormFields, registerScheme } from "@/libs/schemes"
 import { errorCatch } from "@/libs/utils"
 import { useAuthStore } from "@/store/auth"
@@ -20,7 +20,7 @@ export const useRegisterPage = () => {
 		mode: "onBlur"
 	})
 
-	const { replace } = useRouter()
+	const { replace } = useNavigation()
 
 	const { haptic } = useHaptic()
 

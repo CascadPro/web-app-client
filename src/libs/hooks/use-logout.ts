@@ -1,11 +1,12 @@
-import { useRouter } from "next/navigation"
 import { useCallback } from "react"
 
 import { logout } from "@/libs/auth"
 import { AppRoutes } from "@/libs/constants"
 
+import { useNavigation } from "./use-navigation"
+
 export const useLogout = () => {
-	const router = useRouter()
+	const router = useNavigation()
 
 	return useCallback(async () => {
 		await logout()

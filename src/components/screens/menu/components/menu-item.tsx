@@ -1,8 +1,8 @@
 import { ChevronRightIcon } from "lucide-react"
-import { useRouter } from "next/navigation"
 import type { FC } from "react"
 
 import { Button } from "@/components/ui"
+import { useNavigation } from "@/libs/hooks"
 
 import type { MenuPageItemData } from "../hooks/useMenuPage"
 
@@ -11,7 +11,7 @@ interface Props {
 }
 
 export const MenuItem: FC<Props> = ({ item }) => {
-	const { push } = useRouter()
+	const { push } = useNavigation()
 
 	const handleClick = () => push(item.href)
 

@@ -1,7 +1,8 @@
-import { usePathname, useRouter } from "next/navigation"
+import { usePathname } from "next/navigation"
 import { useState } from "react"
 
 import { AppRoutes } from "@/libs/constants"
+import { useNavigation } from "@/libs/hooks"
 
 const paths = {
 	[AppRoutes.MY_PROFILE]: "Мой профиль",
@@ -11,7 +12,7 @@ const paths = {
 
 export const useNestedLayout = () => {
 	const pathname = usePathname()
-	const { back } = useRouter()
+	const { back } = useNavigation()
 
 	const [isActive, setIsActive] = useState(false)
 
