@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import type { ReactNode } from "react"
 
-import { Tabs } from "@/components/layouts/tabs/tabs"
+import { Tabs, TabsData } from "@/components/layouts/tabs/tabs"
 import { AuthProvider } from "@/components/providers/auth"
 import { QueryProvider } from "@/components/providers/query"
 import { RealtimeProvider } from "@/components/providers/realtime"
@@ -13,6 +13,19 @@ export const viewport = getViewport(false, 1)
 
 export const metadata: Metadata = NO_INDEX_PAGE
 
+const data: TabsData[] = [
+	{
+		title: "Дом",
+		icon: "home",
+		href: AppRoutes.INDEX
+	},
+	{
+		title: "Меню",
+		icon: "menu",
+		href: AppRoutes.MENU
+	}
+]
+
 export default function Layout({
 	children
 }: Readonly<{ children: ReactNode }>) {
@@ -20,25 +33,12 @@ export default function Layout({
 		<QueryProvider>
 			<AuthProvider>
 				<RealtimeProvider>
-					<main>
+					<main className="mb-24 sm:mb-0 sm:pt-4">
 						{children}
 
 						<ToastProvider />
 
-						<Tabs
-							data={[
-								{
-									title: "Дом",
-									icon: "home",
-									href: AppRoutes.INDEX
-								},
-								{
-									title: "Меню",
-									icon: "menu",
-									href: AppRoutes.MENU
-								}
-							]}
-						/>
+						<Tabs data={data} />
 					</main>
 				</RealtimeProvider>
 			</AuthProvider>
