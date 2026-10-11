@@ -41,6 +41,18 @@ export const useRequestStats = () => {
 	return { statistics: data ?? null, ...other }
 }
 
+export const useRequestDetail = (id: string, enabled = true) => {
+	const { data, ...other } = useQuery({
+		queryKey: QueryKeys.requests.detail(id),
+		queryFn: async () => (await service.getRequestsId(id)).data,
+		enabled: Boolean(id) && enabled,
+		staleTime: ms("3min"),
+		gcTime: ms("10min")
+	})
+
+	return { request: data ?? null, ...other }
+}
+
 export const useRequestPatchStatus = (id: string) => {
 	const client = useQueryClient()
 

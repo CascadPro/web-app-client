@@ -34,5 +34,9 @@ export const QueryKeys = {
 			[...QueryKeys.requests.lists(), params] as const,
 
 		stats: () => [...QueryKeys.requests.all, "stats"] as const,
+
+		details: () => [...QueryKeys.requests.all, "detail"] as const,
+
+		detail: (id: string) => [...QueryKeys.requests.details(), id] as const
 	}
 }
