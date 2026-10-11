@@ -5,10 +5,11 @@ import { useHaptic } from "@/libs/haptics"
 import { useDeleteSessions, useSessions } from "@/libs/query/hooks"
 import { errorCatch } from "@/libs/utils"
 
-export const useSessionPage = () => {
+export const useSessionScreen = () => {
 	const [isOpen, setIsOpen] = useState<boolean>(false)
 
-	const { data, isLoading } = useSessions()
+	const { sessions, currentSession, isLoading, isPending, error } =
+		useSessions()
 
 	const { mutateAsync: deleteAllSessions, isPending: isDeleting } =
 		useDeleteSessions()
@@ -32,9 +33,11 @@ export const useSessionPage = () => {
 	return {
 		isOpen,
 		setIsOpen,
-		data: data?.data,
-		isLoading,
+		sessions,
+		currentSession,
+		isLoading: isLoading || isPending,
 		isDeleting,
+		error: error ? errorCatch(error) : null,
 		handleDeleteAllSessions
 	}
 }

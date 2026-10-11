@@ -9,7 +9,7 @@ import { QueryKeys } from "../keys"
 export const useSessions = () => {
 	const state = useAuthStore(state => state.status)
 
-	const { isLoading, ...other } = useQuery({
+	const { data, isLoading, ...other } = useQuery({
 		queryKey: QueryKeys.sessions.all,
 		queryFn: service.getSessions,
 		enabled: state === "authenticated",
@@ -17,7 +17,12 @@ export const useSessions = () => {
 		gcTime: ms("10min")
 	})
 
-	return { isLoading: isLoading || state === "loading", ...other }
+	return {
+		sessions: data?.data.sessions ?? null,
+		currentSession: data?.data.current_session ?? null,
+		isLoading: isLoading || state === "loading",
+		...other
+	}
 }
 
 export const useDeleteSession = (id: string) => {

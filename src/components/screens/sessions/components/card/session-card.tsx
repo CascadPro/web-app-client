@@ -9,6 +9,7 @@ import { capitalize, cn } from "@/libs/utils"
 import { formatRelativeDate } from "@/libs/utils/screens/sessions"
 
 import { useSessionCard } from "../../hooks/useSessionCard"
+import { SessionEmpty } from "../list/session-empty"
 
 import type { SessionCardSheetProps } from "./session-card-sheet"
 
@@ -18,7 +19,7 @@ const DynamicSessionCardSheet = dynamic(
 )
 
 interface Props {
-	session: SessionsHttpDtoSessionDTO
+	session: SessionsHttpDtoSessionDTO | null
 	current?: boolean
 	index?: number
 }
@@ -28,13 +29,17 @@ export const SessionCard: FC<Props> = ({
 	current = false,
 	index = 0
 }) => {
+	if (!session) {
+		return <SessionEmpty />
+	}
+
 	const { location, device, isOpen, setIsOpen, handleDelete, isDeleting } =
-		useSessionCard(session?.id, session?.metadata)
+		useSessionCard(session.id, session.metadata)
 
 	const sessionCardSheetProps: SessionCardSheetProps = {
-		ip: session?.ip,
-		location: session?.metadata?.location,
-		lastActiveAt: session?.last_active_at,
+		ip: session.ip,
+		location: session.metadata?.location,
+		lastActiveAt: session.last_active_at,
 		device
 	}
 
@@ -48,11 +53,17 @@ export const SessionCard: FC<Props> = ({
 						"pointer-events-none cursor-wait opacity-60": isDeleting
 					}
 				)}
-				initial={{ opacity: 0, y: 8 }}
+				layout={!current}
+				initial={{ opacity: 0, y: 12 }}
 				animate={{ opacity: 1, y: 0 }}
-				exit={{ opacity: 0, y: 8 }}
-				transition={{ delay: index * 0.1 }}
+				exit={{ opacity: 0, y: 12 }}
+				transition={{
+					opacity: { duration: 0.2 },
+					layout: { duration: 0.25, ease: [0.22, 1, 0.36, 1] },
+					delay: 0.1 * index
+				}}
 				onClick={() => setIsOpen(state => !state)}
+				onContextMenu={e => e.preventDefault()}
 			>
 				<div className="flex gap-4">
 					<div className="bg-surface-variant flex size-11 shrink-0 items-center justify-center rounded-xl">

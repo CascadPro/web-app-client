@@ -1,6 +1,22 @@
+import type { FC } from "react"
+
 import { Skeleton } from "@/components/ui"
 
-export const SessionLoading = () => {
+interface Props {
+	n?: number
+}
+
+export const SessionLoading: FC<Props> = ({ n = 3 }) => {
+	return (
+		<div className="grid gap-4">
+			{Array.from({ length: n }).map((_, index) => (
+				<SessionLoadingItem key={index} />
+			))}
+		</div>
+	)
+}
+
+const SessionLoadingItem = () => {
 	return (
 		<div className="border-outline/20 bg-surface rounded-2xl border p-4 shadow-sm">
 			<div className="flex gap-4">

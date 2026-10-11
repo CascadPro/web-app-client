@@ -1,28 +1,29 @@
 "use client"
 
 import { Globe2, LogOutIcon, ShieldCheck } from "lucide-react"
-import { AnimatePresence, m } from "motion/react"
 
 import { RefreshControl } from "@/components/providers/refresh-control"
 import { Button } from "@/components/ui"
 import { QueryKeys } from "@/libs/query/keys"
 
 import { SessionCard } from "./components/card/session-card"
-import { SessionEmpty } from "./components/session-empty"
-import { SessionLoading } from "./components/session-loading"
+import { SessionsList } from "./components/list/session-list"
+import { SessionLoading } from "./components/list/session-loading"
 import { SessionModal } from "./components/session-modal"
 import { SessionSectionTitle } from "./components/session-section-title"
-import { useSessionPage } from "./hooks/useSessionPage"
+import { useSessionScreen } from "./hooks/useSessionScreen"
 
 export const SessionsScreen = () => {
 	const {
-		data,
+		sessions,
+		currentSession,
 		isLoading,
+		error,
 		handleDeleteAllSessions,
 		isDeleting,
 		isOpen,
 		setIsOpen
-	} = useSessionPage()
+	} = useSessionScreen()
 
 	return (
 		<RefreshControl queryKey={QueryKeys.sessions.all as any}>
@@ -31,15 +32,13 @@ export const SessionsScreen = () => {
 					<SessionSectionTitle Icon={ShieldCheck} title="Текущий сеанс" />
 
 					{isLoading ? (
-						<SessionLoading />
-					) : data?.current_session ? (
+						<SessionLoading n={1} />
+					) : (
 						<SessionCard
-							key={data.current_session.id}
-							session={data.current_session}
+							key={currentSession?.id}
+							session={currentSession}
 							current
 						/>
-					) : (
-						<SessionEmpty text="Нет текущего сеанса." />
 					)}
 				</section>
 
@@ -47,7 +46,7 @@ export const SessionsScreen = () => {
 					<div className="mb-3 flex items-center justify-between gap-4">
 						<SessionSectionTitle Icon={Globe2} title="Другие сеансы" />
 
-						{data?.sessions && data.sessions.length > 0 && (
+						{sessions && sessions.length > 0 && (
 							<Button
 								variant="ghost"
 								className="text-error active:bg-primary/20 gap-1 rounded-lg px-2 py-1.5 text-sm"
@@ -60,30 +59,11 @@ export const SessionsScreen = () => {
 						)}
 					</div>
 
-					<AnimatePresence mode="wait">
-						{isLoading ? (
-							<m.div
-								initial={false}
-								exit={{ opacity: 0, y: 20, display: "none" }}
-								className="space-y-3"
-							>
-								<SessionLoading />
-								<SessionLoading />
-							</m.div>
-						) : data?.sessions?.length === 0 ? (
-							<SessionEmpty text="Нет других активных сеансов." />
-						) : (
-							<div className="space-y-4">
-								{data?.sessions?.map((session, index) => (
-									<SessionCard
-										key={session?.id || index}
-										index={index}
-										session={session}
-									/>
-								))}
-							</div>
-						)}
-					</AnimatePresence>
+					<SessionsList
+						sessions={sessions}
+						isPending={isLoading}
+						error={error}
+					/>
 				</section>
 			</div>
 
