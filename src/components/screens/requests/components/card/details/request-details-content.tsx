@@ -36,7 +36,7 @@ export const RequestCardDetailsContent: FC<Props> = ({
 						Источники
 					</Title>
 
-					<div className="flex items-center gap-2 overflow-x-auto pb-3">
+					<div className="relative flex items-center gap-4 overflow-x-auto pb-3">
 						{origin.map(item => (
 							<RequestDetailsOrigin key={item.value} {...item} />
 						))}

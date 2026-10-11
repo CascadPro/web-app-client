@@ -60,12 +60,11 @@ export const RequestCard: FC<Props> = ({ request }) => {
 				layout
 				initial={{ opacity: 0.6, y: 15 }}
 				whileInView={{ opacity: 1, y: 0 }}
-				whileTap={isSelected ? undefined : { scale: 0.975 }}
+				whileTap={isSelected ? undefined : { scale: 0.98 }}
 				viewport={{ once: true, amount: "all" }}
 				animate={{
 					translateY: isSelected ? selectedY : 0,
-					zIndex: isSelected ? 210 : 1,
-					scale: isSelected ? 1.02 : 1
+					zIndex: isSelected ? 210 : 1
 				}}
 				transition={{
 					opacity: { duration: 0.2 },
@@ -79,7 +78,7 @@ export const RequestCard: FC<Props> = ({ request }) => {
 			>
 				<div
 					className={cn(
-						"bg-surface border-outline/20 overflow-hidden rounded-2xl border shadow-sm transition-colors sm:p-1",
+						"bg-surface border-outline/20 grid overflow-hidden rounded-2xl border shadow-sm transition-colors sm:p-1",
 						isSelected && "border-transparent shadow-lg"
 					)}
 				>

@@ -33,7 +33,7 @@ export const RequestDetailsOrigin: FC<Props> = ({ type, value }) => {
 	return (
 		<Button
 			variant="ghost"
-			className="bg-surface-variant text-on-surface flex items-center gap-2 rounded-xl p-3 text-sm active:scale-[0.97]"
+			className="bg-surface-variant text-on-surface gap-2 rounded-xl p-3 text-sm active:scale-[0.97]"
 			onClick={handleClick}
 		>
 			{isCopied ? <CheckIcon size={18} /> : <Icon size={18} />}
