@@ -1,8 +1,7 @@
 import { useMemo, useState } from "react"
 
 import type { DomainRequestStatus, DomainSortType } from "@/api/generated"
-
-import type { RequestContextState } from "../libs"
+import type { RequestContextState } from "@/types/screens/requests"
 
 export const useRequestContextProvider = () => {
 	const [statuses, setStatuses] = useState<DomainRequestStatus[]>([])

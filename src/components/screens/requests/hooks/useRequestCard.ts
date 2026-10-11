@@ -3,12 +3,11 @@ import { useEffect, useMemo, useRef, useState } from "react"
 
 import type { RequestHttpDtoGetRequestsResponseRequest as Request } from "@/api/generated"
 import { useScrollLocked } from "@/libs/hooks"
-
 import {
 	formatRequestDate,
-	getRequestProgress,
-	type RequestCardDescriptionData
-} from "../libs"
+	getRequestProgress
+} from "@/libs/utils/screens/requests"
+import type { RequestCardDescriptionData } from "@/types/screens/requests"
 
 const LONG_PRESS_DELAY = 450
 const ACTIONS_HEIGHT = 400

@@ -7,8 +7,9 @@ import {
 	useContext
 } from "react"
 
+import type { RequestContextState } from "@/types/screens/requests"
+
 import { useRequestContextProvider } from "./hooks/useRequestContext"
-import type { RequestContextState } from "./libs"
 
 const RequestContext = createContext<RequestContextState>({
 	statuses: [],

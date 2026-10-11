@@ -2,8 +2,8 @@ import { ChevronDownIcon, SortDescIcon, XIcon } from "lucide-react"
 import dynamic from "next/dynamic"
 import type { FC } from "react"
 
-import { REQUEST_STATUSES } from "@/components/screens/requests/libs"
 import { Button, Separator } from "@/components/ui"
+import { REQUEST_STATUSES } from "@/libs/constants/screens/requests"
 import { cn, getSortLabel } from "@/libs/utils"
 
 import { useRequestFilters } from "../../hooks/useRequestFilters"

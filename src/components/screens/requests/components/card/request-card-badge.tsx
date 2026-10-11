@@ -1,11 +1,9 @@
 import { type FC, useMemo } from "react"
 
 import type { DomainRequestStatus } from "@/api/generated"
-import {
-	getRequestStatusLabel,
-	REQUEST_STATUS_ICON
-} from "@/components/screens/requests/libs"
+import { REQUEST_STATUS_ICON } from "@/libs/constants/screens/requests"
 import { cn } from "@/libs/utils"
+import { getRequestStatusLabel } from "@/libs/utils/screens/requests"
 
 const styles: Record<DomainRequestStatus, string> = {
 	default: "bg-outline/30 text-on-surface-variant",

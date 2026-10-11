@@ -1,8 +1,7 @@
 import type { FC } from "react"
 
 import { cn } from "@/libs/utils"
-
-import type { RequestCardDescriptionData } from "../../libs"
+import type { RequestCardDescriptionData } from "@/types/screens/requests"
 
 interface Props extends Omit<RequestCardDescriptionData, "itemKey"> {
 	className?: string

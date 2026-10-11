@@ -5,7 +5,7 @@ import type {
 	DomainRequestStatus,
 	DomainSortType
 } from "@/api/generated"
-import { ReactStateHook } from "@/types/base"
+import type { ReactStateHook } from "@/types/base"
 
 export interface RequestStatus {
 	value: DomainRequestStatus

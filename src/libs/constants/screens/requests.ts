@@ -10,7 +10,7 @@ import type {
 	RequestOriginType,
 	RequestStatus,
 	RequestStatusIcons
-} from "./types"
+} from "@/types/screens/requests"
 
 export const REQUEST_STATUSES: RequestStatus[] = [
 	{ value: "default", label: "Черновик" },
