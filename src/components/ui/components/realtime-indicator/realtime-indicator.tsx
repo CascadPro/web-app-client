@@ -1,5 +1,6 @@
 "use client"
 
+import { GlobeIcon } from "lucide-react"
 import { m } from "motion/react"
 
 import { cn } from "@/libs/utils"
@@ -33,7 +34,7 @@ export function RealtimeStatusIndicator() {
 			}}
 			className={cn(
 				"fixed bottom-[calc(env(safe-area-inset-bottom)+5.5rem)] z-100 translate-x-1/2",
-				"border-outline/30 bg-surface overflow-hidden rounded-2xl border-2 shadow-2xl",
+				"ring-outline/30 bg-surface/50 overflow-hidden rounded-3xl shadow-2xl ring-2 backdrop-blur-xl",
 				!visible && "pointer-events-none",
 				isCompact && "mr-8 flex items-center justify-center"
 			)}
@@ -64,7 +65,7 @@ export function RealtimeStatusIndicator() {
 			>
 				<div
 					className={cn(
-						"bg-surface-variant relative flex size-10 shrink-0 items-center justify-center rounded-full"
+						"relative flex size-10 shrink-0 items-center justify-center rounded-full"
 					)}
 				>
 					<Icon
@@ -72,7 +73,7 @@ export function RealtimeStatusIndicator() {
 						strokeWidth={2}
 						className={cn(config.textColor, {
 							"animate-spin": status === "reconnecting",
-							"text-primary": quality === "degraded",
+							"text-amber-500": quality === "degraded",
 							"text-error": quality === "poor"
 						})}
 					/>
@@ -83,7 +84,7 @@ export function RealtimeStatusIndicator() {
 							config.color,
 							{
 								"animate-pulse": config.pulse,
-								"bg-primary": quality === "degraded",
+								"bg-amber-500": quality === "degraded",
 								"bg-error": quality === "poor"
 							}
 						)}
@@ -103,7 +104,9 @@ export function RealtimeStatusIndicator() {
 				)}
 
 				{!isCompact && status === "online" && (
-					<span className="size-2 shrink-0 rounded-full bg-emerald-400" />
+					<div className="shrink-0 rounded-full p-1 ring-2 ring-emerald-600">
+						<GlobeIcon size={16} className="text-emerald-500" />
+					</div>
 				)}
 			</button>
 		</m.div>

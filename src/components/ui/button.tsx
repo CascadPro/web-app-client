@@ -6,16 +6,16 @@ import { type ButtonHTMLAttributes, forwardRef } from "react"
 import { cn } from "@/libs/utils"
 
 const buttonVariants = cva(
-	"relative inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm transition-all will-change-auto [&_svg]:pointer-events-none [&_svg]:select-none disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none",
+	"relative inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm transition-all will-change-auto [&_svg]:pointer-events-none [&_svg]:select-none disabled:opacity-50! disabled:cursor-not-allowed disabled:pointer-events-none",
 	{
 		variants: {
 			variant: {
 				default:
 					"bg-primary-container text-on-primary shadow shadow-primary hover:bg-primary-container/90 active:bg-primary-container/90 active:shadow-md",
 				"default-2":
-					"bg-primary/10 text-primary shadow shadow-tertiary rounded-lg p-1 active:shadow-none hover:shadow-none",
+					"bg-primary/10 text-primary rounded-lg p-1 ring ring-transparent active:scale-[.96] active:ring-tertiary/50 hover:ring-tertiary/50",
 				outline:
-					"gap-1 border border-outline text-on-background hover:bg-secondary/40 active:bg-secondary/40 active:scale-[.99]",
+					"gap-1 ring ring-outline text-on-background hover:bg-secondary/40 active:bg-secondary/40 active:scale-[.99]",
 				ghost: "",
 				secondary:
 					"bg-secondary text-on-secondary shadow-sm hover:bg-secondary/70 active:bg-secondary/70 active:shadow-md",
@@ -24,7 +24,7 @@ const buttonVariants = cva(
 				destructive:
 					"bg-error-container text-on-error-container hover:bg-error hover:text-on-error active:bg-error active:text-on-error",
 				"destructive-outline":
-					"border border-error-container text-error bg-transparent shadow shadow-error active:shadow-none hover:bg-error-container/40 active:bg-error-container/40 active:scale-[.99]"
+					"ring ring-error-container text-error bg-transparent shadow shadow-error active:shadow-none hover:bg-error-container/40 active:bg-error-container/40 active:scale-[.99]"
 			}
 		},
 		defaultVariants: {

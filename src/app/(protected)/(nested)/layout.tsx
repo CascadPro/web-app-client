@@ -15,27 +15,31 @@ export default function Layout({
 
 	return (
 		<>
-			<header className="flex items-center gap-2 p-2">
-				<Button
-					variant="ghost"
-					className="active:bg-tertiary/40 hover:bg-tertiary/40 rounded-full p-2"
-					onClick={handleBack}
-				>
-					<MoveLeftIcon
-						size={24}
-						className={cn(
-							"transition-transform duration-300 will-change-auto",
-							isActive && "-translate-x-10"
-						)}
-					/>
-				</Button>
+			<header className="fixed inset-x-0 top-0 z-50 pt-[env(safe-area-inset-top)]">
+				<div className="bg-background/40 border-outline/20 flex min-h-16 items-center gap-2 border-b p-2 backdrop-blur-lg">
+					<Button
+						variant="ghost"
+						className="active:bg-tertiary/40 hover:bg-tertiary/40 rounded-full p-2"
+						onClick={handleBack}
+					>
+						<MoveLeftIcon
+							size={24}
+							className={cn(
+								"transition-transform duration-300 will-change-auto",
+								isActive && "-translate-x-10"
+							)}
+						/>
+					</Button>
 
-				<Title size="xl" className="text-xl">
-					{title}
-				</Title>
+					<Title size="xl" className="text-xl">
+						{title}
+					</Title>
+				</div>
 			</header>
 
-			<Container className="px-3 py-2">{children}</Container>
+			<Container className="px-3 pt-[calc(4.5rem+env(safe-area-inset-top))]">
+				{children}
+			</Container>
 		</>
 	)
 }
