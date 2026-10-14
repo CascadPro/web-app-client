@@ -1,5 +1,5 @@
-import type { DragControls, PanInfo } from "motion/react"
-import type { PropsWithChildren, RefObject } from "react"
+import type { DragControls, PanInfo } from "motion/react";
+import type { PropsWithChildren, RefObject } from "react";
 
 export interface BottomSheetProps extends PropsWithChildren {
 	open: boolean
@@ -40,6 +40,12 @@ export interface BottomSheetProps extends PropsWithChildren {
 
 	/** Дополнительный класс затемнения. */
 	backdropCN?: string
+
+	expandable?: boolean
+	expanded?: boolean
+	defaultExpanded?: boolean
+	onExpandedChange?: (expanded: boolean) => void
+	expandedHeight?: number | string
 }
 
 export interface BottomSheetBackdropProps {
@@ -70,6 +76,10 @@ export interface BottomSheetPanelProps {
 	onClose: () => void
 	children: React.ReactNode
 	panelRef: RefObject<HTMLDivElement | null>
+	expandable: boolean
+	expanded: boolean
+	expandedHeight: number | string
+	onExpandedChange: (expanded: boolean) => void
 }
 
 export type BottomSheetDragEndHandler = (

@@ -1,7 +1,7 @@
 "use client"
 
-import { m } from "motion/react"
-import type { FC } from "react"
+import { m, PanInfo } from "motion/react"
+import { type FC } from "react"
 
 import { cn } from "@/libs/utils"
 
@@ -27,10 +27,73 @@ export const BottomSheetPanel: FC<BottomSheetPanelProps> = ({
 	reducedMotion,
 	onClose,
 	children,
-	panelRef
+	panelRef,
+	expanded,
+	expandable,
+	expandedHeight,
+	onExpandedChange
 }) => {
-	const { contentRef, dragControls, handleDragEnd, handlePointerDown } =
-		useBottomSheetPanel(dismissThreshold, dragToClose, dragAnywhere, onClose)
+	const {
+		contentRef,
+		dragControls,
+		dragStartHeight,
+		rubberScaleValue,
+		rubberScale,
+		dragHeight,
+		setDragHeight,
+		handleDragEndWithHeight,
+		handlePointerDown
+	} = useBottomSheetPanel(
+		dismissThreshold,
+		dragToClose,
+		dragAnywhere,
+		expanded,
+		expandable,
+		onClose,
+		onExpandedChange
+	)
+
+	const handleDragStart = () => {
+		const panel = panelRef.current
+		if (!panel) return
+
+		dragStartHeight.current = panel.getBoundingClientRect().height
+		setDragHeight(dragStartHeight.current)
+	}
+
+	const handleDrag = (
+		_: MouseEvent | TouchEvent | PointerEvent,
+		info: PanInfo
+	) => {
+		if (reducedMotion) return
+
+		if (expandable) {
+			const viewportHeight = window.innerHeight
+			const maxHeight =
+				typeof expandedHeight === "number"
+					? expandedHeight
+					: expandedHeight.endsWith("dvh")
+						? (parseFloat(expandedHeight) / 100) * viewportHeight
+						: expandedHeight.endsWith("vh")
+							? (parseFloat(expandedHeight) / 100) * viewportHeight
+							: viewportHeight * 0.9
+
+			const minHeight = dragStartHeight.current
+
+			// Свайп вверх увеличивает высоту, низ панели остаётся на месте.
+			const nextHeight = Math.max(
+				minHeight,
+				Math.min(maxHeight, dragStartHeight.current - info.offset.y)
+			)
+
+			setDragHeight(nextHeight)
+		} else {
+			const pull = Math.max(0, -info.offset.y)
+			const stretch = Math.min(pull / 120, 1) * 0.05
+
+			rubberScaleValue.set(1 + stretch)
+		}
+	}
 
 	return (
 		<m.div
@@ -52,10 +115,16 @@ export const BottomSheetPanel: FC<BottomSheetPanelProps> = ({
 			style={{
 				bottom: 0,
 				paddingBottom: "env(safe-area-inset-bottom)",
-				pointerEvents: open ? "auto" : "none"
+				pointerEvents: open ? "auto" : "none",
+				transformOrigin: "center bottom",
+				scaleY: rubberScale
 			}}
 			initial={{ y: "100%" }}
-			animate={{ y: open ? 0 : "100%" }}
+			animate={{
+				y: open ? 0 : "100%",
+				y: open ? 0 : "100%",
+				height: dragHeight ?? (expanded ? expandedHeight : "auto")
+			}}
 			exit={{ y: "100%" }}
 			transition={getSheetTransition(reducedMotion)}
 			drag={open && dragToClose ? "y" : false}
@@ -65,10 +134,12 @@ export const BottomSheetPanel: FC<BottomSheetPanelProps> = ({
 			dragSnapToOrigin
 			dragConstraints={{
 				top: 0,
-				bottom: Math.max(dismissThreshold + 80, 240)
+				bottom: dragToClose ? dismissThreshold + 80 : 0
 			}}
 			dragElastic={reducedMotion ? 0 : { top: 0, bottom: 0.25 }}
-			onDragEnd={handleDragEnd}
+			onDragStart={handleDragStart}
+			onDrag={handleDrag}
+			onDragEnd={handleDragEndWithHeight}
 			onPointerDown={dragAnywhere ? handlePointerDown : undefined}
 		>
 			<BottomSheetHandle

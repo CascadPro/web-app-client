@@ -7,6 +7,7 @@ import { createPortal } from "react-dom"
 import { BottomSheetBackdrop } from "./components/bottom-sheet-backdrop"
 import { BottomSheetPanel } from "./components/bottom-sheet-panel"
 import { useBottomSheet } from "./hooks/useBottomSheet"
+import { useBottomSheetExpand } from "./hooks/useBottomSheetExpande"
 import type { BottomSheetProps } from "./types"
 
 const BottomSheetComponent = memo(function BottomSheetComponent({
@@ -27,7 +28,12 @@ const BottomSheetComponent = memo(function BottomSheetComponent({
 	showBackdrop = true,
 	keepMounted = false,
 	panelCN,
-	backdropCN
+	backdropCN,
+	expandable = false,
+	expanded,
+	defaultExpanded = false,
+	onExpandedChange,
+	expandedHeight = "90dvh"
 }: Readonly<BottomSheetProps>) {
 	const {
 		panelRef,
@@ -38,6 +44,14 @@ const BottomSheetComponent = memo(function BottomSheetComponent({
 		close,
 		handleBackdropClick
 	} = useBottomSheet(open, onChange, closeOnBackdropClick, closeOnEscape)
+
+	const { isExpanded, setIsExpanded } = useBottomSheetExpand(
+		open,
+		expanded,
+		defaultExpanded,
+		expandable,
+		onExpandedChange
+	)
 
 	if (!mounted) return null
 
@@ -80,6 +94,10 @@ const BottomSheetComponent = memo(function BottomSheetComponent({
 							reducedMotion={reducedMotion}
 							onClose={close}
 							panelRef={panelRef}
+							expanded={isExpanded}
+							expandable={expandable}
+							expandedHeight={expandedHeight}
+							onExpandedChange={setIsExpanded}
 						>
 							{children}
 						</BottomSheetPanel>
@@ -95,3 +113,4 @@ BottomSheetComponent.displayName = "BottomSheet"
 
 export { BottomSheetComponent as BottomSheet }
 export type { BottomSheetProps }
+
