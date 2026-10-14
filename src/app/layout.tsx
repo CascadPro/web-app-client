@@ -1,10 +1,11 @@
 import { domAnimation, LazyMotion } from "motion/react"
-import type { Metadata } from "next"
+import type { Metadata, Viewport } from "next"
 import { ThemeProvider } from "next-themes"
 import { JetBrains_Mono, Mulish } from "next/font/google"
 import type { ReactNode } from "react"
 
 import { HapticProvider } from "@/components/providers/haptics"
+import { ServiceWorkerRegister } from "@/components/pwa/pwa-service-worker"
 
 import "./globals.css"
 
@@ -34,6 +35,13 @@ export const metadata: Metadata = {
 	}
 }
 
+export const viewport: Viewport = {
+	width: "device-width",
+	initialScale: 1,
+	viewportFit: "cover",
+	themeColor: "#121212"
+}
+
 export default function Layout({ children }: Readonly<Props>) {
 	return (
 		<html lang="ru" data-scroll-behavior="smooth" suppressHydrationWarning>
@@ -45,6 +53,7 @@ export default function Layout({ children }: Readonly<Props>) {
 				</ThemeProvider>
 
 				<HapticProvider />
+				<ServiceWorkerRegister />
 			</body>
 		</html>
 	)

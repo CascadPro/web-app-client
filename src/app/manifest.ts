@@ -2,20 +2,18 @@ import type { MetadataRoute } from "next"
 
 export default function manifest(): MetadataRoute.Manifest {
 	return {
-		name: "Cascade Pro App",
-		short_name: "Cascade Pro",
-		description: "Cascade Pro application",
+		id: "/",
+		name: "Cascade Pro",
+		short_name: "Cascade",
+		description: "Управление заявками и сессиями Cascade Pro",
 
 		start_url: "/",
 		scope: "/",
-
 		lang: "ru",
 
 		display: "standalone",
-		orientation: "portrait",
-
-		background_color: "#ffffff",
-		theme_color: "#ff9800",
+		background_color: "#121212",
+		theme_color: "#121212",
 
 		icons: [
 			{
