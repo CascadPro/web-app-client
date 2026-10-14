@@ -1,16 +1,16 @@
 "use client"
 
-import { m, PanInfo } from "motion/react"
-import { type FC } from "react"
+import { m, PanInfo } from "motion/react";
+import { type FC } from "react";
 
-import { cn } from "@/libs/utils"
+import { cn } from "@/libs/utils";
 
-import { Title } from "../../title"
-import { useBottomSheetPanel } from "../hooks/useBottomSheetPanel"
-import type { BottomSheetPanelProps } from "../types"
-import { getSheetTransition } from "../utils"
+import { Title } from "../../title";
+import { useBottomSheetPanel } from "../hooks/useBottomSheetPanel";
+import type { BottomSheetPanelProps } from "../types";
+import { getSheetTransition } from "../utils";
 
-import { BottomSheetHandle } from "./bottom-sheet-handle"
+import { BottomSheetHandle } from "./bottom-sheet-handle";
 
 export const BottomSheetPanel: FC<BottomSheetPanelProps> = ({
 	open,
@@ -153,7 +153,7 @@ export const BottomSheetPanel: FC<BottomSheetPanelProps> = ({
 				ref={contentRef}
 				className={cn(
 					"min-h-0 overflow-y-auto overscroll-contain",
-					"pwa:mb-10 px-4 py-5 [-webkit-overflow-scrolling:touch]",
+					"px-4 py-5 [-webkit-overflow-scrolling:touch]",
 					indicator && "mt-3",
 					className
 				)}

@@ -1,11 +1,11 @@
 "use client"
 
-import { GlobeIcon } from "lucide-react"
-import { m } from "motion/react"
+import { GlobeIcon } from "lucide-react";
+import { m } from "motion/react";
 
-import { cn } from "@/libs/utils"
+import { cn } from "@/libs/utils";
 
-import { useRealtimeIndicator } from "./hook"
+import { useRealtimeIndicator } from "./hook";
 
 export function RealtimeStatusIndicator() {
 	const {
@@ -33,7 +33,7 @@ export function RealtimeStatusIndicator() {
 				right: { delay: isCompact ? 0.2 : 0 }
 			}}
 			className={cn(
-				"fixed bottom-[calc(env(safe-area-inset-bottom)+5.5rem)] z-100 translate-x-1/2",
+				"fixed bottom-[calc(env(safe-area-inset-bottom)+4rem)] z-100 translate-x-1/2",
 				"ring-outline/30 bg-surface/50 overflow-hidden rounded-3xl shadow-2xl ring-2 backdrop-blur-xl",
 				!visible && "pointer-events-none",
 				isCompact && "mr-8 flex items-center justify-center"

@@ -14,7 +14,8 @@ export const useSessions = () => {
 		queryFn: service.getSessions,
 		enabled: state === "authenticated",
 		staleTime: ms("5min"),
-		gcTime: ms("10min")
+		gcTime: ms("10min"),
+		refetchOnWindowFocus: true
 	})
 
 	return {
