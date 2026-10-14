@@ -47,6 +47,8 @@ export async function POST(request: Request) {
 			maxAge: REFRESH_TOKEN_MAX_AGE
 		})
 
+		nextResponse.headers.set("Cache-Control", "no-store, private")
+
 		return nextResponse
 	} catch (error) {
 		const parsed = parseServerError(error)
@@ -58,7 +60,7 @@ export async function POST(request: Request) {
 			console.error(parsed)
 		}
 
-		return NextResponse.json(
+		const nextResponse = NextResponse.json(
 			{
 				code: parsed.code ?? "internal_error",
 				message: parsed.message ?? "Произошла внутренняя ошибка сервера",
@@ -66,5 +68,9 @@ export async function POST(request: Request) {
 			},
 			{ status }
 		)
+
+		nextResponse.headers.set("Cache-Control", "no-store, private")
+
+		return nextResponse
 	}
 }

@@ -1,11 +1,11 @@
-import axios from "axios"
-import { cookies } from "next/headers"
-import { NextResponse } from "next/server"
+import axios from "axios";
+import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
 
-import { serverService } from "@/api/server-instance"
-import { CookieStorageKeys } from "@/libs/constants"
-import { parseServerError } from "@/libs/errors"
-import { isDev } from "@/libs/utils"
+import { serverService } from "@/api/server-instance";
+import { CookieStorageKeys } from "@/libs/constants";
+import { parseServerError } from "@/libs/errors";
+import { isDev } from "@/libs/utils";
 
 export async function GET() {
 	const cookieStore = await cookies()
@@ -28,7 +28,11 @@ export async function GET() {
 			throw new Error("Access token is missing")
 		}
 
-		return NextResponse.json({ access_token })
+		const nextResponse = NextResponse.json({ access_token })
+
+		nextResponse.headers.set("Cache-Control", "no-store, private")
+
+		return nextResponse
 	} catch (error) {
 		const parsed = parseServerError(error)
 		const status = axios.isAxiosError(error)
@@ -47,6 +51,8 @@ export async function GET() {
 		if (status < 500 && status != 429) {
 			nextResponse.cookies.delete(CookieStorageKeys.REFRESH_TOKEN)
 		}
+
+		nextResponse.headers.set("Cache-Control", "no-store, private")
 
 		return nextResponse
 	}

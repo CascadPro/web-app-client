@@ -19,7 +19,7 @@ export async function POST() {
 			? (error.response?.status ?? 500)
 			: 500
 
-		const response = NextResponse.json(
+		const nextResponse = NextResponse.json(
 			{
 				code: parsed.code ?? "internal_error",
 				message: parsed.message ?? "Ошибка выхода из аккаунта"
@@ -27,10 +27,10 @@ export async function POST() {
 			{ status }
 		)
 
-		response.cookies.delete(CookieStorageKeys.REFRESH_TOKEN)
-		response.headers.set("Cache-Control", "no-store")
+		nextResponse.cookies.delete(CookieStorageKeys.REFRESH_TOKEN)
+		nextResponse.headers.set("Cache-Control", "no-store, private")
 
-		return response
+		return nextResponse
 	}
 
 	response.cookies.delete(CookieStorageKeys.REFRESH_TOKEN)
