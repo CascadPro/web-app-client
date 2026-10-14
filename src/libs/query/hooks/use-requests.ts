@@ -9,13 +9,16 @@ import { ms } from "@/libs/utils"
 import { QueryKeys } from "../keys"
 
 export const useRequests = (params?: GetRequestsParams) => {
-	if (params?.statuses) {
-		params.statuses.sort()
-	}
+	const normalizedParams = params
+		? {
+				...params,
+				statuses: params.statuses ? [...params.statuses].sort() : undefined
+			}
+		: undefined
 
 	const { data, ...other } = useQuery({
-		queryKey: QueryKeys.requests.list(params),
-		queryFn: async () => (await service.getRequests(params)).data,
+		queryKey: QueryKeys.requests.list(normalizedParams),
+		queryFn: async () => (await service.getRequests(normalizedParams)).data,
 		staleTime: ms("5min"),
 		gcTime: ms("15min"),
 		placeholderData: previous => previous
