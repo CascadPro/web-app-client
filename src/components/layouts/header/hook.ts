@@ -2,7 +2,7 @@ import { usePathname } from "next/navigation"
 import { useState } from "react"
 
 import { AppRoutes } from "@/libs/constants"
-import { useNavigation } from "@/libs/hooks"
+import { useIsIOS, useNavigation } from "@/libs/hooks"
 
 const paths = {
 	[AppRoutes.MY_PROFILE]: "Мой профиль",
@@ -10,21 +10,25 @@ const paths = {
 	[AppRoutes.REQUESTS]: "Входящие заявки"
 } as const
 
-export const useNestedLayout = () => {
+export const useNestedHeader = () => {
 	const pathname = usePathname()
 	const { back } = useNavigation()
+
+	const isIOS = useIsIOS()
 
 	const [isActive, setIsActive] = useState(false)
 
 	const handleBack = () => {
+		if (isIOS) return back()
+
 		setIsActive(true)
 		setTimeout(() => {
 			back()
 			setIsActive(false)
-		}, 500)
+		}, 300)
 	}
 
 	const title = paths[pathname as keyof typeof paths]
 
-	return { title, handleBack, isActive }
+	return { title, handleBack, isIOS, isActive }
 }

@@ -260,6 +260,8 @@ ul {
 		z-index: -1;
 		border-radius: inherit;
 		pointer-events: none;
+		transition: opacity 150ms ease;
+		will-change: auto;
 
 		background:
 			radial-gradient(
@@ -286,4 +288,19 @@ ul {
 
 		mask-image: linear-gradient(to bottom, black, transparent 55%);
 	}
+}
+
+.header-background {
+	background: linear-gradient(
+		180deg,
+		color-mix(in oklab, var(--background) 100%, transparent) 0%,
+		color-mix(in oklab, var(--background) 90%, transparent) 25%,
+		color-mix(in oklab, var(--background) 75%, transparent) 50%,
+		color-mix(in oklab, var(--background) 50%, transparent) 75%,
+		transparent 100%
+	);
+
+	-webkit-backdrop-filter: blur(var(--glass-blur))
+		saturate(var(--glass-saturation));
+	backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
 }

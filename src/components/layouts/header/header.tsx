@@ -1,0 +1,51 @@
+"use client"
+
+import { MoveLeftIcon } from "lucide-react"
+
+import { Button, Title } from "@/components/ui"
+import { cn } from "@/libs/utils"
+
+import { useNestedHeader } from "./hook"
+
+// bg-[linear-gradient(90deg,transparent,var(--surface))]
+
+export const NestedHeader = () => {
+	const { title, isActive, isIOS, handleBack } = useNestedHeader()
+
+	return (
+		<header className="fixed inset-x-0 top-0 z-50 pt-[env(safe-area-inset-top)]">
+			<div
+				className={cn("flex min-h-16 items-center p-2", {
+					"bg-background/40 border-outline/20 gap-2 border-b backdrop-blur-lg":
+						!isIOS,
+					"header-background pt-3": isIOS
+				})}
+			>
+				<Button
+					variant="ghost"
+					className={cn("rounded-full p-2.5", {
+						"active:bg-tertiary/40 hover:bg-tertiary/40": !isIOS,
+						"glass glass-highlight absolute border-none! active:before:opacity-0 active:after:opacity-0":
+							isIOS
+					})}
+					onClick={handleBack}
+				>
+					<MoveLeftIcon
+						size={24}
+						className={cn(
+							"transition-transform duration-300 will-change-auto",
+							isActive && "-translate-x-12"
+						)}
+					/>
+				</Button>
+
+				<Title
+					size="xl"
+					className={cn("text-xl", { "w-full text-center": isIOS })}
+				>
+					{title}
+				</Title>
+			</div>
+		</header>
+	)
+}
