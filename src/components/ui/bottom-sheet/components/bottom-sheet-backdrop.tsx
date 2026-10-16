@@ -21,7 +21,7 @@ export const BottomSheetBackdrop: FC<Props> = ({
 			aria-label="Закрыть панель"
 			className={cn(
 				"pointer-events-auto absolute inset-0 cursor-default select-none",
-				"bg-black/50 backdrop-blur-xs",
+				"bg-black/10 backdrop-blur-xs dark:bg-black/50",
 				className
 			)}
 			initial={{ opacity: 0 }}

@@ -50,6 +50,7 @@ export const ProfileHeaderSheet: FC<Props> = ({
 			zIndex={8888 + 1}
 			className="flex flex-col gap-2 px-3 py-6 [&>button]:gap-1 [&>button]:p-2 [&>button]:text-base"
 			indicator={false}
+			panelCN="bg-background!"
 		>
 			<Button
 				variant="default-2"

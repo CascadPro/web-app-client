@@ -1,16 +1,16 @@
 "use client"
 
-import { m, PanInfo } from "motion/react";
-import { type FC } from "react";
+import { m, PanInfo } from "motion/react"
+import { type FC } from "react"
 
-import { cn } from "@/libs/utils";
+import { cn } from "@/libs/utils"
 
-import { Title } from "../../title";
-import { useBottomSheetPanel } from "../hooks/useBottomSheetPanel";
-import type { BottomSheetPanelProps } from "../types";
-import { getSheetTransition } from "../utils";
+import { Title } from "../../title"
+import { useBottomSheetPanel } from "../hooks/useBottomSheetPanel"
+import type { BottomSheetPanelProps } from "../types"
+import { getSheetTransition } from "../utils"
 
-import { BottomSheetHandle } from "./bottom-sheet-handle";
+import { BottomSheetHandle } from "./bottom-sheet-handle"
 
 export const BottomSheetPanel: FC<BottomSheetPanelProps> = ({
 	open,
@@ -105,11 +105,10 @@ export const BottomSheetPanel: FC<BottomSheetPanelProps> = ({
 			aria-hidden={!open}
 			tabIndex={-1}
 			className={cn(
-				"pointer-events-auto fixed inset-x-0",
-				"flex max-h-[calc(100dvh-env(safe-area-inset-top)-1rem)]",
-				"flex-col overflow-hidden rounded-t-3xl",
-				"bg-background text-on-background",
-				"shadow-3xl outline-none",
+				"fixed inset-x-0 isolate overflow-hidden",
+				"flex max-h-[calc(100dvh-env(safe-area-inset-top)-1rem)] flex-col",
+				"not-motion-reduce:glass not-motion-reduce:glass-highlight motion-reduce:bg-background",
+				"text-on-background rounded-t-3xl outline-none",
 				panelCN
 			)}
 			style={{
@@ -121,7 +120,6 @@ export const BottomSheetPanel: FC<BottomSheetPanelProps> = ({
 			}}
 			initial={{ y: "100%" }}
 			animate={{
-				y: open ? 0 : "100%",
 				y: open ? 0 : "100%",
 				height: dragHeight ?? (expanded ? expandedHeight : "auto")
 			}}

@@ -38,6 +38,15 @@
 	--on-error: #ffffff;
 	--error-container: #ffccd2;
 	--on-error-container: #b00020;
+
+	/* Liquid Glass — light theme */
+	--glass-bg: rgba(255, 255, 255, 0.5);
+	--glass-border: rgb(255 255 255 / 42%);
+	--glass-highlight: rgb(255 255 255 / 62%);
+	--glass-reflection: rgb(255 255 255 / 20%);
+	--glass-shadow: rgb(40 40 50 / 7%);
+	--glass-blur: 2px;
+	--glass-saturation: 100%;
 }
 
 @theme inline {
@@ -104,6 +113,15 @@
 	--on-error: #000000;
 	--error-container: #b00020;
 	--on-error-container: #ffdad6;
+
+	/* Liquid Glass — dark theme */
+	--glass-bg: rgb(30 30 30 / 58%);
+	--glass-border: rgb(255 255 255 / 14%);
+	--glass-highlight: rgb(255 255 255 / 18%);
+	--glass-reflection: rgb(255 255 255 / 7%);
+	--glass-shadow: rgb(0 0 0 / 28%);
+	--glass-blur: 1px;
+	--glass-saturation: 300%;
 }
 
 body {
@@ -217,5 +235,55 @@ ul {
 @custom-variant pwa {
 	@media (display-mode: standalone) {
 		@slot;
+	}
+}
+
+@utility glass {
+	background: var(--glass-bg);
+	border: 1px solid var(--glass-border);
+
+	-webkit-backdrop-filter: blur(var(--glass-blur))
+		saturate(var(--glass-saturation));
+	backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+
+	box-shadow:
+		inset 0 1px 1px var(--glass-highlight),
+		inset 0 -1px 0 var(--glass-reflection),
+		0 -18px 60px var(--glass-shadow);
+}
+
+@utility glass-highlight {
+	&::before {
+		content: "";
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		border-radius: inherit;
+		pointer-events: none;
+
+		background:
+			radial-gradient(
+				ellipse at 50% 0%,
+				var(--glass-highlight),
+				transparent 58%
+			),
+			linear-gradient(
+				115deg,
+				var(--glass-reflection),
+				transparent 40%,
+				var(--glass-reflection)
+			);
+	}
+
+	&::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+		border-radius: inherit;
+		pointer-events: none;
+
+		border-top: 1px solid var(--glass-highlight);
+
+		mask-image: linear-gradient(to bottom, black, transparent 55%);
 	}
 }
