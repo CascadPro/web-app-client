@@ -1,16 +1,14 @@
 "use client"
 
-import { MoveLeftIcon } from "lucide-react"
+import { memo } from "react"
 
 import { Button, Title } from "@/components/ui"
 import { cn } from "@/libs/utils"
 
 import { useNestedHeader } from "./hook"
 
-// bg-[linear-gradient(90deg,transparent,var(--surface))]
-
-export const NestedHeader = () => {
-	const { title, isActive, isIOS, handleBack } = useNestedHeader()
+export const NestedHeader = memo(() => {
+	const { Icon, title, isActive, isIOS, handleBack } = useNestedHeader()
 
 	return (
 		<header className="fixed inset-x-0 top-0 z-50 pt-[env(safe-area-inset-top)]">
@@ -25,12 +23,12 @@ export const NestedHeader = () => {
 					variant="ghost"
 					className={cn("rounded-full p-2.5", {
 						"active:bg-tertiary/40 hover:bg-tertiary/40": !isIOS,
-						"glass glass-highlight absolute border-none! active:before:opacity-0 active:after:opacity-0":
+						"glass glass-highlight absolute border-none! duration-200 hover:scale-[.98] hover:before:opacity-0 hover:after:opacity-0 active:scale-90 active:before:opacity-0 active:after:opacity-0":
 							isIOS
 					})}
 					onClick={handleBack}
 				>
-					<MoveLeftIcon
+					<Icon
 						size={24}
 						className={cn(
 							"transition-transform duration-300 will-change-auto",
@@ -48,4 +46,4 @@ export const NestedHeader = () => {
 			</div>
 		</header>
 	)
-}
+})

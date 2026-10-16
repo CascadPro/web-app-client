@@ -1,3 +1,4 @@
+import { ChevronLeftIcon, MoveLeftIcon } from "lucide-react"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
 
@@ -30,5 +31,7 @@ export const useNestedHeader = () => {
 
 	const title = paths[pathname as keyof typeof paths]
 
-	return { title, handleBack, isIOS, isActive }
+	const Icon = isIOS ? ChevronLeftIcon : MoveLeftIcon
+
+	return { Icon, title, handleBack, isIOS, isActive }
 }

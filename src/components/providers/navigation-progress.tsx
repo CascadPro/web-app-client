@@ -2,11 +2,11 @@
 
 import { LoaderIcon } from "lucide-react"
 import { AnimatePresence, m } from "motion/react"
-import { Suspense } from "react"
+import { memo, Suspense } from "react"
 
 import { useNavigationProgress } from "./hooks/useNavigationProgress"
 
-function NavigationProgressInner() {
+const NavigationProgressInner = () => {
 	const { reducedMotion, isLoading, isSlow } = useNavigationProgress()
 
 	return (
@@ -68,10 +68,10 @@ function NavigationProgressInner() {
 	)
 }
 
-export function NavigationProgress() {
+export const NavigationProgress = memo(() => {
 	return (
 		<Suspense fallback={null}>
 			<NavigationProgressInner />
 		</Suspense>
 	)
-}
+})

@@ -1,6 +1,6 @@
 "use client"
 
-import type { FC } from "react"
+import { type FC, memo } from "react"
 
 import type { AppRoutesKeys } from "@/libs/constants"
 import { useIsIOS } from "@/libs/hooks"
@@ -19,7 +19,7 @@ interface Props {
 	data: TabsData[]
 }
 
-export const Tabs: FC<Props> = ({ data }) => {
+export const Tabs: FC<Props> = memo(({ data }) => {
 	const isIOS = useIsIOS()
 
 	return (
@@ -36,4 +36,4 @@ export const Tabs: FC<Props> = ({ data }) => {
 			))}
 		</nav>
 	)
-}
+})
