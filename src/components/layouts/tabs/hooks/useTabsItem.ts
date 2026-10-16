@@ -8,7 +8,7 @@ import {
 } from "lucide-react"
 import { usePathname } from "next/navigation"
 
-import { useNavigation } from "@/libs/hooks"
+import { useNavigation } from "@/libs/hooks";
 
 export type TabsItemIconType = "about" | "menu" | "start" | "home"
 
