@@ -1,7 +1,7 @@
-import { EyeIcon, EyeOffIcon } from "lucide-react";
-import type { FC } from "react";
+import { EyeIcon, EyeOffIcon } from "lucide-react"
+import type { FC } from "react"
 
-import { cn } from "@/libs/utils";
+import { cn } from "@/libs/utils"
 
 interface IProps {
 	className?: string
@@ -27,4 +27,4 @@ const PasswordEye: FC<IProps> = ({ onClick, value, className }) => {
 	)
 }
 
-export { PasswordEye };
+export { PasswordEye }

@@ -1,11 +1,11 @@
 "use client"
 
-import type { FC } from "react";
+import type { FC } from "react"
 
-import { Button } from "@/components/ui";
-import { cn } from "@/libs/utils";
+import { Button } from "@/components/ui"
+import { cn } from "@/libs/utils"
 
-import { type TabsItemIconType, useTabsItem } from "../hooks/useTabsItem";
+import { type TabsItemIconType, useTabsItem } from "../hooks/useTabsItem"
 
 interface Props {
 	title: string
@@ -21,8 +21,7 @@ export const TabsItem: FC<Props> = ({ title, href, icon, isIOS }) => {
 		<Button
 			variant="ghost"
 			className={cn("flex-col active:scale-90", {
-				"hover:bg-primary/10 text-shadow-[0px_1px_6px]":
-					!isIOS,
+				"hover:bg-primary/10 text-shadow-[0px_1px_6px]": !isIOS,
 				"text-on-surface-variant rounded-4xl px-10 py-1": isIOS,
 				"bg-primary/10 text-primary": active && isIOS
 			})}

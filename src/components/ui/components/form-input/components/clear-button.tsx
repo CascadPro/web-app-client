@@ -1,7 +1,7 @@
-import { XIcon } from "lucide-react";
-import type { FC } from "react";
+import { XIcon } from "lucide-react"
+import type { FC } from "react"
 
-import { cn } from "@/libs/utils";
+import { cn } from "@/libs/utils"
 
 interface IProps {
 	className?: string
@@ -28,4 +28,4 @@ const ClearButton: FC<IProps> = ({ value, onClick, className }) => {
 	)
 }
 
-export { ClearButton };
+export { ClearButton }

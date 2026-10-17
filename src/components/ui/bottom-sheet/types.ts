@@ -1,5 +1,5 @@
-import type { DragControls, PanInfo } from "motion/react";
-import type { PropsWithChildren, RefObject } from "react";
+import type { DragControls, PanInfo } from "motion/react"
+import type { PropsWithChildren, RefObject } from "react"
 
 export interface BottomSheetProps extends PropsWithChildren {
 	open: boolean

@@ -98,5 +98,4 @@ const useRequestStatsHook = () => {
 	return { stats, isPending }
 }
 
-export { useRequestStatsHook as useRequestStats };
-
+export { useRequestStatsHook as useRequestStats }

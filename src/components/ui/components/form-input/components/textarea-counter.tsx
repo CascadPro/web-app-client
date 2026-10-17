@@ -16,8 +16,9 @@ const TextareaCounter: FC<IProps> = ({ length, maxLength }) => {
 					className={cn(
 						"transition-all will-change-auto motion-reduce:transition-none",
 						{
-						"text-base text-black": maxLength === length
-					})}
+							"text-base text-black": maxLength === length
+						}
+					)}
 				>
 					{length}
 				</p>

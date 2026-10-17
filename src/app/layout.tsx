@@ -50,9 +50,9 @@ export default function Layout({ children }: Readonly<Props>) {
 				<ThemeProvider attribute="class">
 					<LazyMotion features={domAnimation} strict>
 						<MotionConfig reducedMotion="user">
-						{children}
+							{children}
 
-						<ToastViewport />
+							<ToastViewport />
 						</MotionConfig>
 					</LazyMotion>
 				</ThemeProvider>

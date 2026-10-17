@@ -1,11 +1,11 @@
 "use client"
 
-import { GlobeIcon } from "lucide-react";
-import { m } from "motion/react";
+import { GlobeIcon } from "lucide-react"
+import { m } from "motion/react"
 
-import { cn } from "@/libs/utils";
+import { cn } from "@/libs/utils"
 
-import { useRealtimeIndicator } from "./hook";
+import { useRealtimeIndicator } from "./hook"
 
 export function RealtimeStatusIndicator() {
 	const {

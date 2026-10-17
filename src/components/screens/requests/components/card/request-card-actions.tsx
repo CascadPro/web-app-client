@@ -1,10 +1,10 @@
-import { AnimatePresence, m } from "motion/react";
-import type { FC } from "react";
+import { AnimatePresence, m } from "motion/react"
+import type { FC } from "react"
 
-import { Button } from "@/components/ui";
-import type { ReactStateHook } from "@/types/base";
+import { Button } from "@/components/ui"
+import type { ReactStateHook } from "@/types/base"
 
-import { useRequestCardActions } from "../../hooks/useRequestCardActions";
+import { useRequestCardActions } from "../../hooks/useRequestCardActions"
 
 export interface Props {
 	id: string

@@ -1,14 +1,14 @@
 "use client"
 
-import { XIcon } from "lucide-react";
-import { m } from "motion/react";
-import { type FC, memo } from "react";
+import { XIcon } from "lucide-react"
+import { m } from "motion/react"
+import { type FC, memo } from "react"
 
-import { cn } from "@/libs/utils";
+import { cn } from "@/libs/utils"
 
-import { TOAST_TYPE_ACCENTS, TOAST_TYPE_ICONS } from "../constants";
-import { useToastItem } from "../hooks/useToastItem";
-import type { ToastData } from "../types";
+import { TOAST_TYPE_ACCENTS, TOAST_TYPE_ICONS } from "../constants"
+import { useToastItem } from "../hooks/useToastItem"
+import type { ToastData } from "../types"
 
 interface Props {
 	item: ToastData

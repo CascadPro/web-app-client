@@ -1,10 +1,10 @@
-import { LoaderIcon } from "lucide-react";
-import { m } from "motion/react";
-import { memo } from "react";
+import { LoaderIcon } from "lucide-react"
+import { m } from "motion/react"
+import { memo } from "react"
 
-import { Button, Separator } from "@/components/ui";
+import { Button, Separator } from "@/components/ui"
 
-import { useRequestStats } from "../hooks/useRequestStats";
+import { useRequestStats } from "../hooks/useRequestStats"
 
 const RequestsStatsComponent = () => {
 	const { stats, isPending } = useRequestStats()

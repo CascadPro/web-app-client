@@ -1,12 +1,12 @@
 "use client"
 
-import Image from "next/image";
-import type { FC } from "react";
+import Image from "next/image"
+import type { FC } from "react"
 
-import { cn } from "@/libs/utils";
+import { cn } from "@/libs/utils"
 
-import type { UserAvatarProps } from "./types";
-import { useUserAvatar } from "./useUserAvatar";
+import type { UserAvatarProps } from "./types"
+import { useUserAvatar } from "./useUserAvatar"
 
 export const UserAvatar: FC<UserAvatarProps> = ({
 	user,
