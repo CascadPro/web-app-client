@@ -31,7 +31,7 @@ export const NestedHeader = memo(() => {
 					<Icon
 						size={24}
 						className={cn(
-							"transition-transform duration-300 will-change-auto",
+							"transition-transform duration-300 will-change-auto motion-reduce:transition-none",
 							isActive && "-translate-x-12"
 						)}
 					/>

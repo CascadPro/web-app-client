@@ -151,9 +151,18 @@ html {
 	scroll-padding-top: 5rem;
 }
 
-@media screen and (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: reduce) {
 	html {
 		scroll-behavior: auto;
+	}
+
+	.shine::after {
+		animation: none !important;
+		transform: none !important;
+	}
+
+	.glass-highlight::before {
+		transition: none !important;
 	}
 }
 

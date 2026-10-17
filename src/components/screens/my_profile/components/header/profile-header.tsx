@@ -57,7 +57,7 @@ const ProfileHeaderComponent: FC<Props> = ({ user, fullname, role, id }) => {
 							user={user}
 							size="2xl"
 							onClickAction={handleAvatarClick}
-							className="cursor-pointer transition-opacity hover:opacity-60! active:opacity-60!"
+							className="cursor-pointer transition-opacity will-change-auto hover:opacity-60! active:opacity-60! motion-reduce:transition-none"
 						/>
 
 						<div

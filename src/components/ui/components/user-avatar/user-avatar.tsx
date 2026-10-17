@@ -70,7 +70,7 @@ export const UserAvatar: FC<UserAvatarProps> = ({
 					loading={quick ? "eager" : "lazy"}
 					className={cn(
 						"object-cover",
-						"transition-opacity duration-200",
+						"transition-opacity duration-200 will-change-auto motion-reduce:transition-none",
 						imageLoaded ? "opacity-100" : "opacity-0"
 					)}
 					onLoad={() => setImageLoaded(true)}

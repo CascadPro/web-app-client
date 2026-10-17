@@ -69,7 +69,11 @@ export const ToastItem: FC<Props> = memo(({ item }) => {
 				<Icon
 					size={22}
 					strokeWidth={2}
-					className={item.type === "loading" ? "animate-spin" : ""}
+					className={
+						item.type === "loading"
+							? "animate-spin motion-reduce:animate-none"
+							: ""
+					}
 					aria-hidden="true"
 				/>
 			</div>
@@ -89,7 +93,7 @@ export const ToastItem: FC<Props> = memo(({ item }) => {
 					type="button"
 					onClick={handleClose}
 					aria-label="Закрыть уведомление"
-					className="text-on-surface-variant hover:bg-on-surface/5 hover:text-on-surface focus-visible:ring-primary active:text-on-background -mr-1 grid shrink-0 place-items-center rounded-lg p-1 ring-2 ring-transparent transition-all will-change-auto active:scale-80"
+					className="text-on-surface-variant hover:bg-on-surface/5 hover:text-on-surface focus-visible:ring-primary active:text-on-background -mr-1 grid shrink-0 place-items-center rounded-lg p-1 ring-2 ring-transparent transition-all will-change-auto active:scale-80 motion-reduce:transition-none"
 				>
 					<XIcon size={24} />
 				</button>

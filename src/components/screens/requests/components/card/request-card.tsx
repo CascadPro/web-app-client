@@ -77,7 +77,7 @@ const RequestCardComponent: FC<Props> = ({ request }) => {
 			>
 				<div
 					className={cn(
-						"bg-surface border-outline/20 grid overflow-hidden rounded-2xl border shadow-sm transition-colors sm:p-1",
+						"bg-surface border-outline/20 grid overflow-hidden rounded-2xl border shadow-sm transition-colors will-change-auto motion-reduce:transition-none sm:p-1",
 						isSelected && "border-transparent shadow-lg"
 					)}
 				>

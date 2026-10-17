@@ -58,7 +58,10 @@ const NavigationProgressInner = () => {
 							animate={{ y: 0, scale: 1 }}
 							exit={reducedMotion ? undefined : { y: 4, scale: 0.98 }}
 						>
-							<LoaderIcon size={18} className="animate-spin" />
+							<LoaderIcon
+								size={18}
+								className="animate-spin motion-reduce:animate-none"
+							/>
 							Переходим…
 						</m.div>
 					</m.div>

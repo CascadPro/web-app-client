@@ -21,8 +21,7 @@ export const TabsItem: FC<Props> = ({ title, href, icon, isIOS }) => {
 		<Button
 			variant="ghost"
 			className={cn("flex-col active:scale-90", {
-				"hover:bg-primary/10 text-shadow-[0px_1px_6px]":
-					!isIOS,
+				"hover:bg-primary/10 text-shadow-[0px_1px_6px]": !isIOS,
 				"text-on-surface-variant rounded-4xl px-10 py-1": isIOS,
 				"bg-primary/10 text-primary": active && isIOS
 			})}
@@ -31,7 +30,8 @@ export const TabsItem: FC<Props> = ({ title, href, icon, isIOS }) => {
 			<Icon
 				size={26}
 				className={cn({
-					"translate-y-3 transition-all will-change-auto": !isIOS,
+					"translate-y-3 transition-all will-change-auto motion-reduce:transition-none":
+						!isIOS,
 					"text-primary translate-y-0": active && !isIOS
 				})}
 			/>

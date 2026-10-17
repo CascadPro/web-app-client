@@ -1,9 +1,9 @@
 "use client"
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useCallback, useMemo } from "react"
 
-import type { RequestsTransportHttpGetRequestsRequest as GetRequestsParams } from "@/api/generated";
+import type { RequestsTransportHttpGetRequestsRequest as GetRequestsParams } from "@/api/generated"
 import { service } from "@/api/instance"
 import { ms } from "@/libs/utils"
 

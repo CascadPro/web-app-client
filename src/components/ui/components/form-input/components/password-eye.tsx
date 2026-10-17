@@ -18,7 +18,7 @@ const PasswordEye: FC<IProps> = ({ onClick, value, className }) => {
 			title={title}
 			onClick={onClick}
 			className={cn(
-				"absolute top-1/2 right-2 z-20 translate-y-[-25%] p-px [&:hover>svg]:opacity-100 [&>svg]:opacity-70 [&>svg]:transition-opacity [&>svg]:will-change-auto [&~.clear-btn]:right-9",
+				"absolute top-1/2 right-2 z-20 translate-y-[-25%] p-px [&:hover>svg]:opacity-100 [&>svg]:opacity-70 [&>svg]:transition-opacity [&>svg]:will-change-auto [&>svg]:motion-reduce:transition-none [&~.clear-btn]:right-9",
 				className
 			)}
 		>

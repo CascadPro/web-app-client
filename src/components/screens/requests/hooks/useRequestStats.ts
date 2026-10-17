@@ -1,3 +1,4 @@
+import { useReducedMotion } from "motion/react"
 import { useCallback, useEffect, useMemo, useRef } from "react"
 
 import { DomainRequestStatus } from "@/api/generated"
@@ -12,8 +13,11 @@ interface Stats {
 }
 
 const useRequestStatsHook = () => {
+	const reduceMotion = useReducedMotion()
+
 	const { statistics, isPending } = useRequestStats()
 	const { setStatuses } = useRequestContext()
+
 	const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
 	const waiting =
@@ -95,8 +99,7 @@ const useRequestStatsHook = () => {
 		]
 	)
 
-	return { stats, isPending }
+	return { stats, reduceMotion, isPending }
 }
 
-export { useRequestStatsHook as useRequestStats };
-
+export { useRequestStatsHook as useRequestStats }

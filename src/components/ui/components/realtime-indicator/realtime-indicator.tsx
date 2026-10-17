@@ -1,11 +1,11 @@
 "use client"
 
-import { GlobeIcon } from "lucide-react";
-import { m } from "motion/react";
+import { GlobeIcon } from "lucide-react"
+import { m } from "motion/react"
 
-import { cn } from "@/libs/utils";
+import { cn } from "@/libs/utils"
 
-import { useRealtimeIndicator } from "./hook";
+import { useRealtimeIndicator } from "./hook"
 
 export function RealtimeStatusIndicator() {
 	const {
@@ -72,7 +72,8 @@ export function RealtimeStatusIndicator() {
 						size={isCompact ? 20 : 24}
 						strokeWidth={2}
 						className={cn(config.textColor, {
-							"animate-spin": status === "reconnecting",
+							"animate-spin motion-reduce:animate-none":
+								status === "reconnecting",
 							"text-amber-500": quality === "degraded",
 							"text-error": quality === "poor"
 						})}
@@ -83,7 +84,7 @@ export function RealtimeStatusIndicator() {
 							"absolute top-0.5 right-0.5 size-2 rounded-full",
 							config.color,
 							{
-								"animate-pulse": config.pulse,
+								"animate-pulse motion-reduce:animate-none": config.pulse,
 								"bg-amber-500": quality === "degraded",
 								"bg-error": quality === "poor"
 							}

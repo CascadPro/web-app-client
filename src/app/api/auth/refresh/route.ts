@@ -1,11 +1,11 @@
-import axios from "axios";
-import { cookies } from "next/headers";
-import { NextResponse } from "next/server";
+import axios from "axios"
+import { cookies } from "next/headers"
+import { NextResponse } from "next/server"
 
-import { serverService } from "@/api/server-instance";
-import { CookieStorageKeys } from "@/libs/constants";
-import { parseServerError } from "@/libs/errors";
-import { isDev } from "@/libs/utils";
+import { serverService } from "@/api/server-instance"
+import { CookieStorageKeys } from "@/libs/constants"
+import { parseServerError } from "@/libs/errors"
+import { isDev } from "@/libs/utils"
 
 export async function GET() {
 	const cookieStore = await cookies()

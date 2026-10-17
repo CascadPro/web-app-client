@@ -1,4 +1,4 @@
-import { CalendarDaysIcon, CircleCheckIcon, ClockIcon } from "lucide-react";
+import { CalendarDaysIcon, CircleCheckIcon, ClockIcon } from "lucide-react"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
 import type { RequestHttpDtoGetRequestsResponseRequest as Request } from "@/api/generated"

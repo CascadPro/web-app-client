@@ -43,7 +43,7 @@ const RequestFiltersComponent: FC<Props> = ({ isLoading }) => {
 						<SortDescIcon
 							size={18}
 							className={cn(
-								"mt-0.5 transition-transform",
+								"mt-0.5 transition-transform will-change-auto motion-reduce:transition-none",
 								sortType === "oldest" && "rotate-180"
 							)}
 						/>

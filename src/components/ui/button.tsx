@@ -6,7 +6,7 @@ import { type ButtonHTMLAttributes, forwardRef } from "react"
 import { cn } from "@/libs/utils"
 
 const buttonVariants = cva(
-	"relative inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm transition-all will-change-auto [&_svg]:pointer-events-none [&_svg]:select-none disabled:opacity-50! disabled:cursor-not-allowed disabled:pointer-events-none",
+	"relative inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm motion-reduce:transition-none transition-all will-change-auto [&_svg]:pointer-events-none [&_svg]:select-none disabled:opacity-50! disabled:cursor-not-allowed disabled:pointer-events-none",
 	{
 		variants: {
 			variant: {
@@ -47,7 +47,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 		let content: React.ReactNode
 
 		if (isLoading) {
-			content = <Loader2Icon className="h-5 w-5 animate-spin" />
+			content = (
+				<Loader2Icon className="h-5 w-5 animate-spin motion-reduce:animate-none" />
+			)
 		} else if (href) {
 			content = (
 				<Link href={href} className="h-full w-full">

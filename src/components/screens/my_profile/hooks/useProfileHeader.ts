@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react"
 
-import { toast } from "@/components/ui/toast";
-import { useClipboardCopy, useScrollLocked } from "@/libs/hooks";
+import { toast } from "@/components/ui/toast"
+import { useClipboardCopy, useScrollLocked } from "@/libs/hooks"
 
 export const useProfileHeader = (
 	id: string | undefined,

@@ -113,4 +113,3 @@ BottomSheetComponent.displayName = "BottomSheet"
 
 export { BottomSheetComponent as BottomSheet }
 export type { BottomSheetProps }
-

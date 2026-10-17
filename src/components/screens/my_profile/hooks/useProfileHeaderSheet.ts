@@ -5,8 +5,8 @@ import {
 	TOAST_ERROR_DURATION,
 	TOAST_SUCCESS_DURATION
 } from "@/components/ui/toast"
-import { useDeleteAvatar, useUploadAvatar } from "@/libs/query/hooks";
-import { errorCatch } from "@/libs/utils";
+import { useDeleteAvatar, useUploadAvatar } from "@/libs/query/hooks"
+import { errorCatch } from "@/libs/utils"
 
 export const useProfileHeaderSheet = (handleClose: () => void) => {
 	const inputRef = useRef<HTMLInputElement>(null)

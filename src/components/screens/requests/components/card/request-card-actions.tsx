@@ -69,7 +69,7 @@ const RequestCardActionsContent: FC<ContentProps> = ({
 				<Button
 					key={key}
 					variant="ghost"
-					className="active:bg-outline/20 flex w-full justify-start gap-2 rounded-xl px-6 py-2 transition-colors"
+					className="active:bg-outline/20 flex w-full justify-start gap-2 rounded-xl px-6 py-2 transition-colors will-change-auto motion-reduce:transition-none"
 					onClick={onClick}
 					isLoading={loading}
 					disabled={disabled || (key !== "details" && !isCollapsed)}
