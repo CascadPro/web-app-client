@@ -84,7 +84,7 @@ export function RealtimeStatusIndicator() {
 							"absolute top-0.5 right-0.5 size-2 rounded-full",
 							config.color,
 							{
-								"animate-pulse": config.pulse,
+								"animate-pulse motion-reduce:animate-none": config.pulse,
 								"bg-amber-500": quality === "degraded",
 								"bg-error": quality === "poor"
 							}
