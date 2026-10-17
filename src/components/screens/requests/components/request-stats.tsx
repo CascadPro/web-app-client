@@ -7,7 +7,7 @@ import { Button, Separator } from "@/components/ui"
 import { useRequestStats } from "../hooks/useRequestStats"
 
 const RequestsStatsComponent = () => {
-	const { stats, isPending } = useRequestStats()
+	const { stats, isPending, reduceMotion } = useRequestStats()
 
 	return (
 		<section className="border-outline/20 bg-surface relative grid grid-cols-2 gap-4 rounded-3xl border p-4 shadow-sm select-none sm:p-5 lg:grid-cols-4">
@@ -28,9 +28,9 @@ const RequestsStatsComponent = () => {
 							/>
 						) : (
 							<m.span
-								initial={{ y: 15, opacity: 0 }}
+								initial={reduceMotion ? false : { y: 15, opacity: 0 }}
 								animate={{ y: 0, opacity: 1 }}
-								transition={{ type: "tween" }}
+								transition={{ type: reduceMotion ? false : "tween" }}
 								className="block"
 							>
 								{stat.value}
