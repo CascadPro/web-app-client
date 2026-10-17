@@ -1,4 +1,4 @@
-import { domAnimation, LazyMotion } from "motion/react"
+import { domAnimation, LazyMotion, MotionConfig } from "motion/react"
 import type { Metadata, Viewport } from "next"
 import { ThemeProvider } from "next-themes"
 import { JetBrains_Mono, Mulish } from "next/font/google"
@@ -49,9 +49,11 @@ export default function Layout({ children }: Readonly<Props>) {
 			<body className={`${poppins.variable} antialiased`}>
 				<ThemeProvider attribute="class">
 					<LazyMotion features={domAnimation} strict>
+						<MotionConfig reducedMotion="user">
 						{children}
 
 						<ToastViewport />
+						</MotionConfig>
 					</LazyMotion>
 				</ThemeProvider>
 
