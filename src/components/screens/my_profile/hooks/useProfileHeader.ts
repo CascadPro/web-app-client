@@ -1,5 +1,6 @@
 import { useState } from "react"
 
+import { toast } from "@/components/ui/toast"
 import { useClipboardCopy, useScrollLocked } from "@/libs/hooks"
 
 export const useProfileHeader = (
@@ -10,7 +11,11 @@ export const useProfileHeader = (
 	const [isSheetOpen, setIsSheetOpen] = useState<boolean>(false)
 	const [isCopied, copyToClipboard] = useClipboardCopy()
 
-	const handleCopy = () => copyToClipboard(id ?? "")
+	const handleCopy = async () => {
+		await copyToClipboard(id ?? "")
+
+		toast.info("Текст скопирован!", { miniature: true, duration: 2000 })
+	}
 
 	const handleAvatarClick = () => {
 		if (avatar) {

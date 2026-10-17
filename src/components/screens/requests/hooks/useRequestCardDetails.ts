@@ -1,6 +1,10 @@
-import { useMemo } from "react"
+import { MailIcon, PhoneIcon, UsersIcon } from "lucide-react"
+import { useCallback, useMemo } from "react"
 
-import { useRequestDetail } from "@/libs/query/hooks/use-requests"
+import type { RequestHttpDtoGetRequestsResponseOrigin as RequestOrigin } from "@/api/generated"
+import { toast } from "@/components/ui/toast"
+import { useClipboardCopy } from "@/libs/hooks"
+import { useRequestDetail } from "@/libs/query/hooks/use-requests";
 
 export const useRequestCardDetails = (id: string, isCollapsed: boolean) => {
 	const { request, isPending } = useRequestDetail(id, !isCollapsed)
@@ -36,5 +40,38 @@ export const useRequestCardDetails = (id: string, isCollapsed: boolean) => {
 		request,
 		isPending,
 		height
+	}
+}
+
+export const useRequestCardDetailsOrigin = ({ type, value }: RequestOrigin) => {
+	const [isCopied, copyText] = useClipboardCopy()
+
+	const Icon = useMemo(() => {
+		switch (type) {
+			case "email":
+				return MailIcon
+			case "phone":
+				return PhoneIcon
+			default:
+				return UsersIcon
+		}
+	}, [type])
+
+	const handleClick = useCallback(async () => {
+		if (isCopied || !value) return
+
+		await copyText(value)
+
+		toast.info("Текст скопирован!", {
+			position: "bottom-center",
+			miniature: true,
+			duration: 2000
+		})
+	}, [value, isCopied])
+
+	return {
+		Icon,
+		isCopied,
+		handleClick
 	}
 }
