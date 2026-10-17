@@ -1,11 +1,11 @@
 "use client"
 
-import type { FC } from "react"
+import type { FC } from "react";
 
-import { Button } from "@/components/ui"
-import { cn } from "@/libs/utils"
+import { Button } from "@/components/ui";
+import { cn } from "@/libs/utils";
 
-import { type TabsItemIconType, useTabsItem } from "../hooks/useTabsItem"
+import { type TabsItemIconType, useTabsItem } from "../hooks/useTabsItem";
 
 interface Props {
 	title: string
@@ -31,7 +31,8 @@ export const TabsItem: FC<Props> = ({ title, href, icon, isIOS }) => {
 			<Icon
 				size={26}
 				className={cn({
-					"translate-y-3 transition-all will-change-auto": !isIOS,
+					"translate-y-3 transition-all will-change-auto motion-reduce:transition-none":
+						!isIOS,
 					"text-primary translate-y-0": active && !isIOS
 				})}
 			/>

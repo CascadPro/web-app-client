@@ -1,14 +1,14 @@
 "use client"
 
-import { XIcon } from "lucide-react"
-import { m } from "motion/react"
-import { type FC, memo } from "react"
+import { XIcon } from "lucide-react";
+import { m } from "motion/react";
+import { type FC, memo } from "react";
 
-import { cn } from "@/libs/utils"
+import { cn } from "@/libs/utils";
 
-import { TOAST_TYPE_ACCENTS, TOAST_TYPE_ICONS } from "../constants"
-import { useToastItem } from "../hooks/useToastItem"
-import type { ToastData } from "../types"
+import { TOAST_TYPE_ACCENTS, TOAST_TYPE_ICONS } from "../constants";
+import { useToastItem } from "../hooks/useToastItem";
+import type { ToastData } from "../types";
 
 interface Props {
 	item: ToastData
@@ -93,7 +93,7 @@ export const ToastItem: FC<Props> = memo(({ item }) => {
 					type="button"
 					onClick={handleClose}
 					aria-label="Закрыть уведомление"
-					className="text-on-surface-variant hover:bg-on-surface/5 hover:text-on-surface focus-visible:ring-primary active:text-on-background -mr-1 grid shrink-0 place-items-center rounded-lg p-1 ring-2 ring-transparent transition-all will-change-auto active:scale-80"
+					className="text-on-surface-variant hover:bg-on-surface/5 hover:text-on-surface focus-visible:ring-primary active:text-on-background -mr-1 grid shrink-0 place-items-center rounded-lg p-1 ring-2 ring-transparent transition-all will-change-auto active:scale-80 motion-reduce:transition-none"
 				>
 					<XIcon size={24} />
 				</button>

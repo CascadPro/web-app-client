@@ -1,11 +1,11 @@
 "use client"
 
-import { memo } from "react"
+import { memo } from "react";
 
-import { Button, Title } from "@/components/ui"
-import { cn } from "@/libs/utils"
+import { Button, Title } from "@/components/ui";
+import { cn } from "@/libs/utils";
 
-import { useNestedHeader } from "./hook"
+import { useNestedHeader } from "./hook";
 
 export const NestedHeader = memo(() => {
 	const { Icon, title, isActive, isIOS, handleBack } = useNestedHeader()
@@ -31,7 +31,7 @@ export const NestedHeader = memo(() => {
 					<Icon
 						size={24}
 						className={cn(
-							"transition-transform duration-300 will-change-auto",
+							"transition-transform duration-300 will-change-auto motion-reduce:transition-none",
 							isActive && "-translate-x-12"
 						)}
 					/>

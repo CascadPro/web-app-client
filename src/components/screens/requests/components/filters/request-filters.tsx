@@ -1,13 +1,13 @@
-import { ChevronDownIcon, SortDescIcon, XIcon } from "lucide-react"
-import dynamic from "next/dynamic"
-import type { FC } from "react"
-import { memo } from "react"
+import { ChevronDownIcon, SortDescIcon, XIcon } from "lucide-react";
+import dynamic from "next/dynamic";
+import type { FC } from "react";
+import { memo } from "react";
 
-import { Button, Separator } from "@/components/ui"
-import { REQUEST_STATUSES } from "@/libs/constants/screens/requests"
-import { cn, getSortLabel } from "@/libs/utils"
+import { Button, Separator } from "@/components/ui";
+import { REQUEST_STATUSES } from "@/libs/constants/screens/requests";
+import { cn, getSortLabel } from "@/libs/utils";
 
-import { useRequestFilters } from "../../hooks/useRequestFilters"
+import { useRequestFilters } from "../../hooks/useRequestFilters";
 
 const DynamicRequestFiltersSheet = dynamic(
 	async () => (await import("./request-filters-sheet")).RequestFiltersSheet,
@@ -43,7 +43,7 @@ const RequestFiltersComponent: FC<Props> = ({ isLoading }) => {
 						<SortDescIcon
 							size={18}
 							className={cn(
-								"mt-0.5 transition-transform",
+								"mt-0.5 transition-transform will-change-auto motion-reduce:transition-none",
 								sortType === "oldest" && "rotate-180"
 							)}
 						/>

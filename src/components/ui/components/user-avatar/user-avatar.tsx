@@ -1,12 +1,12 @@
 "use client"
 
-import Image from "next/image"
-import type { FC } from "react"
+import Image from "next/image";
+import type { FC } from "react";
 
-import { cn } from "@/libs/utils"
+import { cn } from "@/libs/utils";
 
-import type { UserAvatarProps } from "./types"
-import { useUserAvatar } from "./useUserAvatar"
+import type { UserAvatarProps } from "./types";
+import { useUserAvatar } from "./useUserAvatar";
 
 export const UserAvatar: FC<UserAvatarProps> = ({
 	user,
@@ -70,7 +70,7 @@ export const UserAvatar: FC<UserAvatarProps> = ({
 					loading={quick ? "eager" : "lazy"}
 					className={cn(
 						"object-cover",
-						"transition-opacity duration-200",
+						"transition-opacity duration-200 will-change-auto motion-reduce:transition-none",
 						imageLoaded ? "opacity-100" : "opacity-0"
 					)}
 					onLoad={() => setImageLoaded(true)}

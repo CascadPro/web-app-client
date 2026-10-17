@@ -1,16 +1,16 @@
-import { m } from "motion/react"
-import dynamic from "next/dynamic"
-import type { FC } from "react"
-import { memo } from "react"
+import { m } from "motion/react";
+import dynamic from "next/dynamic";
+import type { FC } from "react";
+import { memo } from "react";
 
-import type { RequestHttpDtoGetRequestsResponseRequest as Request } from "@/api/generated"
-import { MarqueeText } from "@/components/ui/components/maruquee-text/marquee-text"
-import { cn } from "@/libs/utils"
+import type { RequestHttpDtoGetRequestsResponseRequest as Request } from "@/api/generated";
+import { MarqueeText } from "@/components/ui/components/maruquee-text/marquee-text";
+import { cn } from "@/libs/utils";
 
-import { useRequestCard } from "../../hooks/useRequestCard"
+import { useRequestCard } from "../../hooks/useRequestCard";
 
-import { RequestCardBadge } from "./request-card-badge"
-import { RequestCardDescription } from "./request-card-description"
+import { RequestCardBadge } from "./request-card-badge";
+import { RequestCardDescription } from "./request-card-description";
 
 const DynamicRequestCardOverlay = dynamic(
 	() => import("./request-card-overlay").then(mod => mod.RequestCardOverlay),
@@ -77,7 +77,7 @@ const RequestCardComponent: FC<Props> = ({ request }) => {
 			>
 				<div
 					className={cn(
-						"bg-surface border-outline/20 grid overflow-hidden rounded-2xl border shadow-sm transition-colors sm:p-1",
+						"bg-surface border-outline/20 grid overflow-hidden rounded-2xl border shadow-sm transition-colors will-change-auto motion-reduce:transition-none sm:p-1",
 						isSelected && "border-transparent shadow-lg"
 					)}
 				>
