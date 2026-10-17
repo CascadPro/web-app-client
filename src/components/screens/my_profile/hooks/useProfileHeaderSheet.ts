@@ -17,7 +17,7 @@ export const useProfileHeaderSheet = (handleClose: () => void) => {
 		useUploadAvatar()
 
 	const handleDeleteAvatar = useCallback(async () => {
-		const id = toast.loading("Пожалуйста, подождите...")
+		const id = toast.loading("Пожалуйста, подождите...", { dismissible: false })
 
 		try {
 			await deleteAvatar()

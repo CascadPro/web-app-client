@@ -38,7 +38,7 @@ export const useLoginPage = () => {
 
 			setStatus("loading")
 
-			const id = toast.loading("Входим в систему...")
+			const id = toast.loading("Входим в систему...", { dismissible: false })
 
 			const { email, password } = data
 

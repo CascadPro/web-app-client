@@ -27,7 +27,9 @@ export const useRequestCardActions = (
 
 	const updateStatus = useCallback(
 		async (status: "approve" | "reject") => {
-			const toastId = toast.loading("Пожалуйста, подождите...")
+			const toastId = toast.loading("Пожалуйста, подождите...", {
+				dismissible: false
+			})
 
 			try {
 				if (status === "approve") {

@@ -38,7 +38,9 @@ export const useRegisterPage = () => {
 
 			setStatus("loading")
 
-			const id = toast.loading("Проходим регистрацию...")
+			const id = toast.loading("Проходим регистрацию...", {
+				dismissible: false
+			})
 
 			const { email, password, token } = data
 
