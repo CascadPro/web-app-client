@@ -20,8 +20,8 @@ export const TabsItem: FC<Props> = ({ title, href, icon, isIOS }) => {
 	return (
 		<Button
 			variant="ghost"
-			className={cn("flex-col", {
-				"hover:bg-primary/10 text-shadow-[0px_1px_6px] active:[&_svg]:scale-[.90]":
+			className={cn("flex-col active:scale-90", {
+				"hover:bg-primary/10 text-shadow-[0px_1px_6px]":
 					!isIOS,
 				"text-on-surface-variant rounded-4xl px-10 py-1": isIOS,
 				"bg-primary/10 text-primary": active && isIOS

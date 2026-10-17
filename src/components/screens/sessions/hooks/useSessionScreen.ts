@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-import { Toast } from "@/components/ui"
+import { toast, TOAST_ERROR_DURATION } from "@/components/ui/toast"
 import { useHaptic } from "@/libs/haptics"
 import { useDeleteSessions, useSessions } from "@/libs/query/hooks"
 import { errorCatch } from "@/libs/utils"
@@ -22,10 +22,9 @@ export const useSessionScreen = () => {
 		} catch (error) {
 			haptic("medium")
 
-			Toast.show({
-				type: "error",
-				text1: "Невозможно завершить сеансы",
-				text2: errorCatch(error).message
+			toast.error("Невозможно завершить сеансы", {
+				description: errorCatch(error).message,
+				duration: TOAST_ERROR_DURATION
 			})
 		}
 	}

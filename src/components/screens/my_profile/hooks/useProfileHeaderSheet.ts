@@ -1,8 +1,12 @@
 import { useCallback, useRef } from "react"
 
-import { Toast } from "@/components/ui"
-import { useDeleteAvatar, useUploadAvatar } from "@/libs/query/hooks"
-import { errorCatch } from "@/libs/utils"
+import {
+	toast,
+	TOAST_ERROR_DURATION,
+	TOAST_SUCCESS_DURATION
+} from "@/components/ui/toast"
+import { useDeleteAvatar, useUploadAvatar } from "@/libs/query/hooks";
+import { errorCatch } from "@/libs/utils";
 
 export const useProfileHeaderSheet = (handleClose: () => void) => {
 	const inputRef = useRef<HTMLInputElement>(null)
@@ -13,20 +17,24 @@ export const useProfileHeaderSheet = (handleClose: () => void) => {
 		useUploadAvatar()
 
 	const handleDeleteAvatar = useCallback(async () => {
+		const id = toast.loading("Пожалуйста, подождите...")
+
 		try {
 			await deleteAvatar()
 
 			handleClose()
 
-			Toast.show({
+			toast.update(id, {
 				type: "success",
-				text1: "Аватар успешно удален"
+				title: "Аватар успешно удален",
+				duration: TOAST_SUCCESS_DURATION
 			})
 		} catch (error) {
-			Toast.show({
+			toast.update(id, {
 				type: "error",
-				text1: "Не удалось удалить аватар",
-				text2: errorCatch(error).message
+				title: "Не удалось удалить аватар",
+				description: errorCatch(error).message,
+				duration: TOAST_ERROR_DURATION
 			})
 		}
 	}, [deleteAvatar, handleClose])
@@ -36,20 +44,22 @@ export const useProfileHeaderSheet = (handleClose: () => void) => {
 
 		if (!file) return
 
+		const id = toast.loading("Пожалуйста, подождите...")
+
 		try {
 			await uploadAvatar({ file, tag: "avatars" })
 
 			handleClose()
 
-			Toast.show({
+			toast.update(id, {
 				type: "success",
-				text1: "Аватар успешно загружен"
+				title: "Аватар успешно загружен"
 			})
 		} catch (error) {
-			Toast.show({
+			toast.update(id, {
 				type: "error",
-				text1: "Не удалось загрузить аватар",
-				text2: errorCatch(error).message
+				title: "Не удалось загрузить аватар",
+				description: errorCatch(error).message
 			})
 		}
 	}, [inputRef.current, uploadAvatar, handleClose])

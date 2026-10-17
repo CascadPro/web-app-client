@@ -1,7 +1,7 @@
 import { type MouseEvent, useMemo, useState } from "react"
 
 import type { SessionsHttpDtoSessionDtoMetadata } from "@/api/generated"
-import { Toast } from "@/components/ui"
+import { toast, TOAST_ERROR_DURATION } from "@/components/ui/toast"
 import { useHaptic } from "@/libs/haptics"
 import { useDeleteSession } from "@/libs/query/hooks"
 import { errorCatch } from "@/libs/utils"
@@ -33,10 +33,9 @@ export const useSessionCard = (
 		} catch (error) {
 			haptic("medium")
 
-			Toast.show({
-				type: "error",
-				text1: "Не удалось удалить сессию",
-				text2: errorCatch(error).message
+			toast.error("Не удалось удалить сессию", {
+				description: errorCatch(error).message,
+				duration: TOAST_ERROR_DURATION
 			})
 		} finally {
 			setIsOpen(false)

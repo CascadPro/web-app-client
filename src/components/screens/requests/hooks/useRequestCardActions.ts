@@ -6,7 +6,7 @@ import {
 } from "lucide-react"
 import { useCallback, useMemo } from "react"
 
-import { Toast } from "@/components/ui"
+import { toast, TOAST_ERROR_DURATION } from "@/components/ui/toast"
 import { useRequestPatchStatus } from "@/libs/query/hooks/use-requests"
 import { errorCatch } from "@/libs/utils"
 
@@ -29,22 +29,30 @@ export const useRequestCardActions = (
 
 	const updateStatus = useCallback(
 		async (status: "approve" | "reject") => {
+			const id = toast.loading("Пожалуйста, подождите...")
+
 			try {
 				if (status === "approve") {
 					await approve()
 				} else {
 					await reject()
 				}
+
+				toast.update(id, {
+					type: "success",
+					title: `Запрос успешно ${status === "approve" ? "одобрен" : "отклонен"}`
+				})
 			} catch (error) {
-				const { message, code } = errorCatch(error)
+				const { message: description, code } = errorCatch(error)
 
 				const type = code === "request_not_enough_fields" ? "info" : "error"
 				const title = `Не удалось ${status === "approve" ? "одобрить" : "отклонить"} запрос`
 
-				Toast.show({
-					type: type as any,
-					text1: title,
-					text2: message
+				toast.update(id, {
+					type,
+					title,
+					description,
+					duration: TOAST_ERROR_DURATION
 				})
 			}
 		},

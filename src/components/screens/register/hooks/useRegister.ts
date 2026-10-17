@@ -2,7 +2,11 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useCallback, useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 
-import { Toast } from "@/components/ui"
+import {
+	toast,
+	TOAST_ERROR_DURATION,
+	TOAST_SUCCESS_DURATION
+} from "@/components/ui/toast"
 import { register } from "@/libs/auth"
 import { AppRoutes } from "@/libs/constants"
 import { useHaptic } from "@/libs/haptics"
@@ -34,6 +38,8 @@ export const useRegisterPage = () => {
 
 			setStatus("loading")
 
+			const id = toast.loading("Проходим регистрацию...")
+
 			const { email, password, token } = data
 
 			try {
@@ -41,16 +47,21 @@ export const useRegisterPage = () => {
 
 				stateLogin()
 
-				Toast.show({ type: "success", text1: "Успешная регистрация!" })
+				toast.update(id, {
+					type: "success",
+					title: "Успешная регистрация!",
+					duration: TOAST_SUCCESS_DURATION
+				})
 
 				setStatus("success")
 			} catch (error) {
 				haptic("medium")
 
-				Toast.show({
+				toast.update(id, {
 					type: "error",
-					text1: "Не удалось зарегистрироваться!",
-					text2: errorCatch(error).message
+					title: "Не удалось зарегистрироваться!",
+					description: errorCatch(error).message,
+					duration: TOAST_ERROR_DURATION
 				})
 
 				setStatus("error")
