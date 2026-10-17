@@ -69,7 +69,11 @@ export const ToastItem: FC<Props> = memo(({ item }) => {
 				<Icon
 					size={22}
 					strokeWidth={2}
-					className={item.type === "loading" ? "animate-spin" : ""}
+					className={
+						item.type === "loading"
+							? "animate-spin motion-reduce:animate-none"
+							: ""
+					}
 					aria-hidden="true"
 				/>
 			</div>

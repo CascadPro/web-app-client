@@ -72,7 +72,8 @@ export function RealtimeStatusIndicator() {
 						size={isCompact ? 20 : 24}
 						strokeWidth={2}
 						className={cn(config.textColor, {
-							"animate-spin": status === "reconnecting",
+							"animate-spin motion-reduce:animate-none":
+								status === "reconnecting",
 							"text-amber-500": quality === "degraded",
 							"text-error": quality === "poor"
 						})}

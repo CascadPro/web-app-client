@@ -1,10 +1,10 @@
-import { LoaderIcon } from "lucide-react"
-import { m } from "motion/react"
-import { memo } from "react"
+import { LoaderIcon } from "lucide-react";
+import { m } from "motion/react";
+import { memo } from "react";
 
-import { Button, Separator } from "@/components/ui"
+import { Button, Separator } from "@/components/ui";
 
-import { useRequestStats } from "../hooks/useRequestStats"
+import { useRequestStats } from "../hooks/useRequestStats";
 
 const RequestsStatsComponent = () => {
 	const { stats, isPending } = useRequestStats()
@@ -22,7 +22,10 @@ const RequestsStatsComponent = () => {
 
 					<p className="text-on-surface mt-2 text-2xl font-semibold tracking-tight">
 						{isPending ? (
-							<LoaderIcon size={20} className="animate-spin" />
+							<LoaderIcon
+								size={20}
+								className="animate-spin motion-reduce:animate-none"
+							/>
 						) : (
 							<m.span
 								initial={{ y: 15, opacity: 0 }}

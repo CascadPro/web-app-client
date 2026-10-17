@@ -47,7 +47,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 		let content: React.ReactNode
 
 		if (isLoading) {
-			content = <Loader2Icon className="h-5 w-5 animate-spin" />
+			content = (
+				<Loader2Icon className="h-5 w-5 animate-spin motion-reduce:animate-none" />
+			)
 		} else if (href) {
 			content = (
 				<Link href={href} className="h-full w-full">
