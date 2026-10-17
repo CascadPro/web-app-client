@@ -26,7 +26,7 @@ export const SessionsScreen = () => {
 	} = useSessionScreen()
 
 	return (
-		<RefreshControl queryKey={QueryKeys.sessions.all as any}>
+		<RefreshControl queryKey={[...QueryKeys.sessions.all]}>
 			<div className="mx-auto w-full max-w-3xl space-y-8 px-1">
 				<section>
 					<SessionSectionTitle Icon={ShieldCheck} title="Текущий сеанс" />
@@ -35,7 +35,7 @@ export const SessionsScreen = () => {
 						<SessionLoading n={1} />
 					) : (
 						<SessionCard
-							key={currentSession?.id}
+							key={currentSession?.id ?? "current-session"}
 							session={currentSession}
 							current
 						/>
@@ -46,7 +46,7 @@ export const SessionsScreen = () => {
 					<div className="mb-3 flex items-center justify-between gap-4">
 						<SessionSectionTitle Icon={Globe2} title="Другие сеансы" />
 
-						{sessions && sessions.length > 0 && (
+						{Boolean(sessions?.length) && (
 							<Button
 								variant="ghost"
 								className="text-error active:bg-primary/20 gap-1 rounded-lg px-2 py-1.5 text-sm"

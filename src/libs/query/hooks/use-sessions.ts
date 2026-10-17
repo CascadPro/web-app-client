@@ -7,43 +7,51 @@ import { useAuthStore } from "@/store/auth"
 import { QueryKeys } from "../keys"
 
 export const useSessions = () => {
-	const state = useAuthStore(state => state.status)
+	const authStatus = useAuthStore(state => state.status)
 
-	const { data, isLoading, ...other } = useQuery({
+	const query = useQuery({
 		queryKey: QueryKeys.sessions.all,
 		queryFn: service.getSessions,
-		enabled: state === "authenticated",
-		staleTime: ms("5min"),
-		gcTime: ms("10min"),
+		enabled: authStatus === "authenticated",
+		staleTime: ms("1min"),
+		gcTime: ms("30min"),
 		refetchOnWindowFocus: true
 	})
 
 	return {
-		sessions: data?.data.sessions ?? null,
-		currentSession: data?.data.current_session ?? null,
-		isLoading: isLoading || state === "loading",
-		...other
+		sessions: query.data?.data.sessions ?? null,
+		currentSession: query.data?.data.current_session ?? null,
+		isLoading: authStatus === "loading" || query.isLoading,
+		isFetching: query.isFetching,
+		error: query.error,
+		refetch: query.refetch
 	}
 }
 
 export const useDeleteSession = (id: string) => {
-	const client = useQueryClient()
+	const queryClient = useQueryClient()
 
 	return useMutation({
 		mutationKey: QueryKeys.sessions.delete(id),
 		mutationFn: () => service.deleteSessionsId(id),
-		onSuccess: () =>
-			void client.invalidateQueries({ queryKey: QueryKeys.sessions.all })
+		onSuccess: async () => {
+			await queryClient.invalidateQueries({
+				queryKey: QueryKeys.sessions.all
+			})
+		}
 	})
 }
 
 export const useDeleteSessions = () => {
-	const client = useQueryClient()
+	const queryClient = useQueryClient()
 
 	return useMutation({
 		mutationKey: QueryKeys.sessions.deleteAll(),
 		mutationFn: () => service.deleteSessionsDelete(),
-		onSuccess: () =>
-			void client.invalidateQueries({ queryKey: QueryKeys.sessions.all })
+		onSuccess: async () => {
+			await queryClient.invalidateQueries({
+				queryKey: QueryKeys.sessions.all
+			})
+		}
 	})
 }

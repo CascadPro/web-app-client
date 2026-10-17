@@ -1,8 +1,8 @@
 import { AnimatePresence, m } from "motion/react"
-import { FC } from "react"
+import { memo } from "react"
 
-import { SessionsHttpDtoSessionDTO } from "@/api/generated"
-import { ErrorCatchResult } from "@/libs/utils"
+import type { SessionsHttpDtoSessionDTO } from "@/api/generated"
+import type { ErrorCatchResult } from "@/libs/utils"
 
 import { SessionCard } from "../card/session-card"
 
@@ -16,7 +16,7 @@ interface Props {
 	error: ErrorCatchResult | null
 }
 
-export const SessionsList: FC<Props> = ({ sessions, isPending, error }) => {
+const SessionsListComponent = ({ sessions, isPending, error }: Props) => {
 	if (isPending) {
 		return <SessionLoading />
 	}
@@ -32,10 +32,13 @@ export const SessionsList: FC<Props> = ({ sessions, isPending, error }) => {
 	return (
 		<m.div layout id="sessions-list" className="grid gap-4">
 			<AnimatePresence mode="popLayout">
-				{sessions.map((session, i) => (
-					<SessionCard key={session.id} index={i} session={session} />
+				{sessions.map((session, index) => (
+					<SessionCard key={session.id} index={index} session={session} />
 				))}
 			</AnimatePresence>
 		</m.div>
 	)
 }
+
+export const SessionsList = memo(SessionsListComponent)
+SessionsList.displayName = "SessionsList"

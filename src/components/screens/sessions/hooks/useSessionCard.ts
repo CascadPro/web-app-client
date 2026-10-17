@@ -1,4 +1,5 @@
-import { type MouseEvent, useMemo, useState } from "react"
+import type { MouseEvent } from "react"
+import { useCallback, useMemo, useState } from "react"
 
 import type { SessionsHttpDtoSessionDtoMetadata } from "@/api/generated"
 import { toast, TOAST_ERROR_DURATION } from "@/components/ui/toast"
@@ -21,33 +22,42 @@ export const useSessionCard = (
 	const [isOpen, setIsOpen] = useState<boolean>(false)
 
 	const { haptic } = useHaptic()
+	const { mutateAsync, isPending } = useDeleteSession(id ?? "")
 
-	const { mutateAsync, isPending } = useDeleteSession(id || "")
+	const handleDelete = useCallback(
+		async (event: MouseEvent<HTMLButtonElement>) => {
+			event.stopPropagation()
 
-	const handleDelete = async (e: MouseEvent<HTMLButtonElement>) => {
-		if (!id) return
-		e.stopPropagation()
+			if (!id || isPending) return
 
-		try {
-			await mutateAsync()
-		} catch (error) {
-			haptic("medium")
+			try {
+				await mutateAsync()
+				setIsOpen(false)
+			} catch (error) {
+				haptic("medium")
 
-			toast.error("Не удалось удалить сессию", {
-				description: errorCatch(error).message,
-				duration: TOAST_ERROR_DURATION
-			})
-		} finally {
-			setIsOpen(false)
-		}
-	}
+				toast.error("Не удалось удалить сессию", {
+					description: errorCatch(error).message,
+					duration: TOAST_ERROR_DURATION
+				})
+			}
+		},
+		[id, isPending, mutateAsync, haptic]
+	)
+
+	const handleOpenChange = useCallback(
+		(state: boolean) => {
+			if (isPending) return
+			setIsOpen(state)
+		},
+		[isPending]
+	)
 
 	return {
-		DeviceIcon: device.os.icon,
 		device,
 		location,
 		isOpen,
-		setIsOpen,
+		setIsOpen: handleOpenChange,
 		handleDelete,
 		isDeleting: isPending
 	}

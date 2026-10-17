@@ -2,6 +2,7 @@ import { MoreVerticalIcon } from "lucide-react"
 import { m } from "motion/react"
 import dynamic from "next/dynamic"
 import type { FC } from "react"
+import { memo } from "react"
 
 import type { SessionsHttpDtoSessionDTO } from "@/api/generated"
 import { Title } from "@/components/ui"
@@ -24,17 +25,17 @@ interface Props {
 	index?: number
 }
 
-export const SessionCard: FC<Props> = ({
+const SessionCardComponent: FC<Props> = ({
 	session,
 	current = false,
 	index = 0
 }) => {
+	const { location, device, isOpen, setIsOpen, handleDelete, isDeleting } =
+		useSessionCard(session?.id, session?.metadata)
+
 	if (!session) {
 		return <SessionEmpty />
 	}
-
-	const { location, device, isOpen, setIsOpen, handleDelete, isDeleting } =
-		useSessionCard(session.id, session.metadata)
 
 	const sessionCardSheetProps: SessionCardSheetProps = {
 		ip: session.ip,
@@ -46,6 +47,22 @@ export const SessionCard: FC<Props> = ({
 	return (
 		<>
 			<m.article
+				layout={!current}
+				initial={{ opacity: 0, y: 12 }}
+				animate={{ opacity: 1, y: 0 }}
+				exit={{ opacity: 0, y: 12 }}
+				transition={{
+					opacity: {
+						duration: 0.2,
+						delay: Math.min(index * 0.08, 0.24)
+					},
+					y: {
+						duration: 0.25,
+						ease: [0.22, 1, 0.36, 1],
+						delay: Math.min(index * 0.08, 0.24)
+					},
+					layout: { duration: 0.25, ease: [0.22, 1, 0.36, 1] }
+				}}
 				className={cn(
 					"border-outline/20 bg-surface rounded-2xl border p-4 shadow-sm",
 					{
@@ -53,17 +70,8 @@ export const SessionCard: FC<Props> = ({
 						"pointer-events-none cursor-wait opacity-60": isDeleting
 					}
 				)}
-				layout={!current}
-				initial={{ opacity: 0, y: 12 }}
-				animate={{ opacity: 1, y: 0 }}
-				exit={{ opacity: 0, y: 12 }}
-				transition={{
-					opacity: { duration: 0.2 },
-					layout: { duration: 0.25, ease: [0.22, 1, 0.36, 1] },
-					delay: 0.1 * index
-				}}
-				onClick={() => setIsOpen(state => !state)}
-				onContextMenu={e => e.preventDefault()}
+				onClick={() => setIsOpen(!isOpen)}
+				onContextMenu={event => event.preventDefault()}
 			>
 				<div className="flex gap-4">
 					<div className="bg-surface-variant flex size-11 shrink-0 items-center justify-center rounded-xl">
@@ -92,7 +100,7 @@ export const SessionCard: FC<Props> = ({
 									{location?.country && capitalize(location.country)}
 									{location?.city && `, ${location.city}`}
 									&nbsp;&nbsp;•&nbsp;&nbsp;
-									{session?.online
+									{session.online
 										? "В сети"
 										: formatRelativeDate(session.last_active_at || "")}
 								</p>
@@ -115,3 +123,6 @@ export const SessionCard: FC<Props> = ({
 		</>
 	)
 }
+
+export const SessionCard = memo(SessionCardComponent)
+SessionCard.displayName = "SessionCard"
