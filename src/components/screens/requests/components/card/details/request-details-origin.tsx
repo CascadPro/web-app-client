@@ -1,34 +1,15 @@
-import {
-	CheckIcon,
-	type LucideIcon,
-	MailIcon,
-	PhoneIcon,
-	UsersIcon
-} from "lucide-react"
+import { CheckIcon } from "lucide-react"
 import type { FC } from "react"
 
 import type { RequestHttpDtoGetRequestsResponseOrigin as RequestOrigin } from "@/api/generated"
 import { Button } from "@/components/ui"
-import { useClipboardCopy } from "@/libs/hooks"
+
+import { useRequestCardDetailsOrigin } from "../../../hooks/useRequestCardDetails"
 
 interface Props extends RequestOrigin {}
 
-export const RequestDetailsOrigin: FC<Props> = ({ type, value }) => {
-	let Icon: LucideIcon = UsersIcon
-
-	if (type === "email") {
-		Icon = MailIcon
-	} else if (type === "phone") {
-		Icon = PhoneIcon
-	}
-
-	const [isCopied, copyText] = useClipboardCopy()
-
-	const handleClick = async () => {
-		if (isCopied || !value) return
-
-		await copyText(value)
-	}
+export const RequestDetailsOrigin: FC<Props> = props => {
+	const { Icon, isCopied, handleClick } = useRequestCardDetailsOrigin(props)
 
 	return (
 		<Button
@@ -38,7 +19,7 @@ export const RequestDetailsOrigin: FC<Props> = ({ type, value }) => {
 		>
 			{isCopied ? <CheckIcon size={18} /> : <Icon size={18} />}
 
-			<p className="whitespace-nowrap">{value}</p>
+			<p className="whitespace-nowrap">{props.value}</p>
 		</Button>
 	)
 }

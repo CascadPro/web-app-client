@@ -34,6 +34,11 @@ export const ProfileHeaderSheet: FC<Props> = ({
 		handleModalClose()
 	}
 
+	const handleOnChange = (state: boolean) => {
+		if (isDeleting || isUploading) return
+		setIsOpen(state)
+	}
+
 	const {
 		inputRef,
 		handleUpdateClick,
@@ -46,11 +51,12 @@ export const ProfileHeaderSheet: FC<Props> = ({
 	return (
 		<BottomSheet
 			open={isOpen}
-			onChange={setIsOpen}
+			onChange={handleOnChange}
 			zIndex={8888 + 1}
 			className="flex flex-col gap-2 px-3 py-6 [&>button]:gap-1 [&>button]:p-2 [&>button]:text-base"
 			indicator={false}
 			panelCN="bg-background!"
+			dragToClose={!isDeleting && !isUploading}
 		>
 			<Button
 				variant="default-2"

@@ -6,6 +6,7 @@ import type { ReactNode } from "react"
 
 import { HapticProvider } from "@/components/providers/haptics"
 import { ServiceWorkerRegister } from "@/components/pwa/pwa-service-worker"
+import { ToastViewport } from "@/components/ui/toast/components/toast-viewport"
 
 import "./globals.css"
 
@@ -49,6 +50,8 @@ export default function Layout({ children }: Readonly<Props>) {
 				<ThemeProvider attribute="class">
 					<LazyMotion features={domAnimation} strict>
 						{children}
+
+						<ToastViewport />
 					</LazyMotion>
 				</ThemeProvider>
 

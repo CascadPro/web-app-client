@@ -2,7 +2,11 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useCallback, useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 
-import { Toast } from "@/components/ui"
+import {
+	toast,
+	TOAST_ERROR_DURATION,
+	TOAST_SUCCESS_DURATION
+} from "@/components/ui/toast"
 import { login } from "@/libs/auth"
 import { AppRoutes } from "@/libs/constants"
 import { useHaptic } from "@/libs/haptics"
@@ -34,6 +38,8 @@ export const useLoginPage = () => {
 
 			setStatus("loading")
 
+			const id = toast.loading("Входим в систему...")
+
 			const { email, password } = data
 
 			try {
@@ -41,20 +47,25 @@ export const useLoginPage = () => {
 
 				stateLogin()
 
-				Toast.show({ type: "success", text1: "Успешный вход!" })
+				toast.update(id, {
+					type: "success",
+					title: "Успешный вход!",
+					duration: TOAST_SUCCESS_DURATION
+				})
 
 				setStatus("success")
 			} catch (error) {
-				const e =
+				const description =
 					((error as any)?.message as string) || errorCatch(error).message
 
 				haptic("medium")
 				setStatus("error")
 
-				Toast.show({
+				toast.update(id, {
 					type: "error",
-					text1: "Не удалось войти!",
-					text2: e
+					title: "Не удалось войти!",
+					description,
+					duration: TOAST_ERROR_DURATION
 				})
 			}
 		},

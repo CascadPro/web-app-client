@@ -42,15 +42,21 @@ export const SessionCardSheet: FC<Props> = ({
 }) => {
 	const { locationValue, locationCopyText } = useSessionCardSheet(location)
 
+	const handleChange = (state: boolean) => {
+		if (isDeleting) return
+		onOpenChange(state)
+	}
+
 	return (
 		<BottomSheet
 			open={isOpen}
-			onChange={onOpenChange}
+			onChange={handleChange}
 			zIndex={200}
 			dismissThreshold={200}
 			className="grid gap-2 text-sm"
 			title="Детальная информация"
 			titleCN="px-1 mb-2"
+			dragToClose={!isDeleting}
 		>
 			<SessionCardInfo
 				Icon={MapPinIcon}
