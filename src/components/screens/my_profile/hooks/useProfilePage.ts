@@ -1,27 +1,37 @@
+import { useMemo } from "react"
+
 import { useCurrentUser } from "@/libs/query/hooks"
 import { useAuthStore } from "@/store/auth"
 
 export const useProfilePage = () => {
-	const status = useAuthStore(state => state.status)
+	const authStatus = useAuthStore(state => state.status)
 
-	const { data: user, refetch: refetchUser } = useCurrentUser()
+	const { data, refetch, isLoading, isFetching, error } = useCurrentUser()
 
-	const fullName = [user?.name, user?.surname, user?.last_name]
-		.filter(Boolean)
-		.join(" ")
+	const fullName = useMemo(
+		() =>
+			[data?.name, data?.surname, data?.last_name].filter(Boolean).join(" "),
+		[data?.name, data?.surname, data?.last_name]
+	)
 
-	const avatarUser = {
-		avatar_file_id: user?.avatar_file_id,
-		avatar_placeholder: user?.avatar_placeholder,
-		name: user?.name,
-		surname: user?.surname
-	}
+	const avatarUser = useMemo(
+		() => ({
+			avatar_file_id: data?.avatar_file_id,
+			avatar_placeholder: data?.avatar_placeholder,
+			name: data?.name,
+			surname: data?.surname
+		}),
+		[data?.avatar_file_id, data?.avatar_placeholder, data?.name, data?.surname]
+	)
 
 	return {
-		status,
-		user,
+		status: authStatus,
+		user: data,
 		fullName,
 		avatarUser,
-		refetchUser
+		refetchUser: refetch,
+		isLoading: authStatus === "loading" || isLoading,
+		isFetching,
+		error
 	}
 }

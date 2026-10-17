@@ -1,6 +1,6 @@
 import { MailIcon, UserRoundIcon } from "lucide-react"
 import { m } from "motion/react"
-import type { FC } from "react"
+import { type FC, memo } from "react"
 
 import { Title } from "@/components/ui"
 
@@ -13,7 +13,7 @@ interface Props {
 	email?: string
 }
 
-export const ProfileInformation: FC<Props> = ({
+const ProfileInformationComponent: FC<Props> = ({
 	name,
 	surname,
 	last_name,
@@ -60,3 +60,6 @@ export const ProfileInformation: FC<Props> = ({
 		</m.section>
 	)
 }
+
+export const ProfileInformation = memo(ProfileInformationComponent)
+ProfileInformation.displayName = "ProfileInformation"

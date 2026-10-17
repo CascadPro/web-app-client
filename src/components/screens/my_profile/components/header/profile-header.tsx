@@ -2,6 +2,7 @@ import { BadgeCheckIcon, CheckIcon, CopyIcon } from "lucide-react"
 import { m } from "motion/react"
 import dynamic from "next/dynamic"
 import type { FC } from "react"
+import { memo } from "react"
 
 import type { DomainUserRole } from "@/api/generated"
 import { Button, Title } from "@/components/ui"
@@ -30,7 +31,7 @@ interface Props {
 	id?: string
 }
 
-export const ProfileHeader: FC<Props> = ({ user, fullname, role, id }) => {
+const ProfileHeaderComponent: FC<Props> = ({ user, fullname, role, id }) => {
 	const {
 		isModalOpen,
 		isSheetOpen,
@@ -38,7 +39,8 @@ export const ProfileHeader: FC<Props> = ({ user, fullname, role, id }) => {
 		setIsSheetOpen,
 		isCopied,
 		handleCopy,
-		handleAvatarClick
+		handleAvatarClick,
+		handleSheetCloseModal
 	} = useProfileHeader(id, user?.avatar_file_id)
 
 	return (
@@ -83,8 +85,11 @@ export const ProfileHeader: FC<Props> = ({ user, fullname, role, id }) => {
 							variant="ghost"
 							className="text-on-surface-variant active:bg-primary/10 mt-2 justify-center gap-2 rounded-md p-1 text-sm select-none sm:justify-start"
 							onClick={handleCopy}
+							disabled={!id}
 						>
-							<span className="truncate">ID: {id?.slice(0, 20) + "..."}</span>
+							<span className="truncate">
+								{`ID: ${id ? `${id.slice(0, 20)}...` : "—"}`}
+							</span>
 
 							{isCopied ? (
 								<CheckIcon size={14} className="shrink-0" />
@@ -108,8 +113,11 @@ export const ProfileHeader: FC<Props> = ({ user, fullname, role, id }) => {
 				isOpen={isSheetOpen}
 				setIsOpen={setIsSheetOpen}
 				hasAvatar={!!user?.avatar_file_id}
-				handleModalClose={() => setIsModalOpen(false)}
+				handleModalClose={handleSheetCloseModal}
 			/>
 		</>
 	)
 }
+
+export const ProfileHeader = memo(ProfileHeaderComponent)
+ProfileHeader.displayName = "ProfileHeader"

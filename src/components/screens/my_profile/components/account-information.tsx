@@ -1,6 +1,6 @@
 import { CalendarDaysIcon, ShieldIcon } from "lucide-react"
 import { m } from "motion/react"
-import type { FC } from "react"
+import { type FC, memo } from "react"
 
 import type { DomainUserRole } from "@/api/generated"
 import { Title } from "@/components/ui"
@@ -13,7 +13,7 @@ interface Props {
 	last_active_at?: string | null
 }
 
-export const AccountInformation: FC<Props> = ({ role, last_active_at }) => {
+const AccountInformationComponent: FC<Props> = ({ role, last_active_at }) => {
 	return (
 		<m.section
 			initial={{ opacity: 0, y: 10 }}
@@ -47,3 +47,6 @@ export const AccountInformation: FC<Props> = ({ role, last_active_at }) => {
 		</m.section>
 	)
 }
+
+export const AccountInformation = memo(AccountInformationComponent)
+AccountInformation.displayName = "AccountInformation"
