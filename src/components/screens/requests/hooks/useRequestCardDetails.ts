@@ -4,7 +4,7 @@ import { useCallback, useMemo } from "react"
 import type { RequestHttpDtoGetRequestsResponseOrigin as RequestOrigin } from "@/api/generated"
 import { toast } from "@/components/ui/toast"
 import { useClipboardCopy } from "@/libs/hooks"
-import { useRequestDetail } from "@/libs/query/hooks/use-requests";
+import { useRequestDetail } from "@/libs/query/hooks/use-requests"
 
 export const useRequestCardDetails = (id: string, isCollapsed: boolean) => {
 	const { request, isPending } = useRequestDetail(id, !isCollapsed)
@@ -12,35 +12,25 @@ export const useRequestCardDetails = (id: string, isCollapsed: boolean) => {
 	const height = useMemo(() => {
 		if (isPending) return 11
 
-		let h = 0
+		let result = 0
 
-		if (request?.origin) h += 7
+		if (request?.origin?.length) result += 7
+		if (request?.client) result += 7
+		if (request?.geography_description) result += 2
+		if (request?.work_types?.length) result += 2
+		if (request?.status_by) result += 7
 
-		if (request?.client) h += 7
-
-		if (request?.geography_description) h += 2
-
-		if (request?.work_types) h += 2
-
-		if (request?.status_by) h += 7
-
-		if (h !== 0) h += 3
-
-		return h
+		return result > 0 ? result + 3 : 0
 	}, [
+		isPending,
 		request?.origin?.length,
-		request?.client?.id,
-		request?.geography_description?.length,
+		request?.client,
+		request?.geography_description,
 		request?.work_types?.length,
-		request?.status_by?.id,
-		isPending
+		request?.status_by
 	])
 
-	return {
-		request,
-		isPending,
-		height
-	}
+	return { request, isPending, height }
 }
 
 export const useRequestCardDetailsOrigin = ({ type, value }: RequestOrigin) => {
@@ -67,11 +57,7 @@ export const useRequestCardDetailsOrigin = ({ type, value }: RequestOrigin) => {
 			miniature: true,
 			duration: 2000
 		})
-	}, [value, isCopied])
+	}, [copyText, isCopied, value])
 
-	return {
-		Icon,
-		isCopied,
-		handleClick
-	}
+	return { Icon, isCopied, handleClick }
 }

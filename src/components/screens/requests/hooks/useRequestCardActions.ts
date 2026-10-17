@@ -1,6 +1,6 @@
 import {
 	CheckCircleIcon,
-	LucideIcon,
+	type LucideIcon,
 	MoreHorizontalIcon,
 	XCircleIcon
 } from "lucide-react"
@@ -14,9 +14,7 @@ interface Action {
 	key: string
 	title: string
 	Icon: LucideIcon
-
 	onClick: () => void
-
 	loading: boolean
 }
 
@@ -29,7 +27,7 @@ export const useRequestCardActions = (
 
 	const updateStatus = useCallback(
 		async (status: "approve" | "reject") => {
-			const id = toast.loading("Пожалуйста, подождите...")
+			const toastId = toast.loading("Пожалуйста, подождите...")
 
 			try {
 				if (status === "approve") {
@@ -38,19 +36,20 @@ export const useRequestCardActions = (
 					await reject()
 				}
 
-				toast.update(id, {
+				toast.update(toastId, {
 					type: "success",
-					title: `Запрос успешно ${status === "approve" ? "одобрен" : "отклонен"}`
+					title: `Запрос успешно ${
+						status === "approve" ? "одобрен" : "отклонен"
+					}`
 				})
 			} catch (error) {
 				const { message: description, code } = errorCatch(error)
 
-				const type = code === "request_not_enough_fields" ? "info" : "error"
-				const title = `Не удалось ${status === "approve" ? "одобрить" : "отклонить"} запрос`
-
-				toast.update(id, {
-					type,
-					title,
+				toast.update(toastId, {
+					type: code === "request_not_enough_fields" ? "info" : "error",
+					title: `Не удалось ${
+						status === "approve" ? "одобрить" : "отклонить"
+					} запрос`,
 					description,
 					duration: TOAST_ERROR_DURATION
 				})
@@ -59,7 +58,17 @@ export const useRequestCardActions = (
 		[approve, reject]
 	)
 
-	const actions: Action[] = useMemo(
+	const approveRequest = useCallback(
+		() => updateStatus("approve"),
+		[updateStatus]
+	)
+
+	const rejectRequest = useCallback(
+		() => updateStatus("reject"),
+		[updateStatus]
+	)
+
+	const actions = useMemo<Action[]>(
 		() => [
 			{
 				key: "details",
@@ -73,17 +82,23 @@ export const useRequestCardActions = (
 				title: "Подтвердить",
 				Icon: CheckCircleIcon,
 				loading: isApproveLoading,
-				onClick: () => updateStatus("approve")
+				onClick: approveRequest
 			},
 			{
 				key: "reject",
 				title: "Отклонить",
 				Icon: XCircleIcon,
 				loading: isRejectLoading,
-				onClick: () => updateStatus("reject")
+				onClick: rejectRequest
 			}
 		],
-		[isApproveLoading, isRejectLoading, handleCollapse]
+		[
+			handleCollapse,
+			isApproveLoading,
+			isRejectLoading,
+			approveRequest,
+			rejectRequest
+		]
 	)
 
 	return {

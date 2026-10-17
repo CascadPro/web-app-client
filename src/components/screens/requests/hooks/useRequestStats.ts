@@ -1,4 +1,4 @@
-import { useMemo } from "react"
+import { useCallback, useEffect, useMemo, useRef } from "react"
 
 import { DomainRequestStatus } from "@/api/generated"
 import { useRequestStats } from "@/libs/query/hooks/use-requests"
@@ -13,66 +13,90 @@ interface Stats {
 
 const useRequestStatsHook = () => {
 	const { statistics, isPending } = useRequestStats()
+	const { setStatuses } = useRequestContext()
+	const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
 	const waiting =
-		statistics?.by_status?.[DomainRequestStatus.RequestStatusWaiting]
+		statistics?.by_status?.[DomainRequestStatus.RequestStatusWaiting] ?? 0
 
 	const approved =
-		statistics?.by_status?.[DomainRequestStatus.RequestStatusApproved]
+		statistics?.by_status?.[DomainRequestStatus.RequestStatusApproved] ?? 0
 
 	const rejected =
-		statistics?.by_status?.[DomainRequestStatus.RequestStatusRejected]
+		statistics?.by_status?.[DomainRequestStatus.RequestStatusRejected] ?? 0
 
-	const { setStatuses } = useRequestContext()
+	const scrollToList = useCallback(() => {
+		if (timeoutRef.current !== null) {
+			clearTimeout(timeoutRef.current)
+		}
 
-	const scrollToList = () => {
-		setTimeout(
-			() =>
-				requestAnimationFrame(() => {
-					document.getElementById("request-list")?.scrollIntoView({
-						behavior: "smooth",
-						block: "start"
-					})
-				}),
-			300
-		)
-	}
+		timeoutRef.current = setTimeout(() => {
+			timeoutRef.current = null
 
-	const handleStatusClick = (status: DomainRequestStatus) => {
-		setStatuses([status])
-		scrollToList()
-	}
+			requestAnimationFrame(() => {
+				document.getElementById("request-list")?.scrollIntoView({
+					behavior: "smooth",
+					block: "start"
+				})
+			})
+		}, 300)
+	}, [])
 
-	const stats: Stats[] = useMemo(
+	const handleStatusClick = useCallback(
+		(status: DomainRequestStatus) => {
+			setStatuses([status])
+			scrollToList()
+		},
+		[setStatuses, scrollToList]
+	)
+
+	useEffect(
+		() => () => {
+			if (timeoutRef.current !== null) {
+				clearTimeout(timeoutRef.current)
+			}
+		},
+		[]
+	)
+
+	const stats = useMemo<Stats[]>(
 		() => [
 			{
 				label: "Всего заявок",
-				value: statistics?.total || 0,
+				value: statistics?.total ?? 0,
 				onClick: scrollToList
 			},
 			{
 				label: "На рассмотрении",
-				value: waiting || 0,
+				value: waiting,
 				onClick: () =>
 					handleStatusClick(DomainRequestStatus.RequestStatusWaiting)
 			},
 			{
 				label: "Одобрено",
-				value: approved || 0,
+				value: approved,
 				onClick: () =>
 					handleStatusClick(DomainRequestStatus.RequestStatusApproved)
 			},
 			{
 				label: "Отклонено",
-				value: rejected || 0,
+				value: rejected,
 				onClick: () =>
 					handleStatusClick(DomainRequestStatus.RequestStatusRejected)
 			}
 		],
-		[statistics?.total, waiting, approved, rejected]
+		[
+			statistics?.total,
+			waiting,
+			approved,
+			rejected,
+			scrollToList,
+			handleStatusClick
+		]
 	)
 
 	return { stats, isPending }
 }
 
-export { useRequestStatsHook as useRequestStats }
+export { useRequestStatsHook as useRequestStats };
+

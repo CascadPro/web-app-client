@@ -1,6 +1,7 @@
 import { m } from "motion/react"
 import dynamic from "next/dynamic"
 import type { FC } from "react"
+import { memo } from "react"
 
 import type { RequestHttpDtoGetRequestsResponseRequest as Request } from "@/api/generated"
 import { MarqueeText } from "@/components/ui/components/maruquee-text/marquee-text"
@@ -33,7 +34,7 @@ interface Props {
 	request: Request
 }
 
-export const RequestCard: FC<Props> = ({ request }) => {
+const RequestCardComponent: FC<Props> = ({ request }) => {
 	const {
 		ref,
 		progress,
@@ -58,20 +59,18 @@ export const RequestCard: FC<Props> = ({ request }) => {
 			<m.article
 				ref={ref}
 				layout
-				initial={{ opacity: 0.6, y: 15 }}
-				whileInView={{ opacity: 1, y: 0 }}
+				initial={{ opacity: 0, y: 15, scale: 0.98 }}
+				whileInView={{ opacity: 1, scale: 1 }}
+				viewport={{ once: true, amount: "some" }}
 				whileTap={isSelected ? undefined : { scale: 0.98 }}
-				viewport={{ once: true, amount: "all" }}
 				animate={{
-					translateY: isSelected ? selectedY : 0,
+					y: isSelected ? selectedY : 0,
 					zIndex: isSelected ? 210 : 1
 				}}
 				transition={{
 					opacity: { duration: 0.2 },
-					layout: {
-						duration: 0.25,
-						ease: [0.22, 1, 0.36, 1]
-					}
+					y: { duration: 0.3, ease: [0.22, 1, 0.36, 1] },
+					layout: { duration: 0.25, ease: [0.22, 1, 0.36, 1] }
 				}}
 				className="flex flex-col justify-center gap-3 select-none"
 				onContextMenu={e => e.preventDefault()}
@@ -89,6 +88,7 @@ export const RequestCard: FC<Props> = ({ request }) => {
 						onTouchStart={handleTouchStart}
 						onTouchEnd={handleTouchEnd}
 						onTouchCancel={handleTouchCancel}
+						onTouchMove={handleTouchCancel}
 						className="flex w-full flex-col gap-3 px-4 py-5 text-left sm:px-5"
 					>
 						<div className="flex justify-between gap-5">
@@ -110,26 +110,26 @@ export const RequestCard: FC<Props> = ({ request }) => {
 						<div className="mt-1 space-y-2">
 							<div className="text-on-surface-variant flex items-center justify-between text-xs">
 								<span>Заполнение</span>
-
 								<span>{progress}%</span>
 							</div>
 
 							<div className="bg-outline/20 h-1.5 overflow-hidden rounded-full">
 								<m.div
 									initial={false}
-									whileInView={{ width: `${progress}%` }}
-									viewport={{ once: true }}
+									animate={{ width: `${progress}%` }}
 									transition={{ duration: 0.4, ease: "easeOut" }}
-									className="bg-primary h-full w-0 rounded-full"
+									className="bg-primary h-full rounded-full"
 								/>
 							</div>
 						</div>
 					</button>
 
-					<DynamicRequestCardDetails
-						id={request.id || ""}
-						isCollapsed={isCollapsed}
-					/>
+					{isSelected && (
+						<DynamicRequestCardDetails
+							id={request.id || ""}
+							isCollapsed={isCollapsed}
+						/>
+					)}
 				</div>
 
 				<DynamicRequestCardActions
@@ -142,3 +142,5 @@ export const RequestCard: FC<Props> = ({ request }) => {
 		</>
 	)
 }
+
+export const RequestCard = memo(RequestCardComponent)

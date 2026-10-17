@@ -1,13 +1,12 @@
 import { LoaderIcon } from "lucide-react"
 import { m } from "motion/react"
+import { memo } from "react"
 
 import { Button, Separator } from "@/components/ui"
 
 import { useRequestStats } from "../hooks/useRequestStats"
 
-interface Props {}
-
-export const RequestsStats = () => {
+const RequestsStatsComponent = () => {
 	const { stats, isPending } = useRequestStats()
 
 	return (
@@ -31,7 +30,7 @@ export const RequestsStats = () => {
 								transition={{ type: "tween" }}
 								className="block"
 							>
-								<span>{stat.value}</span>
+								{stat.value}
 							</m.span>
 						)}
 					</p>
@@ -50,3 +49,5 @@ export const RequestsStats = () => {
 		</section>
 	)
 }
+
+export const RequestsStats = memo(RequestsStatsComponent)

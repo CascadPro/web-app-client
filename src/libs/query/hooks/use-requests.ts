@@ -1,20 +1,29 @@
 "use client"
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useCallback, useMemo } from "react"
 
-import type { RequestsTransportHttpGetRequestsRequest as GetRequestsParams } from "@/api/generated"
+import type { RequestsTransportHttpGetRequestsRequest as GetRequestsParams } from "@/api/generated";
 import { service } from "@/api/instance"
 import { ms } from "@/libs/utils"
 
 import { QueryKeys } from "../keys"
 
+const EMPTY_REQUESTS: NonNullable<
+	Awaited<ReturnType<typeof service.getRequests>>["data"]["requests"]
+> = []
+
 export const useRequests = (params?: GetRequestsParams) => {
-	const normalizedParams = params
-		? {
-				...params,
-				statuses: params.statuses ? [...params.statuses].sort() : undefined
-			}
-		: undefined
+	const normalizedParams = useMemo(
+		() =>
+			params
+				? {
+						...params,
+						statuses: params.statuses ? [...params.statuses].sort() : undefined
+					}
+				: undefined,
+		[params]
+	)
 
 	const { data, ...other } = useQuery({
 		queryKey: QueryKeys.requests.list(normalizedParams),
@@ -25,7 +34,7 @@ export const useRequests = (params?: GetRequestsParams) => {
 	})
 
 	return {
-		requests: data?.requests ?? [],
+		requests: data?.requests ?? EMPTY_REQUESTS,
 		totalLength: data?.length ?? 0,
 		...other
 	}
@@ -58,9 +67,11 @@ export const useRequestDetail = (id: string, enabled = true) => {
 export const useRequestPatchStatus = (id: string) => {
 	const client = useQueryClient()
 
-	const refreshRequests = () => {
-		void client.refetchQueries({ queryKey: QueryKeys.requests.all })
-	}
+	const refreshRequests = useCallback(() => {
+		void client.invalidateQueries({
+			queryKey: QueryKeys.requests.all
+		})
+	}, [client])
 
 	const approveMutation = useMutation({
 		mutationFn: () => service.patchRequestsIdApprove(id),
@@ -70,7 +81,8 @@ export const useRequestPatchStatus = (id: string) => {
 
 	const rejectMutation = useMutation({
 		mutationFn: () => service.patchRequestsIdReject(id),
-		onSuccess: refreshRequests
+		onSuccess: refreshRequests,
+		onError: refreshRequests
 	})
 
 	return {

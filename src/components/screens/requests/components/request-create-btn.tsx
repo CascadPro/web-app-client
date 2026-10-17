@@ -1,8 +1,9 @@
-import { PlusIcon } from "lucide-react";
+import { PlusIcon } from "lucide-react"
+import { memo } from "react"
 
-import { Button } from "@/components/ui";
+import { Button } from "@/components/ui"
 
-export const RequestCreateButton = () => {
+const RequestCreateButtonComponent = () => {
 	return (
 		<Button
 			variant="tertiary"
@@ -13,3 +14,5 @@ export const RequestCreateButton = () => {
 		</Button>
 	)
 }
+
+export const RequestCreateButton = memo(RequestCreateButtonComponent)

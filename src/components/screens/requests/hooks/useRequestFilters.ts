@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useCallback, useState } from "react"
 
 import type { DomainRequestStatus } from "@/api/generated"
 
@@ -14,17 +14,23 @@ export const useRequestFilters = () => {
 		clearFilters
 	} = useRequestContext()
 
-	const [isOpen, setIsOpen] = useState<boolean>(false)
+	const [isOpen, setIsOpen] = useState(false)
 
-	const toggleStatus = (status: DomainRequestStatus) => {
-		setStatuses(prev =>
-			prev.includes(status)
-				? prev.filter(item => item !== status)
-				: [...prev, status]
-		)
-	}
+	const toggleStatus = useCallback(
+		(status: DomainRequestStatus) => {
+			setStatuses(previous =>
+				previous.includes(status)
+					? previous.filter(item => item !== status)
+					: [...previous, status]
+			)
+		},
+		[setStatuses]
+	)
 
-	const isActive = (value: DomainRequestStatus) => statuses.includes(value)
+	const isActive = useCallback(
+		(value: DomainRequestStatus) => statuses.includes(value),
+		[statuses]
+	)
 
 	return {
 		sortType,

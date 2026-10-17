@@ -1,24 +1,23 @@
-import { useMemo, useState } from "react"
+import { useCallback, useMemo, useState } from "react"
 
 import type { DomainRequestStatus, DomainSortType } from "@/api/generated"
 import type { RequestContextState } from "@/types/screens/requests"
 
 export const useRequestContextProvider = () => {
 	const [statuses, setStatuses] = useState<DomainRequestStatus[]>([])
-
 	const [sortType, setSortType] = useState<DomainSortType>("newest")
 
-	const clearFilters = () => {
+	const clearFilters = useCallback(() => {
 		setStatuses([])
 		setSortType("newest")
-	}
+	}, [])
 
 	const isClearDisabled = useMemo(
-		() => statuses.length == 0 && sortType === "newest",
+		() => statuses.length === 0 && sortType === "newest",
 		[statuses, sortType]
 	)
 
-	const values: RequestContextState = useMemo(
+	const values = useMemo<RequestContextState>(
 		() => ({
 			statuses,
 			sortType,
@@ -27,7 +26,7 @@ export const useRequestContextProvider = () => {
 			setSortType,
 			clearFilters
 		}),
-		[statuses, sortType, isClearDisabled, setStatuses, setSortType]
+		[statuses, sortType, isClearDisabled, clearFilters]
 	)
 
 	return { values }

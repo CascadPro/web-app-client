@@ -1,6 +1,7 @@
 import { ChevronDownIcon, SortDescIcon, XIcon } from "lucide-react"
 import dynamic from "next/dynamic"
 import type { FC } from "react"
+import { memo } from "react"
 
 import { Button, Separator } from "@/components/ui"
 import { REQUEST_STATUSES } from "@/libs/constants/screens/requests"
@@ -17,7 +18,7 @@ interface Props {
 	isLoading: boolean
 }
 
-export const RequestFilters: FC<Props> = ({ isLoading }) => {
+const RequestFiltersComponent: FC<Props> = ({ isLoading }) => {
 	const {
 		sortType,
 		isOpen,
@@ -42,7 +43,7 @@ export const RequestFilters: FC<Props> = ({ isLoading }) => {
 						<SortDescIcon
 							size={18}
 							className={cn(
-								"mt-0.5 transition-transform will-change-transform",
+								"mt-0.5 transition-transform",
 								sortType === "oldest" && "rotate-180"
 							)}
 						/>
@@ -91,3 +92,5 @@ export const RequestFilters: FC<Props> = ({ isLoading }) => {
 		</>
 	)
 }
+
+export const RequestFilters = memo(RequestFiltersComponent)
