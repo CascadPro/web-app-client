@@ -6,7 +6,6 @@ import { AuthProvider } from "@/components/providers/auth"
 import { NavigationProgress } from "@/components/providers/navigation-progress"
 import { QueryProvider } from "@/components/providers/query"
 import { RealtimeProvider } from "@/components/providers/realtime"
-import { ToastProvider } from "@/components/ui"
 import { AppRoutes, NO_INDEX_PAGE } from "@/libs/constants"
 import { getViewport } from "@/libs/utils"
 
@@ -38,8 +37,6 @@ export default function Layout({
 						<NavigationProgress />
 
 						{children}
-
-						<ToastProvider />
 
 						<Tabs data={data} />
 					</main>
