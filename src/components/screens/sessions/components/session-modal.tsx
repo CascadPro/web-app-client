@@ -21,8 +21,17 @@ export const SessionModal: FC<SessionModalProps> = ({
 		setIsOpen(false)
 	}
 
+	const handleOnChange = (state: boolean) => {
+		if (isDeleting) return
+		setIsOpen(state)
+	}
+
 	return (
-		<Modal open={isOpen} onOpenChange={setIsOpen}>
+		<Modal
+			open={isOpen}
+			onOpenChange={handleOnChange}
+			overlayInteractive={!isDeleting}
+		>
 			<Modal.Content className="w-[90%]">
 				<Modal.Header>
 					<Modal.Title>Завершить все сеансы?</Modal.Title>
@@ -39,6 +48,7 @@ export const SessionModal: FC<SessionModalProps> = ({
 						variant="outline"
 						className="p-2"
 						onClick={() => setIsOpen(false)}
+						disabled={isDeleting}
 					>
 						Отмена
 					</Button>
