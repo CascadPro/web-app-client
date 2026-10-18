@@ -1,159 +1,61 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { RotateCcwClockIcon } from "lucide-react"
+
+import { Button, Title } from "../ui"
+
+import { usePWAServiceWorker } from "./hooks/usePWAServiceWorker"
 
 export function ServiceWorkerRegister() {
-	const [updateAvailable, setUpdateAvailable] = useState(false)
-	const [dismissed, setDismissed] = useState(false)
-
-	const waitingWorker = useRef<ServiceWorker | null>(null)
-	const shouldReload = useRef(false)
-
-	useEffect(() => {
-		if (
-			process.env.NODE_ENV !== "production" ||
-			!("serviceWorker" in navigator)
-		) {
-			return
-		}
-
-		let disposed = false
-		let registration: ServiceWorkerRegistration | undefined
-		let updateInterval: number | undefined
-
-		const detectWaitingWorker = () => {
-			if (registration?.waiting && navigator.serviceWorker.controller) {
-				waitingWorker.current = registration.waiting
-				setUpdateAvailable(true)
-			}
-		}
-
-		const onControllerChange = () => {
-			if (shouldReload.current) {
-				window.location.reload()
-			}
-		}
-
-		const onUpdateFound = () => {
-			const installing = registration?.installing
-
-			if (!installing) return
-
-			installing.addEventListener("statechange", () => {
-				if (
-					installing.state === "installed" &&
-					navigator.serviceWorker.controller &&
-					registration?.waiting
-				) {
-					waitingWorker.current = registration.waiting
-					setDismissed(false)
-					setUpdateAvailable(true)
-				}
-			})
-		}
-
-		const onVisibilityChange = () => {
-			if (document.visibilityState === "visible" && registration) {
-				void registration.update().catch(() => {})
-			}
-		}
-
-		navigator.serviceWorker.addEventListener(
-			"controllerchange",
-			onControllerChange
-		)
-
-		void navigator.serviceWorker
-			.register("/sw.js", {
-				scope: "/",
-				updateViaCache: "none"
-			})
-			.then(result => {
-				if (disposed) return
-
-				registration = result
-
-				detectWaitingWorker()
-
-				registration.addEventListener("updatefound", onUpdateFound)
-
-				// Проверяем обновления не чаще одного раза в час.
-				updateInterval = window.setInterval(
-					() => {
-						void registration?.update().catch(() => {})
-					},
-					60 * 60 * 1000
-				)
-
-				document.addEventListener("visibilitychange", onVisibilityChange)
-			})
-			.catch(error => {
-				console.error("[PWA] Service Worker registration failed:", error)
-			})
-
-		return () => {
-			disposed = true
-
-			navigator.serviceWorker.removeEventListener(
-				"controllerchange",
-				onControllerChange
-			)
-
-			document.removeEventListener("visibilitychange", onVisibilityChange)
-
-			if (updateInterval !== undefined) {
-				window.clearInterval(updateInterval)
-			}
-
-			registration?.removeEventListener("updatefound", onUpdateFound)
-		}
-	}, [])
-
-	const applyUpdate = () => {
-		const worker = waitingWorker.current
-
-		if (!worker) return
-
-		shouldReload.current = true
-		worker.postMessage({ type: "SKIP_WAITING" })
-	}
+	const { updateAvailable, dismissed, applyUpdate, dismissUpdate } =
+		usePWAServiceWorker()
 
 	if (!updateAvailable || dismissed) {
 		return null
 	}
 
 	return (
-		<aside
-			role="status"
-			aria-live="polite"
-			className="fixed inset-x-3 z-100 mx-auto flex max-w-lg items-center gap-3 rounded-2xl border border-white/10 bg-neutral-900/95 p-4 text-sm text-white shadow-2xl backdrop-blur-xl"
-			style={{
-				bottom: "calc(1rem + env(safe-area-inset-bottom, 0px))"
-			}}
-		>
-			<div className="min-w-0 flex-1">
-				<p className="font-semibold">Доступна новая версия</p>
-				<p className="mt-1 text-neutral-400">
-					Обнови Cascade Pro, чтобы применить изменения.
-				</p>
-			</div>
-
-			<button
-				type="button"
-				onClick={applyUpdate}
-				className="shrink-0 rounded-xl bg-blue-400 px-3 py-2 font-semibold text-neutral-950"
+		<div className="pointer-events-none fixed bottom-4 z-200 w-full px-4">
+			<aside
+				role="status"
+				aria-live="polite"
+				aria-label="Доступна новая версия"
+				className="bg-background/90! glass glass-highlight ring-outline/20 pointer-events-auto mx-auto flex max-w-lg flex-col gap-5 rounded-2xl p-4 shadow-xl ring"
 			>
-				Обновить
-			</button>
+				<div className="flex min-w-0 items-start gap-3">
+					<span className="bg-primary/20 text-primary mt-1.5 rounded-lg p-2">
+						<RotateCcwClockIcon size={24} />
+					</span>
 
-			<button
-				type="button"
-				onClick={() => setDismissed(true)}
-				aria-label="Позже"
-				className="shrink-0 rounded-lg px-2 py-2 text-neutral-400"
-			>
-				Позже
-			</button>
-		</aside>
+					<div>
+						<Title size="md" className="text-on-surface">
+							Доступна новая версия
+						</Title>
+
+						<p className="text-on-surface-variant text-sm">
+							Обновите приложение, чтобы получить последние изменения.
+						</p>
+					</div>
+				</div>
+
+				<div className="flex items-center gap-3 self-end">
+					<Button
+						variant="ghost"
+						className="text-on-surface-variant hover:text-on-surface active:text-on-surface active:bg-primary/20 rounded-xl px-3 py-2 text-sm transition-colors"
+						onClick={dismissUpdate}
+					>
+						Позже
+					</Button>
+
+					<Button
+						variant="default-2"
+						className="px-3 py-2"
+						onClick={applyUpdate}
+					>
+						Обновить
+					</Button>
+				</div>
+			</aside>
+		</div>
 	)
 }

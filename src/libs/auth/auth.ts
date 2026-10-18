@@ -68,7 +68,6 @@ export const login = async ({ email, password }: LoginRequestDTO) => {
 
 	const response = await fetch("/api/auth/login", {
 		method: "POST",
-		credentials: "include",
 		cache: "no-store",
 		headers: { "Content-Type": "application/json" },
 		body: request
@@ -83,7 +82,7 @@ export const login = async ({ email, password }: LoginRequestDTO) => {
 	useAuthStore.getState().setAccessToken(data.access_token)
 	useAuthStore.getState().setAuthenticated()
 
-	void queryClient.invalidateQueries({
+	await queryClient.invalidateQueries({
 		queryKey: QueryKeys.users.me()
 	})
 
