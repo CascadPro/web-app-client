@@ -2,6 +2,8 @@ import axios, { type AxiosRequestConfig, type AxiosResponse } from "axios"
 
 import { API_URL } from "@/libs/constants"
 import { parseApiError } from "@/libs/errors"
+import { queryClient } from "@/libs/query/client"
+import { queryPersister } from "@/libs/query/persister"
 import { useAuthStore } from "@/store/auth"
 
 import type {
@@ -75,6 +77,17 @@ const refreshAccessToken = (): Promise<string | null> => {
 	return refreshPromise
 }
 
+const clearAuthenticatedCache = (): void => {
+	queryClient.clear()
+
+	queryPersister.removeClient()
+}
+
+const expireClientSession = (): void => {
+	useAuthStore.getState().setUnauthenticated()
+	clearAuthenticatedCache()
+}
+
 const isAuthEndpoint = (url?: string): boolean => {
 	if (!url) return false
 
@@ -123,7 +136,7 @@ instance.interceptors.response.use(
 		}
 
 		if (originalRequest._retry) {
-			useAuthStore.getState().setUnauthenticated()
+			expireClientSession()
 			throw apiError
 		}
 
@@ -132,7 +145,7 @@ instance.interceptors.response.use(
 		const token = await refreshAccessToken()
 
 		if (!token) {
-			useAuthStore.getState().setUnauthenticated()
+			expireClientSession()
 			throw apiError
 		}
 

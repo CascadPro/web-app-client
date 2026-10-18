@@ -4,12 +4,14 @@ import { useEffect, useRef } from "react"
 
 import { realtimeClient } from "@/libs/realtime"
 import { useAuthStore } from "@/store/auth"
+import { useRealtimeStore } from "@/store/realtime"
 
 import { useRealtime } from "./useRealtime"
 
 export function useRealtimeLifecycle(): void {
 	const status = useAuthStore(state => state.status)
 	const accessToken = useAuthStore(state => state.accessToken)
+	const realtimeStatus = useRealtimeStore(state => state.status)
 
 	const setupRealtime = useRealtime()
 	const setupRealtimeRef = useRef(setupRealtime)
@@ -19,7 +21,6 @@ export function useRealtimeLifecycle(): void {
 	useEffect(() => {
 		if (status !== "authenticated" || !accessToken) {
 			realtimeClient.disconnect()
-
 			return
 		}
 
@@ -27,38 +28,36 @@ export function useRealtimeLifecycle(): void {
 
 		realtimeClient.connect()
 
-		const handleOnline = () => {
+		const ensureConnection = () => {
 			if (!realtimeClient.isAuthenticated() && !realtimeClient.isConnecting()) {
 				realtimeClient.connect()
 			}
+		}
 
-			setupRealtimeRef.current.invalidateSessions()
+		const handleOnline = () => {
+			ensureConnection()
 		}
 
 		const handleVisibilityChange = () => {
-			if (document.visibilityState !== "visible") {
-				return
+			if (document.visibilityState === "visible") {
+				ensureConnection()
 			}
-
-			if (!realtimeClient.isAuthenticated() && !realtimeClient.isConnecting()) {
-				realtimeClient.connect()
-			}
-
-			setupRealtimeRef.current.invalidateSessions()
 		}
 
 		window.addEventListener("online", handleOnline)
-
 		document.addEventListener("visibilitychange", handleVisibilityChange)
 
 		return () => {
 			unsubscribe()
-
 			window.removeEventListener("online", handleOnline)
-
 			document.removeEventListener("visibilitychange", handleVisibilityChange)
-
 			realtimeClient.disconnect()
 		}
 	}, [status, accessToken])
+
+	useEffect(() => {
+		if (status === "authenticated" && realtimeStatus === "online") {
+			setupRealtimeRef.current.invalidateSessions()
+		}
+	}, [status, realtimeStatus])
 }

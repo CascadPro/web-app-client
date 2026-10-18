@@ -141,19 +141,14 @@ export class WebSocketClient {
 		this.authenticated = false
 
 		this.clearReconnectTimer()
+		this.stopHeartbeat()
 
 		const socket = this.socket
-
 		this.socket = null
 
-		if (!socket) {
-			this.options.onDisconnected?.()
-			return
+		if (socket) {
+			socket.close()
 		}
-
-		socket.close()
-
-		this.stopHeartbeat()
 
 		this.options.onDisconnected?.()
 	}
@@ -298,15 +293,20 @@ export class WebSocketClient {
 		this.options.onAuthenticated?.()
 	}
 
-	private handleAuthError(message: WsAuthError): void {
+	private handleAuthError(_message: WsAuthError): void {
 		this.authenticated = false
 		this.manuallyClosed = true
 
-		const socket = this.socket
+		this.clearReconnectTimer()
+		this.stopHeartbeat()
 
+		const socket = this.socket
 		this.socket = null
 
+		// Не позволяем старому соединению менять состояние нового.
 		socket?.close()
+
+		this.options.onDisconnected?.()
 	}
 
 	private handleHeartbeatPong(message: WsEvent<undefined>): void {
