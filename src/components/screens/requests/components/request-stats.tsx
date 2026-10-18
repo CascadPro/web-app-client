@@ -10,12 +10,12 @@ const RequestsStatsComponent = () => {
 	const { stats, isPending, reduceMotion } = useRequestStats()
 
 	return (
-		<section className="border-outline/20 bg-surface relative grid grid-cols-2 gap-4 rounded-3xl border p-4 shadow-sm select-none sm:p-5 lg:grid-cols-4">
+		<section className="border-outline/20 bg-surface relative grid grid-cols-2 gap-4 rounded-3xl border px-(--row-padding-x) py-(--row-padding-y) shadow-sm select-none lg:grid-cols-4">
 			{stats.map(stat => (
 				<Button
 					key={stat.label}
 					variant="ghost"
-					className="block px-4 py-3 text-left active:translate-y-1 active:scale-[0.98]"
+					className="block px-3 py-2 text-left active:translate-y-1 active:scale-[0.98]"
 					onClick={stat.onClick}
 				>
 					<p className="text-on-surface-variant text-sm">{stat.label}</p>
@@ -54,3 +54,4 @@ const RequestsStatsComponent = () => {
 }
 
 export const RequestsStats = memo(RequestsStatsComponent)
+RequestsStats.displayName = "RequestStats"

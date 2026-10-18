@@ -1,17 +1,17 @@
 "use client"
 
-import { AnimatePresence, m } from "motion/react"
-import type { FC } from "react"
-import { memo } from "react"
+import { AnimatePresence, m } from "motion/react";
+import type { FC } from "react";
+import { memo } from "react";
 
-import type { RequestHttpDtoGetRequestsResponseRequest } from "@/api/generated"
-import type { ErrorCatchResult } from "@/libs/utils"
+import type { RequestHttpDtoGetRequestsResponseRequest } from "@/api/generated";
+import type { ErrorCatchResult } from "@/libs/utils";
 
-import { RequestCard } from "../card/request-card"
+import { RequestCard } from "../card/request-card";
 
-import { RequestEmpty } from "./request-empty"
-import { RequestError } from "./request-error"
-import { RequestLoading } from "./request-loading"
+import { RequestEmpty } from "./request-empty";
+import { RequestError } from "./request-error";
+import { RequestLoading } from "./request-loading";
 
 interface Props {
 	requests: RequestHttpDtoGetRequestsResponseRequest[]
@@ -27,7 +27,7 @@ const RequestsListComponent: FC<Props> = ({ requests, isPending, error }) => {
 	if (requests.length === 0) return <RequestEmpty />
 
 	return (
-		<m.div id="request-list" className="grid gap-5">
+		<m.div id="request-list" className="grid gap-(--card-gap)">
 			<AnimatePresence mode="popLayout">
 				{requests.map(request => (
 					<RequestCard key={request.id} request={request} />
