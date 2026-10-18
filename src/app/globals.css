@@ -18,11 +18,6 @@
 	--secondary-container: #e64a19;
 	--on-secondary-container: #ffccbc;
 
-	--tertiary: #ffd54f;
-	--on-tertiary: #000000;
-	--tertiary-container: #fbc02d;
-	--on-tertiary-container: #fff176;
-
 	--background: #ffffff;
 	--on-background: #212121;
 
@@ -60,11 +55,6 @@
 	--color-secondary-container: var(--secondary-container);
 	--color-on-secondary-container: var(--on-secondary-container);
 
-	--color-tertiary: var(--tertiary);
-	--color-on-tertiary: var(--on-tertiary);
-	--color-tertiary-container: var(--tertiary-container);
-	--color-on-tertiary-container: var(--on-tertiary-container);
-
 	--color-background: var(--background);
 	--color-on-background: var(--on-background);
 
@@ -92,11 +82,6 @@
 	--on-secondary: #000000;
 	--secondary-container: #0d47a1;
 	--on-secondary-container: #bbdefb;
-
-	--tertiary: #b39ddb;
-	--on-tertiary: #000000;
-	--tertiary-container: #5e35b1;
-	--on-tertiary-container: #d1c4e9;
 
 	--background: #121212;
 	--on-background: #e0e0e0;

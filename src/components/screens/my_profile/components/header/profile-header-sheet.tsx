@@ -1,12 +1,12 @@
-import { Trash2Icon, UploadIcon } from "lucide-react"
-import type { FC } from "react"
+import { Trash2Icon, UploadIcon } from "lucide-react";
+import type { FC } from "react";
 
-import { BottomSheet } from "@/components/ui"
-import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
-import type { ReactStateHook } from "@/types/base"
+import { BottomSheet } from "@/components/ui";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import type { ReactStateHook } from "@/types/base";
 
-import { useProfileHeaderSheet } from "../../hooks/useProfileHeaderSheet"
+import { useProfileHeaderSheet } from "../../hooks/useProfileHeaderSheet";
 
 const ALLOWED_AVATAR_FILE_TYPES = [
 	"image/jpeg",
@@ -83,7 +83,7 @@ export const ProfileHeaderSheet: FC<Props> = ({
 
 			{hasAvatar && (
 				<>
-					<Separator type="horizontal" className="bg-tertiary my-4" />
+					<Separator type="horizontal" className="bg-secondary my-4" />
 
 					<Button
 						variant="destructive-outline"

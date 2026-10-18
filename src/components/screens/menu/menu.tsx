@@ -1,12 +1,12 @@
 "use client"
 
-import { LogOutIcon } from "lucide-react"
+import { LogOutIcon } from "lucide-react";
 
-import { Button, Container, Separator } from "@/components/ui"
+import { Button, Container, Separator } from "@/components/ui";
 
-import { MenuItem } from "./components/menu-item"
-import { ProfileBadge } from "./components/profile-badge"
-import { useMenuPage } from "./hooks/useMenuPage"
+import { MenuItem } from "./components/menu-item";
+import { ProfileBadge } from "./components/profile-badge";
+import { useMenuPage } from "./hooks/useMenuPage";
 
 export const MenuScreen = () => {
 	const { fullname, user, loading, logout, menuItemsData } = useMenuPage()
@@ -26,7 +26,7 @@ export const MenuScreen = () => {
 					<MenuItem key={String(item.href)} item={item} />
 				))}
 
-				<Separator type="horizontal" className="bg-tertiary my-4" />
+				<Separator type="horizontal" className="bg-secondary my-4" />
 
 				<Button
 					variant="destructive-outline"
