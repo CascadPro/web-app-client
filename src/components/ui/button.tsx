@@ -24,7 +24,7 @@ const buttonVariants = cva(
 				destructive:
 					"bg-error-container text-on-error-container hover:bg-error hover:text-on-error active:bg-error active:text-on-error",
 				"destructive-outline":
-					"ring ring-error-container text-error bg-transparent shadow shadow-error active:shadow-none hover:bg-error-container/40 active:bg-error-container/40 active:scale-[.99]"
+					"text-error bg-error/20 ring-error rounded-xl ring shadow-md active:shadow-none hover:bg-error-container/40 active:bg-error-container/40 active:scale-[.99]"
 			}
 		},
 		defaultVariants: {
