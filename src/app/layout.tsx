@@ -6,6 +6,7 @@ import type { ReactNode } from "react"
 
 import { HapticProvider } from "@/components/providers/haptics"
 import { ServiceWorkerRegister } from "@/components/pwa/pwa-service-worker"
+import { PWASplashScreen } from "@/components/pwa/pwa-splash-screen"
 import { ToastViewport } from "@/components/ui/toast/components/toast-viewport"
 
 import "./globals.css"
@@ -50,7 +51,7 @@ export default function Layout({ children }: Readonly<Props>) {
 				<ThemeProvider attribute="class">
 					<LazyMotion features={domAnimation} strict>
 						<MotionConfig reducedMotion="user">
-							{children}
+							<PWASplashScreen>{children}</PWASplashScreen>
 
 							<ToastViewport />
 						</MotionConfig>
