@@ -1,10 +1,10 @@
-import { MailIcon, UserRoundIcon } from "lucide-react"
-import { m } from "motion/react"
-import { type FC, memo } from "react"
+import { MailIcon, UserRoundIcon } from "lucide-react";
+import { m } from "motion/react";
+import { type FC, memo } from "react";
 
-import { Title } from "@/components/ui"
+import { Title } from "@/components/ui";
 
-import { ProfileRow } from "./profile-row"
+import { ProfileRow } from "./profile-row";
 
 interface Props {
 	name?: string
@@ -26,7 +26,7 @@ const ProfileInformationComponent: FC<Props> = ({
 			transition={{ duration: 0.3, delay: 0.05 }}
 			className="border-outline/20 bg-surface overflow-hidden rounded-3xl border shadow-sm"
 		>
-			<div className="border-outline/15 border-b px-5 py-4 sm:px-6">
+			<div className="border-outline/15 border-b px-(--row-padding-x) py-(--row-padding-y)">
 				<Title size="sm" className="text-on-surface">
 					Персональная информация
 				</Title>

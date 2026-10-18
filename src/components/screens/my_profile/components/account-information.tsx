@@ -21,7 +21,7 @@ const AccountInformationComponent: FC<Props> = ({ role, last_active_at }) => {
 			transition={{ duration: 0.3, delay: 0.1 }}
 			className="border-outline/20 bg-surface overflow-hidden rounded-3xl border shadow-sm"
 		>
-			<div className="border-outline/15 border-b px-5 py-4 sm:px-6">
+			<div className="border-outline/15 border-b px-(--row-padding-x) py-(--row-padding-y)">
 				<Title size="sm" className="text-on-surface">
 					Аккаунт
 				</Title>

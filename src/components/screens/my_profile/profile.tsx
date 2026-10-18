@@ -28,7 +28,7 @@ export const MyProfileScreen = () => {
 	return (
 		<PullToRefresh onRefresh={handleRefresh}>
 			<main className="mx-auto w-full max-w-3xl px-1 sm:px-6">
-				<div className="space-y-6">
+				<div className="space-y-(--section-gap)">
 					<ProfileHeader
 						user={avatarUser}
 						fullname={fullName}
