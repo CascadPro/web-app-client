@@ -16,7 +16,9 @@ export const ACCENT_OPTIONS: SettingsOption<AccentPreference>[] = [
 	{ value: "orange", label: "Оранжевый" },
 	{ value: "blue", label: "Голубой" },
 	{ value: "mauve", label: "Лиловый" },
-	{ value: "green", label: "Зелёный" }
+	{ value: "green", label: "Зелёный" },
+	{ value: "teal", label: "Бирюзовый" },
+	{ value: "rose", label: "Розовый" }
 ]
 
 export const ANIMATION_OPTIONS: SettingsOption<AnimationPreference>[] = [

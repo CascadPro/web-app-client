@@ -2,7 +2,8 @@ import type { LucideIcon } from "lucide-react"
 
 export type ThemePreference = "system" | "light" | "dark"
 
-export type AccentPreference = "orange" | "blue" | "mauve" | "green"
+export type AccentPreference =
+	"orange" | "blue" | "mauve" | "green" | "teal" | "rose"
 
 export type AnimationPreference = "system" | "enabled" | "disabled"
 

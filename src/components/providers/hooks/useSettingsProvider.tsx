@@ -21,7 +21,7 @@ export const useSettingsProvider = () => {
 	const [settings, setSettings] = useState<SettingsState>(DEFAULT_SETTINGS)
 	const [hydrated, setHydrated] = useState<boolean>(false)
 
-	const { setTheme } = useTheme()
+	const { setTheme, resolvedTheme } = useTheme()
 
 	const updateSettings = (patch: Partial<SettingsUpdate>) => {
 		setSettings(current => ({ ...current, ...patch }))
@@ -62,6 +62,7 @@ export const useSettingsProvider = () => {
 		setHydrated(true)
 	}, [])
 
+
 	useEffect(() => {
 		if (!hydrated) return
 
@@ -69,16 +70,27 @@ export const useSettingsProvider = () => {
 		setTheme(settings.theme)
 
 		const root = document.documentElement
-		const accent = ACCENT_COLORS[settings.accent]
+		const theme = resolvedTheme === "dark" ? "dark" : "light"
+		const accent = ACCENT_COLORS[settings.accent][theme]
 
 		root.dataset.accent = settings.accent
 		root.dataset.density = settings.density
 		root.dataset.motion = settings.animations
 
 		root.style.setProperty("--primary", accent.primary)
-		root.style.setProperty("--primary-container", accent.container)
 		root.style.setProperty("--on-primary", accent.onPrimary)
-	}, [settings, hydrated, setTheme])
+		root.style.setProperty("--primary-container", accent.primaryContainer)
+		root.style.setProperty("--on-primary-container", accent.onPrimaryContainer)
+
+		root.style.setProperty("--secondary", accent.secondary)
+		root.style.setProperty("--on-secondary", accent.onSecondary)
+		root.style.setProperty("--secondary-container", accent.secondaryContainer)
+		root.style.setProperty(
+			"--on-secondary-container",
+			accent.onSecondaryContainer
+		)
+	}, [settings, hydrated, setTheme, resolvedTheme])
+
 
 	return {
 		contextValue,
