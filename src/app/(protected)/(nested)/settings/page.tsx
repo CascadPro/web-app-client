@@ -1,6 +1,6 @@
 import type { Metadata } from "next"
 
-import { SettingsScreen } from "@/components/screens/settings/settings-screen"
+import { SettingsScreen } from "@/components/screens/settings/settings"
 
 export const metadata: Metadata = {
 	title: "Настройки | Cascade Pro"

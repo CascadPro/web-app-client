@@ -316,13 +316,17 @@ ul {
 }
 
 :root {
+	--row-padding-x: 1.25rem;
 	--row-padding-y: 1rem;
 	--section-gap: 1.75rem;
+	--card-gap: 1.25rem;
 }
 
 :root[data-density="compact"] {
+	--row-padding-x: 0.85rem;
 	--row-padding-y: 0.625rem;
 	--section-gap: 1.25rem;
+	--card-gap: 0.85rem;
 }
 
 @media (prefers-reduced-motion: reduce) {
