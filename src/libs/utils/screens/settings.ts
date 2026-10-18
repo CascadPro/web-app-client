@@ -1,21 +1,38 @@
-import { DEFAULT_SETTINGS } from "@/libs/constants/screens/settings"
+import {
+	DEFAULT_SETTINGS,
+	SETTINGS_STORAGE_KEY
+} from "@/libs/constants/screens/settings"
+import { storedSettingsScheme } from "@/libs/schemes"
+import type { SettingsState } from "@/types/screens/settings"
 
-export const readSettings = () => {
-	if (typeof window === "undefined") return DEFAULT_SETTINGS
+import { isDev } from "../is-dev"
+
+export const readSettings = (): SettingsState => {
+	if (typeof window === "undefined") {
+		return DEFAULT_SETTINGS
+	}
 
 	try {
-		const raw = localStorage.getItem("cascade:settings:v1")
-		if (!raw) return DEFAULT_SETTINGS
+		const raw = window.localStorage.getItem(SETTINGS_STORAGE_KEY)
 
-		const saved = JSON.parse(raw)
-		const notifications = saved.notifications ?? {}
+		if (!raw) {
+			return DEFAULT_SETTINGS
+		}
+
+		const result = storedSettingsScheme.safeParse(JSON.parse(raw))
+
+		if (!result.success) {
+			return DEFAULT_SETTINGS
+		}
+
+		const saved = result.data
 
 		return {
 			...DEFAULT_SETTINGS,
 			...saved,
 			notifications: {
 				...DEFAULT_SETTINGS.notifications,
-				...notifications
+				...saved.notifications
 			}
 		}
 	} catch {
@@ -23,10 +40,23 @@ export const readSettings = () => {
 	}
 }
 
-export const writeSettings = (value: unknown) => {
+export const writeSettings = (value: SettingsState): void => {
+	if (typeof window === "undefined") {
+		return
+	}
+
 	try {
-		localStorage.setItem("cascade:settings:v1", JSON.stringify(value))
-	} catch {
-		// Storage может быть недоступен в приватном режиме.
+		const serialized = JSON.stringify(value)
+		const current = window.localStorage.getItem(SETTINGS_STORAGE_KEY)
+
+		if (current === serialized) {
+			return
+		}
+
+		window.localStorage.setItem(SETTINGS_STORAGE_KEY, serialized)
+	} catch (error) {
+		if (isDev()) {
+			console.error("failed to write settings to storage", error)
+		}
 	}
 }

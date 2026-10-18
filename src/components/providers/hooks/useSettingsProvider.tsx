@@ -2,11 +2,12 @@
 
 import { useReducedMotion } from "motion/react"
 import { useTheme } from "next-themes"
-import { useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 
 import {
 	ACCENT_COLORS,
-	DEFAULT_SETTINGS
+	DEFAULT_SETTINGS,
+	SETTINGS_STORAGE_KEY
 } from "@/libs/constants/screens/settings"
 import { readSettings, writeSettings } from "@/libs/utils/screens/settings"
 import type {
@@ -19,23 +20,41 @@ export const useSettingsProvider = () => {
 	const systemReducedMotion = useReducedMotion()
 
 	const [settings, setSettings] = useState<SettingsState>(DEFAULT_SETTINGS)
+
 	const [hydrated, setHydrated] = useState<boolean>(false)
 
 	const { setTheme, resolvedTheme } = useTheme()
 
-	const updateSettings = (patch: Partial<SettingsUpdate>) => {
-		setSettings(current => ({ ...current, ...patch }))
-	}
-
-	const updateNotification = (key: NotificationKey, value: boolean) => {
+	const updateSettings = useCallback((patch: Partial<SettingsUpdate>) => {
 		setSettings(current => ({
 			...current,
-			notifications: {
-				...current.notifications,
-				[key]: value
-			}
+			...patch
 		}))
-	}
+	}, [])
+
+	const updateNotification = useCallback(
+		(key: NotificationKey, value: boolean) => {
+			setSettings(current => ({
+				...current,
+				notifications: {
+					...current.notifications,
+					[key]: value
+				}
+			}))
+		},
+		[]
+	)
+
+	const reduceMotion = useMemo(() => {
+		switch (settings.animations) {
+			case "disabled":
+				return true
+			case "enabled":
+				return false
+			default:
+				return Boolean(systemReducedMotion)
+		}
+	}, [settings.animations, systemReducedMotion])
 
 	const contextValue = useMemo(
 		() => ({
@@ -47,29 +66,38 @@ export const useSettingsProvider = () => {
 		[settings, hydrated, updateSettings, updateNotification]
 	)
 
-	const reduceMotion = useMemo(() => {
-		if (settings.animations === "disabled") {
-			return true
-		} else if (settings.animations === "enabled") {
-			return false
-		} else {
-			return !!systemReducedMotion
-		}
-	}, [settings.animations, systemReducedMotion])
-
 	useEffect(() => {
 		setSettings(readSettings())
 		setHydrated(true)
 	}, [])
 
 	useEffect(() => {
-		if (!hydrated) return
+		const handleStorage = (event: StorageEvent) => {
+			if (event.key !== SETTINGS_STORAGE_KEY && event.key !== null) {
+				return
+			}
+
+			setSettings(readSettings())
+		}
+
+		window.addEventListener("storage", handleStorage)
+
+		return () => {
+			window.removeEventListener("storage", handleStorage)
+		}
+	}, [])
+
+	useEffect(() => {
+		if (!hydrated) {
+			return
+		}
 
 		writeSettings(settings)
 		setTheme(settings.theme)
 
 		const root = document.documentElement
 		const theme = resolvedTheme === "dark" ? "dark" : "light"
+
 		const accent = ACCENT_COLORS[settings.accent][theme]
 
 		root.dataset.accent = settings.accent
