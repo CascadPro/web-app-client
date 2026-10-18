@@ -33,7 +33,7 @@ service.getRequests = (
 
 let refreshPromise: Promise<string | null> | null = null
 
-const refreshAccessToken = async (): Promise<string | null> => {
+const refreshAccessToken = (): Promise<string | null> => {
 	if (refreshPromise) {
 		return refreshPromise
 	}
@@ -42,24 +42,29 @@ const refreshAccessToken = async (): Promise<string | null> => {
 		try {
 			const response = await fetch("/api/auth/refresh", {
 				method: "GET",
-				credentials: "include"
+				credentials: "include",
+				cache: "no-store"
 			})
 
 			if (!response.ok) {
 				return null
 			}
 
-			const data = await response.json()
+			const data: unknown = await response.json()
 
-			const accessToken = data.access_token
-
-			if (!accessToken) {
+			if (
+				typeof data !== "object" ||
+				data === null ||
+				!("access_token" in data) ||
+				typeof data.access_token !== "string" ||
+				data.access_token.length === 0
+			) {
 				return null
 			}
 
-			useAuthStore.getState().setAccessToken(accessToken)
+			useAuthStore.getState().setAccessToken(data.access_token)
 
-			return accessToken
+			return data.access_token
 		} catch {
 			return null
 		} finally {
@@ -68,6 +73,14 @@ const refreshAccessToken = async (): Promise<string | null> => {
 	})()
 
 	return refreshPromise
+}
+
+const isAuthEndpoint = (url?: string): boolean => {
+	if (!url) return false
+
+	const pathname = url.split("?")[0].replace(/\/+$/, "")
+
+	return /(?:^|\/)auth(?:\/|$)/i.test(pathname)
 }
 
 const ROOT_ROUTER_PATHS = new Set(["sessions", "requests", "auth", "users"])
@@ -99,15 +112,18 @@ instance.interceptors.response.use(
 			throw apiError
 		}
 
-		const originalRequest = error.config as RetryConfig
+		const originalRequest = error.config as RetryConfig | undefined
 
 		if (!originalRequest) {
 			throw apiError
 		}
 
+		if (isAuthEndpoint(originalRequest.url)) {
+			throw apiError
+		}
+
 		if (originalRequest._retry) {
 			useAuthStore.getState().setUnauthenticated()
-
 			throw apiError
 		}
 
@@ -117,7 +133,6 @@ instance.interceptors.response.use(
 
 		if (!token) {
 			useAuthStore.getState().setUnauthenticated()
-
 			throw apiError
 		}
 
