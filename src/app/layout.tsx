@@ -1,10 +1,11 @@
-import { domAnimation, LazyMotion, MotionConfig } from "motion/react"
+import { domAnimation, LazyMotion } from "motion/react"
 import type { Metadata, Viewport } from "next"
 import { ThemeProvider } from "next-themes"
-import { JetBrains_Mono, Mulish } from "next/font/google"
+import { JetBrains_Mono, Nunito } from "next/font/google"
 import type { ReactNode } from "react"
 
 import { HapticProvider } from "@/components/providers/haptics"
+import { SettingsContextProvider } from "@/components/providers/settings-provider"
 import { ServiceWorkerRegister } from "@/components/pwa/pwa-service-worker"
 import { PWASplashScreen } from "@/components/pwa/pwa-splash-screen"
 import { ToastViewport } from "@/components/ui/toast/components/toast-viewport"
@@ -15,7 +16,7 @@ interface Props {
 	children: ReactNode
 }
 
-const poppins = Mulish({
+const font = Nunito({
 	variable: "--font-mulish",
 	subsets: ["latin", "cyrillic"],
 	weight: ["300", "400", "500", "600", "700", "800"],
@@ -47,14 +48,14 @@ export const viewport: Viewport = {
 export default function Layout({ children }: Readonly<Props>) {
 	return (
 		<html lang="ru" data-scroll-behavior="smooth" suppressHydrationWarning>
-			<body className={`${poppins.variable} antialiased`}>
-				<ThemeProvider attribute="class">
+			<body className={`${font.variable} antialiased`}>
+				<ThemeProvider attribute="class" defaultTheme="system" enableSystem>
 					<LazyMotion features={domAnimation} strict>
-						<MotionConfig reducedMotion="user">
+						<SettingsContextProvider>
 							<PWASplashScreen>{children}</PWASplashScreen>
 
 							<ToastViewport />
-						</MotionConfig>
+						</SettingsContextProvider>
 					</LazyMotion>
 				</ThemeProvider>
 
