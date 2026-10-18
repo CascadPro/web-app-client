@@ -54,7 +54,6 @@ const SettingsApplicationComponent: FC<Props> = ({
 			description="Текущая версия клиента"
 			className="flex items-center justify-between"
 			icon={SmartphoneIcon}
-			last
 			trailing={
 				<p className="text-on-surface-variant mb-2 text-sm">{APP_VERSION}</p>
 			}

@@ -44,7 +44,7 @@ export const SettingsSection = ({
 			</div>
 		</div>
 
-		<div className="border-outline/20 bg-surface overflow-hidden rounded-2xl border shadow-sm">
+		<div className="border-outline/20 divide-outline/10 bg-surface divide-y overflow-hidden rounded-2xl border shadow-sm">
 			{children}
 		</div>
 	</m.section>

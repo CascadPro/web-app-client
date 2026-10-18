@@ -26,13 +26,12 @@ const SettingsNotificationsComponent: FC<Props> = ({ settings, onChange }) => {
 			description="Выберите, о каких событиях сообщать"
 			icon={BellRingIcon}
 		>
-			{SETTINGS_NOTIFICATIONS_ROWS.map((row, index) => (
+			{SETTINGS_NOTIFICATIONS_ROWS.map(row => (
 				<SettingsRow
 					key={row.key}
 					title={row.title}
 					description={row.description}
 					icon={row.icon}
-					last={index === SETTINGS_NOTIFICATIONS_ROWS.length - 1}
 					className="flex items-center justify-between"
 					trailing={
 						<Switch

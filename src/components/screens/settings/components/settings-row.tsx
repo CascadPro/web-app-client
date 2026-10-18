@@ -8,7 +8,6 @@ interface SettingsRowProps {
 	description?: string
 	icon?: LucideIcon
 	trailing: React.ReactNode
-	last?: boolean
 	className?: string
 }
 
@@ -17,13 +16,11 @@ export const SettingsRow = ({
 	description,
 	icon: Icon,
 	trailing,
-	last = false,
 	className
 }: SettingsRowProps) => (
 	<div
 		className={cn(
 			"min-w-0 px-4 py-(--row-padding-y)",
-			!last && "border-outline/15 border-b",
 			className
 		)}
 	>

@@ -71,7 +71,6 @@ const SettingsAppearanceComponent: FC<Props> = ({ settings, onChange }) => (
 			title="Анимации"
 			description="Учитывать системные настройки движения"
 			icon={ZapIcon}
-			last
 			trailing={
 				<SettingsSegmentedControl
 					label="Анимации"
