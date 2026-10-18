@@ -2,11 +2,11 @@
 
 import { PullToRefresh } from "@/components/pwa/pwa-refresh-control"
 
-import { AccountInformation } from "./components/account-information"
 import { ProfileHeader } from "./components/header/profile-header"
 import { ProfileError } from "./components/profile-error"
-import { ProfileInformation } from "./components/profile-information"
 import { ProfileLoading } from "./components/profile-loading"
+import { AccountInformation } from "./components/sections/account-information"
+import { ProfileInformation } from "./components/sections/profile-information"
 import { useProfilePage } from "./hooks/useProfilePage"
 
 export const MyProfileScreen = () => {
