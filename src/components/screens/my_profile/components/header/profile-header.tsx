@@ -49,9 +49,9 @@ const ProfileHeaderComponent: FC<Props> = ({ user, fullname, role, id }) => {
 				initial={{ opacity: 0, y: 10 }}
 				animate={{ opacity: 1, y: 0 }}
 				transition={{ duration: 0.3 }}
-				className="border-outline/20 bg-surface rounded-3xl border p-5 shadow-sm sm:p-6"
+				className="border-outline/20 bg-surface rounded-3xl border px-(--row-padding-x) py-(--row-padding-y) shadow-sm"
 			>
-				<div className="flex flex-col items-center gap-5 sm:flex-row">
+				<div className="flex flex-col items-center gap-(--card-gap) sm:flex-row">
 					<div className="relative shrink-0">
 						<UserAvatar
 							user={user}

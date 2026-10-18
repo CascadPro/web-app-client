@@ -14,7 +14,7 @@ export const RequestsScreen = () => {
 
 	return (
 		<RefreshControl queryKey={QueryKeys.requests.all as any}>
-			<div className="mx-auto w-full max-w-3xl space-y-6 px-1 sm:px-6">
+			<div className="mx-auto w-full max-w-3xl space-y-(--section-gap) px-1 sm:px-6">
 				<RequestsStats />
 
 				<RequestFilters isLoading={isLoading} />

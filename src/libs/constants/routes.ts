@@ -7,6 +7,7 @@ export const AppRoutes = {
 	MENU: "/menu",
 	SESSIONS: "/sessions",
 	REQUESTS: "/requests",
+	SETTINGS: "/settings",
 
 	PROFILE: "/profile",
 	MY_PROFILE: "/profile/me",

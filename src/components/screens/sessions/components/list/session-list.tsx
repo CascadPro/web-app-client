@@ -30,7 +30,7 @@ const SessionsListComponent = ({ sessions, isPending, error }: Props) => {
 	}
 
 	return (
-		<m.div layout id="sessions-list" className="grid gap-4">
+		<m.div layout id="sessions-list" className="grid gap-(--card-gap)">
 			<AnimatePresence mode="popLayout">
 				{sessions.map((session, index) => (
 					<SessionCard key={session.id} index={index} session={session} />

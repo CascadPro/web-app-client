@@ -30,5 +30,13 @@ export const RequestContextProvider: FC<PropsWithChildren> = ({ children }) => {
 }
 
 export const useRequestContext = () => {
-	return useContext(RequestContext)
+	const context = useContext(RequestContext)
+
+	if (!context) {
+		throw new Error(
+			"useRequestContext must be used inside RequestContextProvider"
+		)
+	}
+
+	return context
 }

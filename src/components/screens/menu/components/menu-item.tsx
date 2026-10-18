@@ -18,7 +18,7 @@ export const MenuItem: FC<Props> = ({ item }) => {
 	return (
 		<Button
 			variant="ghost"
-			className="border-outline/20 bg-surface active:bg-tertiary/50 hover:shadow-tertiary justify-between rounded-lg border p-3 hover:-translate-y-1 hover:shadow-md active:translate-x-1"
+			className="border-outline/20 bg-surface active:bg-secondary/50 hover:shadow-secondary justify-between rounded-lg border p-3 hover:-translate-y-1 hover:shadow-md active:translate-x-1"
 			onClick={handleClick}
 		>
 			<div className="flex items-center gap-2">

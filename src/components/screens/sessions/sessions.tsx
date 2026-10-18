@@ -1,16 +1,15 @@
 "use client"
 
-import { Globe2, LogOutIcon, ShieldCheck } from "lucide-react"
+import { Globe2Icon, LogOutIcon, ShieldCheckIcon } from "lucide-react"
 
 import { RefreshControl } from "@/components/providers/refresh-control"
-import { Button } from "@/components/ui"
+import { Button, Section } from "@/components/ui"
 import { QueryKeys } from "@/libs/query/keys"
 
 import { SessionCard } from "./components/card/session-card"
 import { SessionsList } from "./components/list/session-list"
 import { SessionLoading } from "./components/list/session-loading"
 import { SessionModal } from "./components/session-modal"
-import { SessionSectionTitle } from "./components/session-section-title"
 import { useSessionScreen } from "./hooks/useSessionScreen"
 
 export const SessionsScreen = () => {
@@ -27,10 +26,13 @@ export const SessionsScreen = () => {
 
 	return (
 		<RefreshControl queryKey={[...QueryKeys.sessions.all]}>
-			<div className="mx-auto w-full max-w-3xl space-y-8 px-1">
-				<section>
-					<SessionSectionTitle Icon={ShieldCheck} title="Текущий сеанс" />
-
+			<div className="mx-auto w-full max-w-3xl space-y-(--section-gap)">
+				<Section
+					id="current-session"
+					title="Текущий сеанс"
+					icon={ShieldCheckIcon}
+					renderContainer={false}
+				>
 					{isLoading ? (
 						<SessionLoading n={1} />
 					) : (
@@ -40,31 +42,36 @@ export const SessionsScreen = () => {
 							current
 						/>
 					)}
-				</section>
 
-				<section>
-					<div className="mb-3 flex items-center justify-between gap-4">
-						<SessionSectionTitle Icon={Globe2} title="Другие сеансы" />
+					<p className="text-on-surface-variant text-sm leading-4">
+						Ваше текущее устройство, с которого вы это читаете
+					</p>
+				</Section>
 
-						{Boolean(sessions?.length) && (
-							<Button
-								variant="ghost"
-								className="text-error active:bg-primary/20 gap-1 rounded-lg px-2 py-1.5 text-sm"
-								onClick={() => setIsOpen(true)}
-								disabled={isDeleting}
-							>
-								<LogOutIcon className="size-4" />
-								{isDeleting ? "Завершение..." : "Завершить все сеансы"}
-							</Button>
-						)}
-					</div>
-
+				<Section
+					id="other-sessions"
+					title="Другие сеансы"
+					icon={Globe2Icon}
+					renderContainer={false}
+				>
 					<SessionsList
 						sessions={sessions}
 						isPending={isLoading}
 						error={error}
 					/>
-				</section>
+
+					{Boolean(sessions?.length) && (
+						<Button
+							variant="destructive-outline"
+							className="my-4 w-full gap-2 p-3 text-base"
+							onClick={() => setIsOpen(true)}
+							disabled={isDeleting}
+						>
+							<LogOutIcon size={20} />
+							{isDeleting ? "Завершение..." : "Завершить прочие сеансы"}
+						</Button>
+					)}
+				</Section>
 			</div>
 
 			<SessionModal

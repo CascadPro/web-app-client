@@ -27,7 +27,7 @@ const RequestsListComponent: FC<Props> = ({ requests, isPending, error }) => {
 	if (requests.length === 0) return <RequestEmpty />
 
 	return (
-		<m.div id="request-list" className="grid gap-5">
+		<m.div id="request-list" className="grid gap-(--card-gap)">
 			<AnimatePresence mode="popLayout">
 				{requests.map(request => (
 					<RequestCard key={request.id} request={request} />

@@ -89,7 +89,7 @@ const RequestCardComponent: FC<Props> = ({ request }) => {
 						onTouchEnd={handleTouchEnd}
 						onTouchCancel={handleTouchCancel}
 						onTouchMove={handleTouchCancel}
-						className="flex w-full flex-col gap-3 px-4 py-5 text-left sm:px-5"
+						className="flex w-full flex-col gap-3 px-(--row-padding-x) py-(--row-padding-y) text-left sm:px-5"
 					>
 						<div className="flex justify-between gap-5">
 							<MarqueeText
@@ -144,3 +144,4 @@ const RequestCardComponent: FC<Props> = ({ request }) => {
 }
 
 export const RequestCard = memo(RequestCardComponent)
+RequestCard.displayName = "RequestCard"

@@ -74,7 +74,7 @@ export const SessionCardSheet: FC<Props> = ({
 			/>
 
 			{current ? (
-				<div className="bg-primary-container shine text-on-primary mt-2 flex items-center justify-center gap-1 rounded-xl py-3">
+				<div className="bg-primary-container shine text-on-primary-container mt-2 flex items-center justify-center gap-1 rounded-xl py-3">
 					<ShieldCheckIcon size={20} />
 					<span className="mb-0.5">Это текущий сеанс</span>
 				</div>

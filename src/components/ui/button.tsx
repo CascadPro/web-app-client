@@ -11,20 +11,18 @@ const buttonVariants = cva(
 		variants: {
 			variant: {
 				default:
-					"bg-primary-container text-on-primary shadow shadow-primary hover:bg-primary-container/90 active:bg-primary-container/90 active:shadow-md",
+					"bg-primary text-on-primary shadow-sm hover:bg-primary-container/70 active:bg-primary-container/70 active:shadow-lg",
 				"default-2":
-					"bg-primary/10 text-primary rounded-lg p-1 ring ring-transparent active:scale-[.96] active:ring-tertiary/50 hover:ring-tertiary/50",
+					"bg-primary/10 text-primary rounded-lg p-1 ring ring-transparent active:scale-[.96] active:ring-secondary/50 hover:ring-secondary/50",
 				outline:
 					"gap-1 ring ring-outline text-on-background hover:bg-secondary/40 active:bg-secondary/40 active:scale-[.99]",
 				ghost: "",
 				secondary:
 					"bg-secondary text-on-secondary shadow-sm hover:bg-secondary/70 active:bg-secondary/70 active:shadow-md",
-				tertiary:
-					"bg-tertiary text-on-tertiary shadow-sm hover:bg-tertiary/50 active:bg-tertiary/50",
 				destructive:
 					"bg-error-container text-on-error-container hover:bg-error hover:text-on-error active:bg-error active:text-on-error",
 				"destructive-outline":
-					"ring ring-error-container text-error bg-transparent shadow shadow-error active:shadow-none hover:bg-error-container/40 active:bg-error-container/40 active:scale-[.99]"
+					"text-error bg-error/20 ring-error rounded-xl ring shadow-md active:shadow-none hover:bg-error-container/40 active:bg-error-container/40 active:scale-[.99]"
 			}
 		},
 		defaultVariants: {

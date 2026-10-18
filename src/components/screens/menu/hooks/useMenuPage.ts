@@ -29,7 +29,7 @@ export const useMenuPage = () => {
 			},
 			{
 				title: "Настройки",
-				href: AppRoutes.INDEX,
+				href: AppRoutes.SETTINGS,
 				icon: CogIcon
 			},
 			{

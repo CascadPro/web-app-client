@@ -42,7 +42,7 @@ export const RequestCardDetails: FC<Props> = ({ id, isCollapsed }) => {
 					initial={{ height: "0rem" }}
 					animate={{ height: `${height === 0 ? 10 : height}rem` }}
 					exit={{ height: "0rem" }}
-					className="overflow-hidden px-4 sm:px-5"
+					className="overflow-hidden px-(--row-padding-x) py-(--row-padding-y)"
 				>
 					<Separator
 						type="horizontal"

@@ -22,7 +22,7 @@ export const NestedHeader = memo(() => {
 				<Button
 					variant="ghost"
 					className={cn("rounded-full p-2.5", {
-						"active:bg-tertiary/40 hover:bg-tertiary/40": !isIOS,
+						"active:bg-secondary/40 hover:bg-secondary/40": !isIOS,
 						"glass glass-highlight absolute border-none! duration-200 hover:scale-[.98] hover:before:opacity-0 hover:after:opacity-0 active:scale-90 active:before:opacity-0 active:after:opacity-0":
 							isIOS
 					})}

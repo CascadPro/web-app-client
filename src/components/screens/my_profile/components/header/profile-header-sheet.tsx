@@ -83,7 +83,7 @@ export const ProfileHeaderSheet: FC<Props> = ({
 
 			{hasAvatar && (
 				<>
-					<Separator type="horizontal" className="bg-tertiary my-4" />
+					<Separator type="horizontal" className="bg-secondary my-4" />
 
 					<Button
 						variant="destructive-outline"
