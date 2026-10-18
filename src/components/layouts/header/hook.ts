@@ -8,7 +8,8 @@ import { useIsIOS, useNavigation } from "@/libs/hooks"
 const paths = {
 	[AppRoutes.MY_PROFILE]: "Мой профиль",
 	[AppRoutes.SESSIONS]: "Мои сеансы",
-	[AppRoutes.REQUESTS]: "Входящие заявки"
+	[AppRoutes.REQUESTS]: "Входящие заявки",
+	[AppRoutes.SETTINGS]: "Настройки"
 } as const
 
 export const useNestedHeader = () => {
