@@ -1,6 +1,7 @@
 import { MonitorIcon, PaletteIcon, SunIcon, ZapIcon } from "lucide-react"
 import { type FC, memo } from "react"
 
+import { Section } from "@/components/ui"
 import {
 	ACCENT_OPTIONS,
 	ANIMATION_OPTIONS,
@@ -10,7 +11,6 @@ import {
 import { SettingsState } from "@/types/screens/settings"
 
 import { SettingsRow } from "../settings-row"
-import { SettingsSection } from "../settings-section"
 import { SettingsSegmentedControl } from "../settings-segmented-control"
 
 interface Props {
@@ -19,7 +19,7 @@ interface Props {
 }
 
 const SettingsAppearanceComponent: FC<Props> = ({ settings, onChange }) => (
-	<SettingsSection
+	<Section
 		id="appearance"
 		title="Внешний вид"
 		description="Персонализируйте интерфейс"
@@ -80,7 +80,7 @@ const SettingsAppearanceComponent: FC<Props> = ({ settings, onChange }) => (
 				/>
 			}
 		/>
-	</SettingsSection>
+	</Section>
 )
 
 export const SettingsAppearance = memo(SettingsAppearanceComponent)

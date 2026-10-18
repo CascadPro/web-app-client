@@ -3,7 +3,7 @@
 import { BellRingIcon } from "lucide-react"
 import { type FC, memo } from "react"
 
-import { Switch } from "@/components/ui"
+import { Section, Switch } from "@/components/ui"
 import { SETTINGS_NOTIFICATIONS_ROWS } from "@/libs/constants/screens/settings"
 import type {
 	NotificationKey,
@@ -11,7 +11,6 @@ import type {
 } from "@/types/screens/settings"
 
 import { SettingsRow } from "../settings-row"
-import { SettingsSection } from "../settings-section"
 
 interface Props {
 	settings: NotificationSettings
@@ -20,7 +19,7 @@ interface Props {
 
 const SettingsNotificationsComponent: FC<Props> = ({ settings, onChange }) => {
 	return (
-		<SettingsSection
+		<Section
 			id="notifications"
 			title="Уведомления"
 			description="Выберите, о каких событиях сообщать"
@@ -42,7 +41,7 @@ const SettingsNotificationsComponent: FC<Props> = ({ settings, onChange }) => {
 					}
 				/>
 			))}
-		</SettingsSection>
+		</Section>
 	)
 }
 

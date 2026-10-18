@@ -2,10 +2,10 @@ import { CalendarDaysIcon, ShieldIcon, User2Icon } from "lucide-react"
 import { type FC, memo } from "react"
 
 import type { DomainUserRole } from "@/api/generated"
+import { Section } from "@/components/ui"
 import { formatDate, roleName } from "@/libs/utils"
 
 import { ProfileRow } from "../profile-row"
-import { ProfileSection } from "../profile-section"
 
 interface Props {
 	role?: DomainUserRole
@@ -14,7 +14,7 @@ interface Props {
 
 const AccountInformationComponent: FC<Props> = ({ role, last_active_at }) => {
 	return (
-		<ProfileSection
+		<Section
 			id="account"
 			title="Аккаунт"
 			description="Аккаунт и ваша активность"
@@ -31,7 +31,7 @@ const AccountInformationComponent: FC<Props> = ({ role, last_active_at }) => {
 				label="Последняя активность"
 				value={formatDate(last_active_at)}
 			/>
-		</ProfileSection>
+		</Section>
 	)
 }
 

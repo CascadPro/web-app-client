@@ -1,8 +1,9 @@
 import { InfoIcon, MailIcon, UserRoundIcon } from "lucide-react"
 import { type FC, memo } from "react"
 
+import { Section } from "@/components/ui"
+
 import { ProfileRow } from "../profile-row"
-import { ProfileSection } from "../profile-section"
 
 interface Props {
 	name?: string
@@ -18,7 +19,7 @@ const ProfileInformationComponent: FC<Props> = ({
 	email
 }) => {
 	return (
-		<ProfileSection
+		<Section
 			id="information"
 			title="Персональная информация"
 			description="Ваша основная информация"
@@ -43,7 +44,7 @@ const ProfileInformationComponent: FC<Props> = ({
 				label="Электронная почта"
 				value={email || "—"}
 			/>
-		</ProfileSection>
+		</Section>
 	)
 }
 

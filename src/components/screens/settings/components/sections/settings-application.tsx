@@ -1,11 +1,10 @@
 import { DatabaseIcon, RefreshCw, SmartphoneIcon } from "lucide-react"
 import { type FC, memo } from "react"
 
-import { Button } from "@/components/ui"
+import { Button, Section } from "@/components/ui"
 import { APP_VERSION } from "@/libs/constants"
 
 import { SettingsRow } from "../settings-row"
-import { SettingsSection } from "../settings-section"
 
 interface Props {
 	totalCacheSize: string | undefined
@@ -20,7 +19,7 @@ const SettingsApplicationComponent: FC<Props> = ({
 	clearing,
 	onClearCache
 }) => (
-	<SettingsSection
+	<Section
 		id="application"
 		title="Приложение"
 		description="Локальные данные и информация о версии"
@@ -58,7 +57,7 @@ const SettingsApplicationComponent: FC<Props> = ({
 				<p className="text-on-surface-variant mb-2 text-sm">{APP_VERSION}</p>
 			}
 		/>
-	</SettingsSection>
+	</Section>
 )
 
 export const SettingsApplication = memo(SettingsApplicationComponent)
