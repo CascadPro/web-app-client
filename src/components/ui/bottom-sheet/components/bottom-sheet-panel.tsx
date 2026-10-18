@@ -150,8 +150,8 @@ export const BottomSheetPanel: FC<BottomSheetPanelProps> = ({
 			<div
 				ref={contentRef}
 				className={cn(
-					"min-h-0 overflow-y-auto overscroll-contain",
-					"px-4 py-5 [-webkit-overflow-scrolling:touch]",
+					"min-h-0 w-full max-w-3xl overflow-y-auto overscroll-contain",
+					"mx-auto px-4 py-5 [-webkit-overflow-scrolling:touch]",
 					indicator && "mt-3",
 					className
 				)}

@@ -12,7 +12,7 @@ export const MenuScreen = () => {
 	const { fullname, user, loading, logout, menuItemsData } = useMenuPage()
 
 	return (
-		<Container className="pwa:pt-5 px-3 py-3">
+		<Container className="pwa:pt-5 max-w-3xl px-3 py-3">
 			<ProfileBadge
 				fullname={fullname}
 				role={user?.role ?? ""}
