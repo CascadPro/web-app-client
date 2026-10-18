@@ -25,7 +25,7 @@ export const useFormDefaultInput = (
 	const [isShowPassword, setIsShowPassword] = useState<boolean>(false)
 
 	useEffect(() => {
-		if (input.type && isPhone) {
+		if (input?.type && isPhone) {
 			mask = IMask<FactoryArg>(input, {
 				mask: PHONE_MASK_PATTERN,
 				lazy: true
@@ -39,9 +39,9 @@ export const useFormDefaultInput = (
 
 	const onInput = (e: InputEvent<HTMLInputElement>) => {
 		if (!isPhone) onInputRule(e.currentTarget)
-		else if (!input.value) setValue(name, "", { shouldValidate: true })
-		else if (input.value.includes("+7 (") && !getValues(name))
-			setValue(name, input.value, { shouldValidate: true })
+		else if (!input?.value) setValue(name, "", { shouldValidate: true })
+		else if (input?.value.includes("+7 (") && !getValues(name))
+			setValue(name, input?.value, { shouldValidate: true })
 	}
 
 	const clearError = () => {

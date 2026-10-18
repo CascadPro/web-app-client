@@ -18,7 +18,8 @@ export const useFormInput = (name: FormInputFieldNames) => {
 	const value = watch(name)
 	const error = formState.errors[name]?.message || ""
 	const field = control._fields[name]?._f
-	const input = field?.ref as HTMLInputElement
+	const input =
+		field && "ref" in field ? (field?.ref as HTMLInputElement) : undefined
 
 	const inputType = (): FormInputType => {
 		return "default"
