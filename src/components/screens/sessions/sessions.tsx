@@ -1,17 +1,17 @@
 "use client"
 
-import { Globe2, LogOutIcon, ShieldCheck } from "lucide-react"
+import { Globe2, LogOutIcon, ShieldCheck } from "lucide-react";
 
-import { RefreshControl } from "@/components/providers/refresh-control"
-import { Button } from "@/components/ui"
-import { QueryKeys } from "@/libs/query/keys"
+import { RefreshControl } from "@/components/providers/refresh-control";
+import { Button } from "@/components/ui";
+import { QueryKeys } from "@/libs/query/keys";
 
-import { SessionCard } from "./components/card/session-card"
-import { SessionsList } from "./components/list/session-list"
-import { SessionLoading } from "./components/list/session-loading"
-import { SessionModal } from "./components/session-modal"
-import { SessionSectionTitle } from "./components/session-section-title"
-import { useSessionScreen } from "./hooks/useSessionScreen"
+import { SessionCard } from "./components/card/session-card";
+import { SessionsList } from "./components/list/session-list";
+import { SessionLoading } from "./components/list/session-loading";
+import { SessionModal } from "./components/session-modal";
+import { SessionSectionTitle } from "./components/session-section-title";
+import { useSessionScreen } from "./hooks/useSessionScreen";
 
 export const SessionsScreen = () => {
 	const {
@@ -27,7 +27,7 @@ export const SessionsScreen = () => {
 
 	return (
 		<RefreshControl queryKey={[...QueryKeys.sessions.all]}>
-			<div className="mx-auto w-full max-w-3xl space-y-8 px-1">
+			<div className="mx-auto w-full max-w-3xl space-y-(--section-gap) px-1">
 				<section>
 					<SessionSectionTitle Icon={ShieldCheck} title="Текущий сеанс" />
 
@@ -43,7 +43,7 @@ export const SessionsScreen = () => {
 				</section>
 
 				<section>
-					<div className="mb-3 flex items-center justify-between gap-4">
+					<div className="mb-3 flex items-center justify-between gap-(--card-gap)">
 						<SessionSectionTitle Icon={Globe2} title="Другие сеансы" />
 
 						{Boolean(sessions?.length) && (

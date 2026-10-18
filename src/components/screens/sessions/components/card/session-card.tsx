@@ -64,7 +64,7 @@ const SessionCardComponent: FC<Props> = ({
 					layout: { duration: 0.25, ease: [0.22, 1, 0.36, 1] }
 				}}
 				className={cn(
-					"border-outline/20 bg-surface rounded-2xl border p-4 shadow-sm",
+					"border-outline/20 bg-surface rounded-2xl border px-(--row-padding-x) py-(--row-padding-y) shadow-sm",
 					{
 						"border-primary shadow-primary": current,
 						"pointer-events-none cursor-wait opacity-60": isDeleting
