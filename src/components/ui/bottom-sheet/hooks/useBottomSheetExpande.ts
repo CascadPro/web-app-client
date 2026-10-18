@@ -9,12 +9,12 @@ export const useBottomSheetExpand = (
 ) => {
 	const [internalExpanded, setInternalExpanded] = useState(defaultExpanded)
 
-	const isExpanded = expanded !== undefined ? expanded : internalExpanded
+	const isExpanded = expanded ?? internalExpanded
 
 	const setIsExpanded = (next: boolean) => {
 		if (!expandable && next) return
 
-		if (!expanded !== undefined) {
+		if (expanded === undefined) {
 			setInternalExpanded(next)
 		}
 

@@ -10,7 +10,7 @@ export const useDeleteAvatar = () => {
 
 	return useMutation({
 		mutationKey: QueryKeys.avatar.delete(),
-		mutationFn: async () => service.deleteUsersAvatar(),
+		mutationFn: async () => await service.deleteUsersAvatar(),
 		onSuccess: () => client.invalidateQueries({ queryKey: QueryKeys.users.all })
 	})
 }
@@ -21,7 +21,7 @@ export const useUploadAvatar = () => {
 	return useMutation({
 		mutationKey: QueryKeys.avatar.upload(),
 		mutationFn: async (body?: PatchUsersAvatarBody) =>
-			service.patchUsersAvatar(body, {
+			await service.patchUsersAvatar(body, {
 				headers: { "Content-Type": "multipart/form-data" }
 			}),
 		onSuccess: () => client.invalidateQueries({ queryKey: QueryKeys.users.all })

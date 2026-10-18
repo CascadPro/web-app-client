@@ -73,9 +73,9 @@ export const BottomSheetPanel: FC<BottomSheetPanelProps> = ({
 				typeof expandedHeight === "number"
 					? expandedHeight
 					: expandedHeight.endsWith("dvh")
-						? (parseFloat(expandedHeight) / 100) * viewportHeight
+						? (Number.parseFloat(expandedHeight) / 100) * viewportHeight
 						: expandedHeight.endsWith("vh")
-							? (parseFloat(expandedHeight) / 100) * viewportHeight
+							? (Number.parseFloat(expandedHeight) / 100) * viewportHeight
 							: viewportHeight * 0.9
 
 			const minHeight = dragStartHeight.current

@@ -31,7 +31,7 @@ function updatePWATheme() {
 export function PWAProvider() {
 	useEffect(() => {
 		if ("serviceWorker" in navigator) {
-			navigator.serviceWorker.register("/sw.js")
+			void navigator.serviceWorker.register("/sw.js")
 		}
 
 		updatePWATheme()

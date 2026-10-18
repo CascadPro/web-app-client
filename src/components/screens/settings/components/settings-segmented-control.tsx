@@ -15,7 +15,7 @@ export const SettingsSegmentedControl = <T extends string>({
 	label,
 	onChange
 }: SettingsSegmentedControlProps<T>) => (
-	<div
+	<fieldset
 		role="group"
 		aria-label={label}
 		className="bg-surface-variant/60 flex max-w-full flex-wrap gap-1 rounded-xl p-1"
@@ -42,5 +42,5 @@ export const SettingsSegmentedControl = <T extends string>({
 				</Button>
 			)
 		})}
-	</div>
+	</fieldset>
 )
