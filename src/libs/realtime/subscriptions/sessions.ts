@@ -1,3 +1,4 @@
+import { toast } from "@/components/ui/toast"
 import { queryClient } from "@/libs/query/client"
 import type { WebSocketClient } from "@/libs/realtime"
 import { WS_EVENTS } from "@/libs/realtime/events"
@@ -6,12 +7,22 @@ import {
 	handleSessionRevoked,
 	handleSessionRevokedAll,
 	handleSessionUpdated
-} from "@/libs/realtime/handlers"
+} from "@/libs/realtime/handlers";
 
 export function subscribeToSessions(
 	client: WebSocketClient,
 	logout: () => void
 ): () => void {
+	const onSessionRevoke = () => {
+		toast.warning("Ваш сеанс был удален", {
+			description: "Вам нужно будет войти в систему снова",
+			duration: 4000,
+			dismissible: true
+		})
+
+		logout()
+	}
+
 	const unsubscribeCreated = client.on(WS_EVENTS.SESSION_CREATED, event => {
 		handleSessionCreated(queryClient, event)
 	})
@@ -27,7 +38,7 @@ export function subscribeToSessions(
 			return
 		}
 
-		logout()
+		onSessionRevoke()
 	})
 
 	const unsubscribeRevokedAll = client.on(
@@ -39,7 +50,7 @@ export function subscribeToSessions(
 				return
 			}
 
-			logout()
+			onSessionRevoke()
 		}
 	)
 
