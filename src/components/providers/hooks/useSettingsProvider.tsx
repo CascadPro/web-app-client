@@ -62,7 +62,6 @@ export const useSettingsProvider = () => {
 		setHydrated(true)
 	}, [])
 
-
 	useEffect(() => {
 		if (!hydrated) return
 
@@ -90,7 +89,6 @@ export const useSettingsProvider = () => {
 			accent.onSecondaryContainer
 		)
 	}, [settings, hydrated, setTheme, resolvedTheme])
-
 
 	return {
 		contextValue,

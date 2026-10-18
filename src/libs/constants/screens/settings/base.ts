@@ -15,7 +15,6 @@ export const DEFAULT_SETTINGS: SettingsState = {
 	}
 }
 
-
 export const ACCENT_COLORS = {
 	orange: {
 		light: {

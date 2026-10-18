@@ -1,18 +1,18 @@
-import { MoreVerticalIcon } from "lucide-react";
-import { m } from "motion/react";
-import dynamic from "next/dynamic";
-import type { FC } from "react";
-import { memo } from "react";
+import { MoreVerticalIcon } from "lucide-react"
+import { m } from "motion/react"
+import dynamic from "next/dynamic"
+import type { FC } from "react"
+import { memo } from "react"
 
-import type { SessionsHttpDtoSessionDTO } from "@/api/generated";
-import { Title } from "@/components/ui";
-import { capitalize, cn } from "@/libs/utils";
-import { formatRelativeDate } from "@/libs/utils/screens/sessions";
+import type { SessionsHttpDtoSessionDTO } from "@/api/generated"
+import { Title } from "@/components/ui"
+import { capitalize, cn } from "@/libs/utils"
+import { formatRelativeDate } from "@/libs/utils/screens/sessions"
 
-import { useSessionCard } from "../../hooks/useSessionCard";
-import { SessionEmpty } from "../list/session-empty";
+import { useSessionCard } from "../../hooks/useSessionCard"
+import { SessionEmpty } from "../list/session-empty"
 
-import type { SessionCardSheetProps } from "./session-card-sheet";
+import type { SessionCardSheetProps } from "./session-card-sheet"
 
 const DynamicSessionCardSheet = dynamic(
 	async () => (await import("./session-card-sheet")).SessionCardSheet,

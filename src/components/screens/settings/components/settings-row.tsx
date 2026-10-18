@@ -18,12 +18,7 @@ export const SettingsRow = ({
 	trailing,
 	className
 }: SettingsRowProps) => (
-	<div
-		className={cn(
-			"min-w-0 px-4 py-(--row-padding-y)",
-			className
-		)}
-	>
+	<div className={cn("min-w-0 px-4 py-(--row-padding-y)", className)}>
 		<div className="mb-3 flex items-center gap-3">
 			{Icon && (
 				<Icon

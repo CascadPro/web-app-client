@@ -1,11 +1,11 @@
 "use client"
 
-import { memo } from "react";
+import { memo } from "react"
 
-import { Button, Title } from "@/components/ui";
-import { cn } from "@/libs/utils";
+import { Button, Title } from "@/components/ui"
+import { cn } from "@/libs/utils"
 
-import { useNestedHeader } from "./hook";
+import { useNestedHeader } from "./hook"
 
 export const NestedHeader = memo(() => {
 	const { Icon, title, isActive, isIOS, handleBack } = useNestedHeader()

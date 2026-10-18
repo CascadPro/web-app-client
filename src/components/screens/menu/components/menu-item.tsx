@@ -1,10 +1,10 @@
-import { ChevronRightIcon } from "lucide-react";
-import type { FC } from "react";
+import { ChevronRightIcon } from "lucide-react"
+import type { FC } from "react"
 
-import { Button } from "@/components/ui";
-import { useNavigation } from "@/libs/hooks";
+import { Button } from "@/components/ui"
+import { useNavigation } from "@/libs/hooks"
 
-import type { MenuPageItemData } from "../hooks/useMenuPage";
+import type { MenuPageItemData } from "../hooks/useMenuPage"
 
 interface Props {
 	item: MenuPageItemData

@@ -1,7 +1,7 @@
-import { PlusIcon } from "lucide-react";
-import { memo } from "react";
+import { PlusIcon } from "lucide-react"
+import { memo } from "react"
 
-import { Button } from "@/components/ui";
+import { Button } from "@/components/ui"
 
 const RequestCreateButtonComponent = () => {
 	return (

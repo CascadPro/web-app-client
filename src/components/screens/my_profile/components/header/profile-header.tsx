@@ -1,18 +1,18 @@
-import { BadgeCheckIcon, CheckIcon, CopyIcon } from "lucide-react";
-import { m } from "motion/react";
-import dynamic from "next/dynamic";
-import type { FC } from "react";
-import { memo } from "react";
+import { BadgeCheckIcon, CheckIcon, CopyIcon } from "lucide-react"
+import { m } from "motion/react"
+import dynamic from "next/dynamic"
+import type { FC } from "react"
+import { memo } from "react"
 
-import type { DomainUserRole } from "@/api/generated";
-import { Button, Title } from "@/components/ui";
+import type { DomainUserRole } from "@/api/generated"
+import { Button, Title } from "@/components/ui"
 import {
-    UserAvatar,
-    type UserAvatarUser
-} from "@/components/ui/components/user-avatar";
-import { roleName } from "@/libs/utils";
+	UserAvatar,
+	type UserAvatarUser
+} from "@/components/ui/components/user-avatar"
+import { roleName } from "@/libs/utils"
 
-import { useProfileHeader } from "../../hooks/useProfileHeader";
+import { useProfileHeader } from "../../hooks/useProfileHeader"
 
 const DynamicProfileHeaderModal = dynamic(
 	async () => (await import("./profile-header-modal")).ProfileHeaderModal,
