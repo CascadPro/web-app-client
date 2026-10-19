@@ -1,4 +1,4 @@
-import type { FC } from "react"
+import { type FC, memo } from "react"
 
 import type { DomainUserRole } from "@/api/generated"
 import { Skeleton } from "@/components/ui"
@@ -17,7 +17,7 @@ interface Props {
 	loading?: boolean
 }
 
-export const ProfileBadge: FC<Props> = ({
+const ProfileBadgeComponent: FC<Props> = ({
 	size = "md",
 	fullname,
 	role,
@@ -61,3 +61,6 @@ export const ProfileBadge: FC<Props> = ({
 		</div>
 	)
 }
+
+export const ProfileBadge = memo(ProfileBadgeComponent)
+ProfileBadge.displayName = "ProfileBadge"

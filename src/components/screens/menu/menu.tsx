@@ -6,10 +6,11 @@ import { Button, Container, Separator } from "@/components/ui"
 
 import { MenuItem } from "./components/menu-item"
 import { ProfileBadge } from "./components/profile-badge"
+import { MENU_ITEMS_DATA } from "./data"
 import { useMenuPage } from "./hooks/useMenuPage"
 
 export const MenuScreen = () => {
-	const { fullname, user, loading, logout, menuItemsData } = useMenuPage()
+	const { fullname, user, loading, logout } = useMenuPage()
 
 	return (
 		<Container className="pwa:pt-5 max-w-3xl px-3 py-3">
@@ -22,7 +23,7 @@ export const MenuScreen = () => {
 			/>
 
 			<div className="mt-10 flex flex-col gap-5">
-				{menuItemsData.map(item => (
+				{MENU_ITEMS_DATA.map(item => (
 					<MenuItem key={String(item.href)} item={item} />
 				))}
 

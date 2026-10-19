@@ -1,5 +1,5 @@
 import { ChevronRightIcon } from "lucide-react"
-import type { FC } from "react"
+import { type FC, memo } from "react"
 
 import { Button } from "@/components/ui"
 import { useNavigation } from "@/libs/hooks"
@@ -10,7 +10,7 @@ interface Props {
 	item: MenuPageItemData
 }
 
-export const MenuItem: FC<Props> = ({ item }) => {
+const MenuItemComponent: FC<Props> = ({ item }) => {
 	const { push } = useNavigation()
 
 	const handleClick = () => push(item.href)
@@ -32,3 +32,6 @@ export const MenuItem: FC<Props> = ({ item }) => {
 		</Button>
 	)
 }
+
+export const MenuItem = memo(MenuItemComponent)
+MenuItem.displayName = "MenuItem"
