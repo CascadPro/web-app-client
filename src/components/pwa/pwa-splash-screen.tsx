@@ -2,7 +2,7 @@
 
 import { AnimatePresence, m } from "motion/react"
 import Image from "next/image"
-import type { FC, PropsWithChildren } from "react"
+import { type FC, memo, type PropsWithChildren } from "react"
 
 import { Title } from "../ui"
 
@@ -10,7 +10,7 @@ import { usePWASplashScreen } from "./hooks/usePWASplashScreen"
 
 interface Props extends PropsWithChildren {}
 
-export const PWASplashScreen: FC<Props> = ({ children }) => {
+const PWASplashScreenComponent: FC<Props> = ({ children }) => {
 	const { reduceMotion, dismissed } = usePWASplashScreen()
 
 	return (
@@ -71,3 +71,6 @@ export const PWASplashScreen: FC<Props> = ({ children }) => {
 		</>
 	)
 }
+
+export const PWASplashScreen = memo(PWASplashScreenComponent)
+PWASplashScreen.displayName = "PWASplashScreen"

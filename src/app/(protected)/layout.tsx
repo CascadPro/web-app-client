@@ -6,6 +6,7 @@ import { AuthProvider } from "@/components/providers/auth"
 import { NavigationProgress } from "@/components/providers/navigation-progress"
 import { QueryProvider } from "@/components/providers/query"
 import { RealtimeProvider } from "@/components/providers/realtime"
+import { RouteTransitionProvider } from "@/components/providers/route-transition"
 import { AppRoutes, NO_INDEX_PAGE } from "@/libs/constants"
 import { getViewport } from "@/libs/utils"
 
@@ -36,7 +37,7 @@ export default function Layout({
 					<main className="mb-24 sm:mb-0 sm:pt-4">
 						<NavigationProgress />
 
-						{children}
+						<RouteTransitionProvider>{children}</RouteTransitionProvider>
 
 						<Tabs data={data} />
 					</main>
