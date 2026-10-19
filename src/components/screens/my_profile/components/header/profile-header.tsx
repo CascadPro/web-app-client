@@ -60,10 +60,7 @@ const ProfileHeaderComponent: FC<Props> = ({ user, fullname, role, id }) => {
 							className="cursor-pointer transition-opacity will-change-auto hover:opacity-60! active:opacity-60! motion-reduce:transition-none"
 						/>
 
-						<div
-							className="border-surface absolute right-1 bottom-1 size-4 rounded-full border-2 bg-green-500"
-							title="Online"
-						/>
+						<Indicator />
 					</div>
 
 					<div className="min-w-0 flex-1 text-center sm:text-left">
@@ -116,6 +113,19 @@ const ProfileHeaderComponent: FC<Props> = ({ user, fullname, role, id }) => {
 				handleModalClose={handleSheetCloseModal}
 			/>
 		</>
+	)
+}
+
+export const Indicator = () => {
+	return (
+		<span
+			title="Онлайн"
+			className="bg-surface absolute right-1 bottom-1 grid size-5 place-items-center rounded-full *:rounded-full"
+			aria-hidden
+		>
+			<span className="size-3 animate-ping bg-emerald-500 motion-reduce:animate-none" />
+			<span className="absolute size-3 bg-emerald-500" />
+		</span>
 	)
 }
 

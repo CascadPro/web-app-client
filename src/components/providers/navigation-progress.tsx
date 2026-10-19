@@ -47,13 +47,13 @@ const NavigationProgressInner = () => {
 						aria-live="polite"
 						aria-label="Загрузка страницы"
 						className="pointer-events-none fixed inset-0 z-9998 flex items-center justify-center"
-						initial={{ opacity: 0 }}
-						animate={{ opacity: 1 }}
-						exit={{ opacity: 0 }}
+						initial={{ opacity: 0, y: 6 }}
+						animate={{ opacity: 1, y: 0 }}
+						exit={{ opacity: 0, scale: 1.25 }}
 						transition={{ duration: reducedMotion ? 0 : 0.2 }}
 					>
 						<m.div
-							className="ring-outline/20 bg-background/40 text-on-background flex items-center gap-2 rounded-2xl px-4 py-3 text-sm shadow-xl ring-2 backdrop-blur-xl"
+							className="glass bg-surface/70! text-on-surface flex animate-pulse items-center gap-2 rounded-2xl px-(--row-padding-x) py-(--row-padding-y) text-sm shadow-xl motion-reduce:animate-none"
 							initial={reducedMotion ? false : { y: 6, scale: 0.98 }}
 							animate={{ y: 0, scale: 1 }}
 							exit={reducedMotion ? undefined : { y: 4, scale: 0.98 }}

@@ -1,9 +1,10 @@
 "use client"
 
-import { GlobeIcon } from "lucide-react"
 import { m } from "motion/react"
+import { FC, memo } from "react"
 
 import { cn } from "@/libs/utils"
+import { ConnectionQuality } from "@/types/store"
 
 import { useRealtimeIndicator } from "./hook"
 
@@ -79,17 +80,13 @@ export function RealtimeStatusIndicator() {
 						})}
 					/>
 
-					<span
-						className={cn(
-							"absolute top-0.5 right-0.5 size-2 rounded-full",
-							config.color,
-							{
-								"animate-pulse motion-reduce:animate-none": config.pulse,
-								"bg-amber-500": quality === "degraded",
-								"bg-error": quality === "poor"
-							}
-						)}
-					/>
+					{isCompact && (
+						<IndicatorDot
+							className="absolute top-1.5 right-0.5 size-2"
+							color={config.color}
+							quality={quality}
+						/>
+					)}
 				</div>
 
 				{!isCompact && (
@@ -105,11 +102,40 @@ export function RealtimeStatusIndicator() {
 				)}
 
 				{!isCompact && status === "online" && (
-					<div className="shrink-0 rounded-full p-1 ring-2 ring-emerald-600">
-						<GlobeIcon size={16} className="text-emerald-500" />
-					</div>
+					<IndicatorDot
+						className="size-3 shrink-0"
+						color={config.color}
+						quality={quality}
+					/>
 				)}
 			</button>
 		</m.div>
 	)
 }
+
+interface IndicatorDotProps {
+	color: string
+	quality: ConnectionQuality
+	className?: string
+}
+
+const IndicatorDot: FC<IndicatorDotProps> = memo(
+	({ color, quality, className }) => {
+		const commonCN = cn(color, {
+			"bg-amber-500": quality === "degraded",
+			"bg-error": quality === "poor"
+		})
+
+		return (
+			<div
+				className={cn(
+					"relative rounded-full *:rounded-full motion-reduce:*:animate-none!",
+					className
+				)}
+			>
+				<div className={cn("absolute size-full", commonCN)} />
+				<div className={cn("size-full animate-ping", commonCN)} />
+			</div>
+		)
+	}
+)
