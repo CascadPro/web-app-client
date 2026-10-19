@@ -1,6 +1,6 @@
 "use client"
 
-import type { FC } from "react"
+import { type FC, memo } from "react"
 
 import { Button } from "@/components/ui"
 import { cn } from "@/libs/utils"
@@ -11,19 +11,33 @@ interface Props {
 	title: string
 	href: string
 	icon: TabsItemIconType
+	active: boolean
 	isIOS: boolean
+	onClick?: () => void
 }
 
-export const TabsItem: FC<Props> = ({ title, href, icon, isIOS }) => {
-	const { Icon, active, handleClick } = useTabsItem(href, icon)
+const TabsItemComponent: FC<Props> = ({
+	title,
+	href,
+	icon,
+	active,
+	isIOS,
+	onClick
+}) => {
+	const { Icon, push } = useTabsItem(icon)
+
+	const handleClick = () => {
+		push(href)
+		onClick?.()
+	}
 
 	return (
 		<Button
 			variant="ghost"
-			className={cn("flex-col active:scale-90", {
+			className={cn("flex-1 flex-col active:scale-90", {
 				"hover:bg-primary/10 text-shadow-[0px_1px_6px]": !isIOS,
-				"text-on-surface-variant rounded-4xl px-10 py-1": isIOS,
-				"bg-primary/10 text-primary": active && isIOS
+				"text-on-surface-variant w-28 rounded-4xl px-10 py-1": isIOS,
+				"text-primary": active && isIOS
 			})}
 			onClick={handleClick}
 		>
@@ -47,3 +61,6 @@ export const TabsItem: FC<Props> = ({ title, href, icon, isIOS }) => {
 		</Button>
 	)
 }
+
+export const TabsItem = memo(TabsItemComponent)
+TabsItem.displayName = "TabsItem"

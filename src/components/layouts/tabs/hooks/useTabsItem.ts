@@ -2,43 +2,35 @@ import {
 	CircleQuestionMarkIcon,
 	HomeIcon,
 	InfoIcon,
-	LucideIcon,
 	MenuIcon,
 	PlayIcon
 } from "lucide-react"
-import { usePathname } from "next/navigation"
+import { useMemo } from "react"
 
 import { useNavigation } from "@/libs/hooks"
 
 export type TabsItemIconType = "about" | "menu" | "start" | "home"
 
-export const useTabsItem = (href: string, icon: TabsItemIconType) => {
-	const pathname = usePathname()
-	const active = pathname === href
-
+export const useTabsItem = (icon: TabsItemIconType) => {
 	const { push } = useNavigation()
 
-	let Icon: LucideIcon
-	switch (icon) {
-		case "about":
-			Icon = InfoIcon
-			break
-		case "start":
-			Icon = PlayIcon
-			break
-		case "menu":
-			Icon = MenuIcon
-			break
-		case "home":
-			Icon = HomeIcon
-			break
-		default:
-			Icon = CircleQuestionMarkIcon
-	}
+	const Icon = useMemo(() => {
+		switch (icon) {
+			case "about":
+				return InfoIcon
+			case "start":
+				return PlayIcon
+			case "menu":
+				return MenuIcon
+			case "home":
+				return HomeIcon
+			default:
+				return CircleQuestionMarkIcon
+		}
+	}, [icon])
 
 	return {
-		handleClick: () => push(href),
-		active,
+		push,
 		Icon
 	}
 }
