@@ -1,8 +1,10 @@
 "use client"
 
+import { memo } from "react"
+
 import { Button, Title } from "@/components/ui"
 
-export const OfflineScreen = () => {
+const OfflineScreenComponent = () => {
 	return (
 		<main className="flex min-h-screen items-center justify-center">
 			<div className="text-center">
@@ -23,3 +25,6 @@ export const OfflineScreen = () => {
 		</main>
 	)
 }
+
+export const OfflineScreen = memo(OfflineScreenComponent)
+OfflineScreen.displayName = "OfflineScreen"

@@ -3,6 +3,8 @@ import type { Metadata } from "next"
 import { StartScreen } from "@/components/screens/start/start"
 import { NO_INDEX_PAGE } from "@/libs/constants"
 
+export const dynamic = "force-static"
+
 export const metadata: Metadata = {
 	title: "Начать работу | CascadePro",
 	description: "",

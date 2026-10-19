@@ -1,7 +1,9 @@
+import { memo } from "react"
+
 import { Button, Separator, Title } from "@/components/ui"
 import { AppRoutes } from "@/libs/constants"
 
-export const StartScreen = () => {
+const StartScreenComponent = () => {
 	return (
 		<>
 			<Title size="lg">Начать работу</Title>
@@ -34,3 +36,6 @@ export const StartScreen = () => {
 		</>
 	)
 }
+
+export const StartScreen = memo(StartScreenComponent)
+StartScreen.displayName = "StartScreen"
