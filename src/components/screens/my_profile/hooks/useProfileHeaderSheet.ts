@@ -6,7 +6,7 @@ import {
 	TOAST_SUCCESS_DURATION
 } from "@/components/ui/toast"
 import { useDeleteAvatar, useUploadAvatar } from "@/libs/query/hooks"
-import { errorCatch } from "@/libs/utils"
+import { createIdempotencyKey, errorCatch } from "@/libs/utils"
 
 export const useProfileHeaderSheet = (handleClose: () => void) => {
 	const inputRef = useRef<HTMLInputElement>(null)
@@ -18,9 +18,10 @@ export const useProfileHeaderSheet = (handleClose: () => void) => {
 
 	const handleDeleteAvatar = useCallback(async () => {
 		const id = toast.loading("Пожалуйста, подождите...", { dismissible: false })
+		const idempotencyKey = createIdempotencyKey()
 
 		try {
-			await deleteAvatar()
+			await deleteAvatar({ idempotencyKey })
 
 			handleClose()
 
@@ -45,9 +46,13 @@ export const useProfileHeaderSheet = (handleClose: () => void) => {
 		if (!file) return
 
 		const id = toast.loading("Пожалуйста, подождите...")
+		const idempotencyKey = createIdempotencyKey()
 
 		try {
-			await uploadAvatar({ file, tag: "avatars" })
+			await uploadAvatar({
+				body: { file, tag: "avatars" },
+				idempotencyKey
+			})
 
 			handleClose()
 
