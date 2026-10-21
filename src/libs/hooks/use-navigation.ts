@@ -1,5 +1,5 @@
 import type { NavigateOptions } from "next/dist/shared/lib/app-router-context.shared-runtime"
-import { useRouter } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 
 export function startNavigationProgress() {
 	if (typeof window === "undefined") return
@@ -8,6 +8,8 @@ export function startNavigationProgress() {
 }
 
 export const useNavigation = () => {
+	const pathname = usePathname()
+
 	const { back, forward, push, replace, ...other } = useRouter()
 
 	const backFn = () => {
@@ -21,12 +23,12 @@ export const useNavigation = () => {
 	}
 
 	const pushFn = (href: string, options?: NavigateOptions | undefined) => {
-		startNavigationProgress()
+		if (pathname !== href) startNavigationProgress()
 		push(href, options)
 	}
 
 	const replaceFn = (href: string, options?: NavigateOptions | undefined) => {
-		startNavigationProgress()
+		if (pathname !== href) startNavigationProgress()
 		replace(href, options)
 	}
 

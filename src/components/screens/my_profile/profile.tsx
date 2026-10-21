@@ -27,7 +27,7 @@ export const MyProfileScreen = () => {
 
 	return (
 		<PullToRefresh onRefresh={handleRefresh}>
-			<main className="mx-auto w-full max-w-3xl px-1 sm:px-6">
+			<div className="mx-auto w-full max-w-3xl px-1 sm:px-6">
 				<div className="space-y-(--section-gap)">
 					<ProfileHeader
 						user={avatarUser}
@@ -48,7 +48,7 @@ export const MyProfileScreen = () => {
 						last_active_at={user?.last_active_at}
 					/>
 				</div>
-			</main>
+			</div>
 		</PullToRefresh>
 	)
 }

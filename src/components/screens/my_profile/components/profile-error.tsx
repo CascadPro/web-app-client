@@ -8,7 +8,7 @@ interface Props {
 
 const ProfileErrorComponent: FC<Props> = ({ refresh }) => {
 	return (
-		<main className="mx-auto w-full max-w-3xl px-1 sm:px-6">
+		<div className="mx-auto w-full max-w-3xl px-1 sm:px-6">
 			<div className="border-outline/20 bg-surface flex flex-col items-center gap-3 rounded-3xl border p-6 text-center">
 				<p className="text-on-surface font-medium">
 					Не удалось загрузить профиль
@@ -22,7 +22,7 @@ const ProfileErrorComponent: FC<Props> = ({ refresh }) => {
 					Повторить
 				</Button>
 			</div>
-		</main>
+		</div>
 	)
 }
 

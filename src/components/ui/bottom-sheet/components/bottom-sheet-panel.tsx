@@ -80,7 +80,6 @@ export const BottomSheetPanel: FC<BottomSheetPanelProps> = ({
 
 			const minHeight = dragStartHeight.current
 
-			// Свайп вверх увеличивает высоту, низ панели остаётся на месте.
 			const nextHeight = Math.max(
 				minHeight,
 				Math.min(maxHeight, dragStartHeight.current - info.offset.y)

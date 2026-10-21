@@ -34,7 +34,7 @@ export default function Layout({
 		<QueryProvider>
 			<AuthProvider>
 				<RealtimeProvider>
-					<main className="mb-24 sm:mb-0 sm:pt-4">
+					<main className="pb-[calc(env(safe-area-inset-bottom)+5rem)] sm:mb-0 sm:pt-4">
 						<NavigationProgress />
 
 						<RouteTransitionProvider>{children}</RouteTransitionProvider>

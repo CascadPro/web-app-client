@@ -1,6 +1,7 @@
 "use client"
 
 import { Globe2Icon, LogOutIcon, ShieldCheckIcon } from "lucide-react"
+import dynamic from "next/dynamic"
 
 import { RefreshControl } from "@/components/providers/refresh-control"
 import { Button, Section } from "@/components/ui"
@@ -9,8 +10,12 @@ import { QueryKeys } from "@/libs/query/keys"
 import { SessionCard } from "./components/card/session-card"
 import { SessionsList } from "./components/list/session-list"
 import { SessionLoading } from "./components/list/session-loading"
-import { SessionModal } from "./components/session-modal"
 import { useSessionScreen } from "./hooks/useSessionScreen"
+
+const DynamicSessionModal = dynamic(
+	() => import("./components/session-modal").then(mod => mod.SessionModal),
+	{ ssr: false }
+)
 
 export const SessionsScreen = () => {
 	const {
@@ -74,7 +79,7 @@ export const SessionsScreen = () => {
 				</Section>
 			</div>
 
-			<SessionModal
+			<DynamicSessionModal
 				isOpen={isOpen}
 				setIsOpen={() => setIsOpen(false)}
 				onDelete={handleDeleteAllSessions}

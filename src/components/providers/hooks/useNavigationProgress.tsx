@@ -3,7 +3,7 @@ import { usePathname, useSearchParams } from "next/navigation"
 import { useCallback, useEffect, useRef, useState } from "react"
 
 const NAVIGATION_TIMEOUT = 10_000
-const SLOW_NAVIGATION_DELAY = 500
+const SLOW_NAVIGATION_DELAY = 800
 
 export const useNavigationProgress = () => {
 	const pathname = usePathname()
