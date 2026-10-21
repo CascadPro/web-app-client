@@ -37,6 +37,11 @@ export const API_ERROR_MESSAGES: Record<ApiErrorCode, string> = {
 	session_expired: "Сессия истекла",
 	session_revoked: "Сессия отозвана",
 
+	invalid_idempotency_key: "Некорректный ключ идемпотентности",
+	request_body_too_large: "Тело запроса слишком большое",
+	idempotency_key_reused: "Этот ключ уже использован с другим запросом",
+	idempotency_in_progress: "Запрос с этим ключом ещё выполняется",
+
 	settings_not_found: "Настройки не найдены",
 
 	invalid_token: "Недействительный токен",
