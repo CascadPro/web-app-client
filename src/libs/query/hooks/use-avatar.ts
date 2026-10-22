@@ -1,23 +1,21 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import type { AxiosRequestConfig } from "axios"
 
-import type { PatchUsersAvatarBody } from "@/api/generated";
-import { service } from "@/api/instance";
-import type { AxiosRequestConfig } from "axios";
+import type { PatchUsersAvatarBody } from "@/api/generated"
+import { service } from "@/api/instance"
 
-import { QueryKeys } from "../keys";
+import { QueryKeys } from "../keys"
 
-interface IdempotentMutation {
+export interface IdempotentMutation {
 	idempotencyKey: string
 }
 
-interface UploadAvatarVariables extends IdempotentMutation {
+export interface UploadAvatarVariables extends IdempotentMutation {
 	body?: PatchUsersAvatarBody
 }
 
 const idempotencyConfig = (key: string): AxiosRequestConfig => ({
-	headers: {
-		"Idempotency-Key": key
-	}
+	headers: { "Idempotency-Key": key }
 })
 
 export const useDeleteAvatar = () => {
@@ -25,10 +23,8 @@ export const useDeleteAvatar = () => {
 
 	return useMutation({
 		mutationKey: QueryKeys.avatar.delete(),
-
 		mutationFn: async ({ idempotencyKey }: IdempotentMutation) =>
 			await service.deleteUsersAvatar(idempotencyConfig(idempotencyKey)),
-
 		onSuccess: () => client.invalidateQueries({ queryKey: QueryKeys.users.all })
 	})
 }
@@ -38,7 +34,6 @@ export const useUploadAvatar = () => {
 
 	return useMutation({
 		mutationKey: QueryKeys.avatar.upload(),
-
 		mutationFn: async ({ body, idempotencyKey }: UploadAvatarVariables) =>
 			await service.patchUsersAvatar(body, {
 				headers: {
@@ -46,7 +41,6 @@ export const useUploadAvatar = () => {
 					"Content-Type": "multipart/form-data"
 				}
 			}),
-
 		onSuccess: () => client.invalidateQueries({ queryKey: QueryKeys.users.all })
 	})
 }
