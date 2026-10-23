@@ -14,7 +14,6 @@ self.addEventListener("install", event => {
 		(async () => {
 			const cache = await caches.open(OFFLINE_CACHE)
 
-			// Офлайн-страницу нужно получить заранее, пока сеть есть.
 			try {
 				const response = await fetch(OFFLINE_PATH, {
 					cache: "no-store",
@@ -28,8 +27,6 @@ self.addEventListener("install", event => {
 					await cache.put(OFFLINE_PATH, response)
 				}
 			} catch (error) {
-				// Если страница недоступна при установке,
-				// не блокируем установку всего Service Worker.
 				console.warn("[PWA] Offline page prefetch failed", error)
 			}
 		})()
@@ -55,12 +52,14 @@ self.addEventListener("activate", event => {
 })
 
 self.addEventListener("message", event => {
+	if (event.origin !== process.env.NEXT_PUBLIC_APP_URL) {
+		return
+	}
+
 	if (event.data?.type === "SKIP_WAITING") {
 		self.skipWaiting()
 	}
 
-	// Позволяет обновить сохранённую офлайн-страницу,
-	// например после изменения её дизайна.
 	if (event.data?.type === "CACHE_OFFLINE_PAGE") {
 		event.waitUntil(cacheOfflinePage())
 	}
@@ -87,12 +86,10 @@ self.addEventListener("fetch", event => {
 
 	if (url.origin !== self.location.origin) return
 
-	// API, авторизация и пользовательские данные не кешируем.
 	if (url.pathname.startsWith("/api/") || url.pathname.startsWith("/graphql")) {
 		return
 	}
 
-	// Не вмешиваемся во внутренние запросы Next.js.
 	if (
 		request.headers.has("RSC") ||
 		request.headers.has("Next-Action") ||
@@ -103,7 +100,6 @@ self.addEventListener("fetch", event => {
 		return
 	}
 
-	// Сохраняем только конкретные группы статических ресурсов.
 	if (url.pathname.startsWith("/_next/static/")) {
 		event.respondWith(cacheFirst(request, STATIC_CACHE, MAX_STATIC_ENTRIES))
 		return
@@ -114,7 +110,6 @@ self.addEventListener("fetch", event => {
 		return
 	}
 
-	// Любая обычная навигация: сеть, затем готовая офлайн-страница.
 	if (request.mode === "navigate") {
 		event.respondWith(networkNavigation(request))
 	}

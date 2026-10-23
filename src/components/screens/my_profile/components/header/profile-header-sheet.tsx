@@ -1,5 +1,5 @@
 import { Trash2Icon, UploadIcon } from "lucide-react"
-import type { FC } from "react"
+import { type FC, memo } from "react"
 
 import { BottomSheet } from "@/components/ui"
 import { Button } from "@/components/ui/button"
@@ -23,7 +23,7 @@ interface Props {
 	handleModalClose: () => void
 }
 
-export const ProfileHeaderSheet: FC<Props> = ({
+const ProfileHeaderSheetComponent: FC<Props> = ({
 	isOpen,
 	setIsOpen,
 	hasAvatar,
@@ -99,3 +99,6 @@ export const ProfileHeaderSheet: FC<Props> = ({
 		</BottomSheet>
 	)
 }
+
+export const ProfileHeaderSheet = memo(ProfileHeaderSheetComponent)
+ProfileHeaderSheet.displayName = "ProfileHeaderSheet"

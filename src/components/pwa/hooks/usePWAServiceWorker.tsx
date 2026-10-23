@@ -47,7 +47,7 @@ export const usePWAServiceWorker = () => {
 		}
 
 		const onInstallingStateChange = () => {
-			if (!installingWorker || installingWorker.state !== "installed") {
+			if (installingWorker?.state !== "installed") {
 				return
 			}
 
@@ -91,7 +91,7 @@ export const usePWAServiceWorker = () => {
 				.catch((error: unknown) => {
 					const message = error instanceof Error ? error.message : String(error)
 
-					console.warn("[PWA] Update check failed:", error)
+					console.warn("[PWA] Update check failed:", message)
 				})
 		}
 
@@ -209,7 +209,7 @@ export const usePWAServiceWorker = () => {
 	const applyUpdate = useCallback(() => {
 		const worker = waitingWorker.current
 
-		if (!worker || worker.state !== "installed") return
+		if (worker?.state !== "installed") return
 
 		shouldReload.current = true
 		worker.postMessage({ type: "SKIP_WAITING" })

@@ -50,7 +50,7 @@ export const ProfileHeaderModal: FC<Props> = ({
 					}}
 					transition={{ duration: translate === 0 ? 0.3 : 0 }}
 				>
-					<div className="absolute top-[4%] left-0 flex w-full items-center justify-between px-4">
+					<div className="absolute top-[6%] left-0 flex w-full items-center justify-between px-4">
 						<Button
 							variant="ghost"
 							title="Закрыть"
@@ -83,7 +83,7 @@ export const ProfileHeaderModal: FC<Props> = ({
 						<UserAvatar
 							user={user}
 							size="2xl"
-							className="h-[calc(100vw)] w-[calc(100vw)] rounded-none"
+							className="size-[100vw] rounded-none"
 						/>
 					</m.div>
 				</m.div>

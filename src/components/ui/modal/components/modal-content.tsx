@@ -45,7 +45,7 @@ const ModalContentComponent = memo(function ModalContent({
 			}}
 			transition={getModalTransition(reducedMotion)}
 			className={cn(
-				"relative flex max-h-[calc(100dvh-2rem)]",
+				"relative flex max-h-dvh",
 				"w-full flex-col overflow-hidden",
 				"bg-surface text-on-surface rounded-2xl shadow-2xl",
 				"outline-none sm:max-w-lg sm:rounded-2xl",
