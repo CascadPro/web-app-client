@@ -60,6 +60,9 @@ const getCodeFromStatus = (status: number): ApiErrorCode => {
 		case 409:
 			return "conflict"
 
+		case 422:
+			return "idempotency_key_reused"
+
 		case 429:
 			return "too_many_requests"
 
