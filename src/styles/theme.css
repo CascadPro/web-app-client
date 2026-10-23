@@ -1,0 +1,108 @@
+:root {
+	--safe-area-top: env(safe-area-inset-top, 0px);
+	--safe-area-right: env(safe-area-inset-right, 0px);
+	--safe-area-bottom: env(safe-area-inset-bottom, 0px);
+	--safe-area-left: env(safe-area-inset-left, 0px);
+}
+
+:root {
+	--primary: #ff9800;
+	--on-primary: #ffffff;
+	--primary-container: #ffb74d;
+	--on-primary-container: #ffcc80;
+
+	--secondary: #ff5722;
+	--on-secondary: #ffffff;
+	--secondary-container: #e64a19;
+	--on-secondary-container: #ffccbc;
+
+	--background: #ffffff;
+	--on-background: #212121;
+
+	--surface: #f5f5f5;
+	--on-surface: #000000;
+
+	--surface-variant: #eeeeee;
+	--on-surface-variant: #757575;
+
+	--outline: #bdbdbd;
+
+	--error: #d32f2f;
+	--on-error: #ffffff;
+	--error-container: #ffccd2;
+	--on-error-container: #b00020;
+
+	/* Liquid Glass — light theme */
+	--glass-bg: rgb(255 255 255 / 30%);
+	--glass-border: rgb(255 255 255 / 65%);
+	--glass-highlight: rgb(255 255 255 / 85%);
+	--glass-reflection: rgb(255 255 255 / 45%);
+	--glass-shadow: rgb(100 100 120 / 4%);
+	--glass-blur: 5px;
+	--glass-saturation: 200%;
+}
+
+@theme inline {
+	--color-primary: var(--primary);
+	--color-on-primary: var(--on-primary);
+	--color-primary-container: var(--primary-container);
+	--color-on-primary-container: var(--on-primary-container);
+
+	--color-secondary: var(--secondary);
+	--color-on-secondary: var(--on-secondary);
+	--color-secondary-container: var(--secondary-container);
+	--color-on-secondary-container: var(--on-secondary-container);
+
+	--color-background: var(--background);
+	--color-on-background: var(--on-background);
+
+	--color-surface: var(--surface);
+	--color-on-surface: var(--on-surface);
+
+	--color-surface-variant: var(--surface-variant);
+	--color-on-surface-variant: var(--on-surface-variant);
+
+	--color-outline: var(--outline);
+
+	--color-error: var(--error);
+	--color-on-error: var(--on-error);
+	--color-error-container: var(--error-container);
+	--color-on-error-container: var(--on-error-container);
+}
+
+.dark {
+	--primary: #64b5f6;
+	--on-primary: #ffffff;
+	--primary-container: #1976d2;
+	--on-primary-container: #e3f2fd;
+
+	--secondary: #90caf9;
+	--on-secondary: #000000;
+	--secondary-container: #0d47a1;
+	--on-secondary-container: #bbdefb;
+
+	--background: #121212;
+	--on-background: #e0e0e0;
+
+	--surface: #1e1e1e;
+	--on-surface: #ffffff;
+
+	--surface-variant: #2d2d2d;
+	--on-surface-variant: #b0bec5;
+
+	--outline: #90a4ae;
+
+	--error: #cf6679;
+	--on-error: #000000;
+	--error-container: #b00020;
+	--on-error-container: #ffdad6;
+
+	/* Liquid Glass — dark theme */
+	--glass-bg: rgb(30 30 30 / 58%);
+	--glass-border: rgb(255 255 255 / 14%);
+	--glass-highlight: rgb(255 255 255 / 18%);
+	--glass-reflection: rgb(255 255 255 / 7%);
+	--glass-shadow: rgb(0 0 0 / 28%);
+	--glass-blur: 1px;
+	--glass-saturation: 300%;
+}

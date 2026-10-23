@@ -1,0 +1,34 @@
+@theme {
+	--animate-shine: shine 2.5s ease-in-out infinite;
+
+	@keyframes shine {
+		0% {
+			transform: translateX(-150%) skewX(-20deg);
+		}
+
+		50%,
+		100% {
+			transform: translateX(700%) skewX(-20deg);
+		}
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	:root:not([data-motion="enabled"]) *,
+	:root:not([data-motion="enabled"]) *::before,
+	:root:not([data-motion="enabled"]) *::after {
+		animation-duration: 0ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0ms !important;
+		scroll-behavior: auto !important;
+	}
+}
+
+:root[data-motion="disabled"] *,
+:root[data-motion="disabled"] *::before,
+:root[data-motion="disabled"] *::after {
+	animation-duration: 0ms !important;
+	animation-iteration-count: 1 !important;
+	transition-duration: 0ms !important;
+	scroll-behavior: auto !important;
+}
