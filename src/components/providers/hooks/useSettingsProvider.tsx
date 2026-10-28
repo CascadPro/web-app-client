@@ -9,7 +9,14 @@ import {
 	DEFAULT_SETTINGS,
 	SETTINGS_STORAGE_KEY
 } from "@/libs/constants/screens/settings"
-import { readSettings, writeSettings } from "@/libs/utils/screens/settings"
+import { useUserSettings } from "@/libs/query/hooks/use-user-settings"
+import {
+	getQueuedSettingsChanges,
+	readSettings,
+	settingsFromResponse,
+	settingsToPatch,
+	writeSettings
+} from "@/libs/utils/screens/settings"
 import type {
 	NotificationKey,
 	SettingsState,
@@ -19,30 +26,47 @@ import type {
 export const useSettingsProvider = () => {
 	const systemReducedMotion = useReducedMotion()
 
+	const { setTheme, resolvedTheme } = useTheme()
+
 	const [settings, setSettings] = useState<SettingsState>(DEFAULT_SETTINGS)
 
 	const [hydrated, setHydrated] = useState<boolean>(false)
+	const [pendingOfflineChanges, setPendingOfflineChanges] =
+		useState<boolean>(false)
 
-	const { setTheme, resolvedTheme } = useTheme()
+	const {
+		data: remoteSettings,
+		isFetching,
+		updateSettings: syncSettings
+	} = useUserSettings()
 
-	const updateSettings = useCallback((patch: Partial<SettingsUpdate>) => {
+	const applyPatch = useCallback((patch: Partial<SettingsState>) => {
 		setSettings(current => ({
 			...current,
-			...patch
+			...patch,
+			notifications: { ...current.notifications, ...patch.notifications }
 		}))
 	}, [])
+
+	const updateSettings = useCallback(
+		(patch: Partial<SettingsUpdate>) => {
+			applyPatch(patch)
+
+			void syncSettings(settingsToPatch(patch))
+		},
+		[applyPatch, syncSettings]
+	)
 
 	const updateNotification = useCallback(
 		(key: NotificationKey, value: boolean) => {
 			setSettings(current => ({
 				...current,
-				notifications: {
-					...current.notifications,
-					[key]: value
-				}
+				notifications: { ...current.notifications, [key]: value }
 			}))
+
+			void syncSettings({ notifications: { [key]: value } })
 		},
-		[]
+		[syncSettings]
 	)
 
 	const reduceMotion = useMemo(() => {
@@ -60,10 +84,19 @@ export const useSettingsProvider = () => {
 		() => ({
 			settings,
 			hydrated,
+			syncing: isFetching,
+			pendingOfflineChanges,
 			updateSettings,
 			updateNotification
 		}),
-		[settings, hydrated, updateSettings, updateNotification]
+		[
+			settings,
+			hydrated,
+			isFetching,
+			pendingOfflineChanges,
+			updateSettings,
+			updateNotification
+		]
 	)
 
 	useEffect(() => {
@@ -72,43 +105,37 @@ export const useSettingsProvider = () => {
 	}, [])
 
 	useEffect(() => {
-		const handleStorage = (event: StorageEvent) => {
-			if (event.key !== SETTINGS_STORAGE_KEY && event.key !== null) {
+		if (!remoteSettings || !hydrated) return
+
+		void getQueuedSettingsChanges().then(queued => {
+			if (queued) {
+				setPendingOfflineChanges(true)
 				return
 			}
 
-			setSettings(readSettings())
-		}
-
-		window.addEventListener("storage", handleStorage)
-
-		return () => {
-			window.removeEventListener("storage", handleStorage)
-		}
-	}, [])
+			setSettings(settingsFromResponse(remoteSettings))
+			setPendingOfflineChanges(false)
+		})
+	}, [remoteSettings, hydrated])
 
 	useEffect(() => {
-		if (!hydrated) {
-			return
-		}
-
+		if (!hydrated) return
 		writeSettings(settings)
 		setTheme(settings.theme)
 
 		const root = document.documentElement
 		const theme = resolvedTheme === "dark" ? "dark" : "light"
-
 		const accent = ACCENT_COLORS[settings.accent][theme]
 
 		root.dataset.accent = settings.accent
 		root.dataset.density = settings.density
 		root.dataset.motion = settings.animations
+		root.dataset.textSize = settings.textSize
 
 		root.style.setProperty("--primary", accent.primary)
 		root.style.setProperty("--on-primary", accent.onPrimary)
 		root.style.setProperty("--primary-container", accent.primaryContainer)
 		root.style.setProperty("--on-primary-container", accent.onPrimaryContainer)
-
 		root.style.setProperty("--secondary", accent.secondary)
 		root.style.setProperty("--on-secondary", accent.onSecondary)
 		root.style.setProperty("--secondary-container", accent.secondaryContainer)
@@ -118,8 +145,17 @@ export const useSettingsProvider = () => {
 		)
 	}, [settings, hydrated, setTheme, resolvedTheme])
 
-	return {
-		contextValue,
-		reduceMotion
-	}
+	useEffect(() => {
+		const handleStorage = (event: StorageEvent) => {
+			if (event.key !== SETTINGS_STORAGE_KEY && event.key !== null) return
+
+			setSettings(readSettings())
+		}
+
+		window.addEventListener("storage", handleStorage)
+
+		return () => window.removeEventListener("storage", handleStorage)
+	}, [])
+
+	return { contextValue, reduceMotion }
 }
