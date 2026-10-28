@@ -1,23 +1,11 @@
 import { z } from "zod"
 
-import type {
-	AccentPreference,
-	AnimationPreference,
-	DensityPreference,
-	ThemePreference
-} from "@/types/screens/settings"
-
-const themeEnum: ThemePreference[] = ["system", "light", "dark"]
-const accentEnum: AccentPreference[] = [
-	"orange",
-	"blue",
-	"mauve",
-	"green",
-	"teal",
-	"rose"
-]
-const animationsEnum: AnimationPreference[] = ["system", "enabled", "disabled"]
-const densityEnum: DensityPreference[] = ["comfortable", "compact"]
+const themeEnum = ["system", "light", "dark"] as const
+const accentEnum = ["orange", "blue", "mauve", "green", "teal", "rose"] as const
+const animationsEnum = ["system", "enabled", "disabled"] as const
+const densityEnum = ["comfortable", "compact"] as const
+const textSizeEnum = ["small", "medium", "large"] as const
+const sessionExpireEnum = ["7d", "30d", "90d"] as const
 
 const notificationsSchema = z
 	.object({
@@ -33,5 +21,9 @@ export const storedSettingsScheme = z.object({
 	accent: z.enum(accentEnum).optional(),
 	animations: z.enum(animationsEnum).optional(),
 	density: z.enum(densityEnum).optional(),
+	textSize: z.enum(textSizeEnum).optional(),
+	confirmImportantActions: z.boolean().optional(),
+	sessionExpireTerm: z.enum(sessionExpireEnum).optional(),
+	session2FAEnabled: z.boolean().optional(),
 	notifications: notificationsSchema
 })

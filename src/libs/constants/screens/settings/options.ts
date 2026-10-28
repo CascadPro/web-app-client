@@ -2,7 +2,9 @@ import type {
 	AccentPreference,
 	AnimationPreference,
 	DensityPreference,
+	SessionExpireTerm,
 	SettingsOption,
+	TextSizePreference,
 	ThemePreference
 } from "@/types/screens/settings"
 
@@ -30,4 +32,16 @@ export const ANIMATION_OPTIONS: SettingsOption<AnimationPreference>[] = [
 export const DENSITY_OPTIONS: SettingsOption<DensityPreference>[] = [
 	{ value: "comfortable", label: "Обычная" },
 	{ value: "compact", label: "Компактная" }
+]
+
+export const TEXT_SIZE_OPTIONS: SettingsOption<TextSizePreference>[] = [
+	{ value: "small", label: "Маленький" },
+	{ value: "medium", label: "Обычный" },
+	{ value: "large", label: "Большой" }
+]
+
+export const SESSION_EXPIRE_OPTIONS: SettingsOption<SessionExpireTerm>[] = [
+	{ value: "7d", label: "7 дней" },
+	{ value: "30d", label: "30 дней" },
+	{ value: "90d", label: "90 дней" }
 ]

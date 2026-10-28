@@ -7,6 +7,10 @@ export const DEFAULT_SETTINGS: SettingsState = {
 	accent: "orange",
 	animations: "system",
 	density: "comfortable",
+	textSize: "medium",
+	confirmImportantActions: true,
+	sessionExpireTerm: "30d",
+	session2FAEnabled: false,
 	notifications: {
 		requests: true,
 		sessions: true,
