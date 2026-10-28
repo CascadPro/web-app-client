@@ -35,11 +35,17 @@ export async function getQueuedSettingsChanges(): Promise<SettingsChanges | null
 	return (await get<SettingsChanges | null>(QUEUE_KEY)) ?? null
 }
 
-export async function enqueueSettingsChanges(
-	changes: SettingsChanges
-): Promise<void> {
-	const current = await getQueuedSettingsChanges()
-	await set(QUEUE_KEY, mergeChanges(current ?? undefined, changes))
+let queueLock: Promise<unknown> = Promise.resolve()
+
+export function enqueueSettingsChanges(changes: SettingsChanges) {
+	const task = queueLock.then(async () => {
+		const current = await getQueuedSettingsChanges()
+		await set(QUEUE_KEY, mergeChanges(current ?? undefined, changes))
+	})
+
+	queueLock = task.catch(() => {})
+
+	return task
 }
 
 export async function clearQueuedSettingsChanges(

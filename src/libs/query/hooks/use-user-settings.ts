@@ -20,6 +20,8 @@ import { QueryKeys } from "../keys"
 
 type SettingsChanges = Omit<PatchUserSettingsRequest, "version">
 
+const SETTINGS_QUERY_KEY = QueryKeys.settings.current()
+
 const mergeSettings = (
 	current: UserSettingsResponse,
 	changes: SettingsChanges
@@ -33,10 +35,9 @@ const mergeSettings = (
 export const useUserSettings = () => {
 	const status = useAuthStore(state => state.status)
 	const queryClient = useQueryClient()
-	const queryKey = QueryKeys.settings.current()
 
 	const query = useQuery({
-		queryKey,
+		queryKey: SETTINGS_QUERY_KEY,
 		queryFn: async () => {
 			const serverSettings = await getUserSettings()
 			const queued = await getQueuedSettingsChanges()
@@ -50,20 +51,24 @@ export const useUserSettings = () => {
 
 	const updateSettings = useCallback(
 		async (changes: SettingsChanges) => {
-			const current = queryClient.getQueryData<UserSettingsResponse>(queryKey)
+			const current =
+				queryClient.getQueryData<UserSettingsResponse>(SETTINGS_QUERY_KEY)
 			if (!current) return
 
 			// Optimistic UI update is reflected in the persisted TanStack Query cache.
-			queryClient.setQueryData(queryKey, mergeSettings(current, changes))
+			queryClient.setQueryData(
+				SETTINGS_QUERY_KEY,
+				mergeSettings(current, changes)
+			)
 
 			await enqueueSettingsChanges(changes)
 
 			if (typeof navigator !== "undefined" && navigator.onLine) {
 				const updated = await flushSettingsQueue()
-				if (updated) queryClient.setQueryData(queryKey, updated)
+				if (updated) queryClient.setQueryData(SETTINGS_QUERY_KEY, updated)
 			}
 		},
-		[queryClient, queryKey]
+		[queryClient, SETTINGS_QUERY_KEY]
 	)
 
 	useEffect(() => {
@@ -73,13 +78,14 @@ export const useUserSettings = () => {
 			const updated = await flushSettingsQueue()
 
 			if (updated) {
-				queryClient.setQueryData(queryKey, updated)
+				queryClient.setQueryData(SETTINGS_QUERY_KEY, updated)
 			} else {
 				const queued = await getQueuedSettingsChanges()
 
 				if (queued) {
-					queryClient.setQueryData<UserSettingsResponse>(queryKey, current =>
-						current ? mergeSettings(current, queued) : current
+					queryClient.setQueryData<UserSettingsResponse>(
+						SETTINGS_QUERY_KEY,
+						current => (current ? mergeSettings(current, queued) : current)
 					)
 				}
 			}
@@ -90,7 +96,7 @@ export const useUserSettings = () => {
 		window.addEventListener("online", flush)
 
 		return () => window.removeEventListener("online", flush)
-	}, [queryClient, queryKey, status])
+	}, [queryClient, SETTINGS_QUERY_KEY, status])
 
 	return { ...query, updateSettings }
 }
