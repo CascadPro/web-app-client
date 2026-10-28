@@ -35,7 +35,11 @@ const TabsComponent: FC<Props> = ({ data }) => {
 			{isIOS && currentIndex >= 0 && (
 				<m.div
 					initial={{ opacity: 0 }}
-					animate={{ x: 116 * currentIndex, opacity: 1, scale }}
+					animate={{
+						x: `${7.25 * currentIndex}rem`,
+						opacity: 1,
+						scaleY: scale
+					}}
 					transition={{
 						type: "spring",
 						damping: 32,
