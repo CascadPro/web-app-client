@@ -134,22 +134,22 @@ export const useSettingsProvider = () => {
 		const theme = resolvedTheme === "dark" ? "dark" : "light"
 		const accent = ACCENT_COLORS[settings.accent][theme]
 
+		// Batch all CSS variable updates into a single style assignment
+		root.style.cssText = [
+			`--primary:${accent.primary}`,
+			`--on-primary:${accent.onPrimary}`,
+			`--primary-container:${accent.primaryContainer}`,
+			`--on-primary-container:${accent.onPrimaryContainer}`,
+			`--secondary:${accent.secondary}`,
+			`--on-secondary:${accent.onSecondary}`,
+			`--secondary-container:${accent.secondaryContainer}`,
+			`--on-secondary-container:${accent.onSecondaryContainer}`
+		].join(";")
+
 		root.dataset.accent = settings.accent
 		root.dataset.density = settings.density
 		root.dataset.motion = settings.animations
 		root.dataset.textSize = settings.textSize
-
-		root.style.setProperty("--primary", accent.primary)
-		root.style.setProperty("--on-primary", accent.onPrimary)
-		root.style.setProperty("--primary-container", accent.primaryContainer)
-		root.style.setProperty("--on-primary-container", accent.onPrimaryContainer)
-		root.style.setProperty("--secondary", accent.secondary)
-		root.style.setProperty("--on-secondary", accent.onSecondary)
-		root.style.setProperty("--secondary-container", accent.secondaryContainer)
-		root.style.setProperty(
-			"--on-secondary-container",
-			accent.onSecondaryContainer
-		)
 	}, [settings, setTheme, resolvedTheme])
 
 	// Cross-tab synchronization

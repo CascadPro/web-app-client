@@ -6,21 +6,8 @@ import { getCssVar } from "@/libs/utils"
 
 function updatePWATheme() {
 	const background = getCssVar("--background")
-	// const primary = getCSSVariable("--primary")
 
 	if (!background) return
-
-	let meta = document.querySelector('meta[name="theme-color"]')
-
-	if (!meta) {
-		meta = document.createElement("meta")
-
-		meta.setAttribute("name", "theme-color")
-
-		document.head.appendChild(meta)
-	}
-
-	meta.setAttribute("content", background)
 
 	document.documentElement.style.setProperty(
 		"--pwa-background-color",
@@ -30,10 +17,6 @@ function updatePWATheme() {
 
 export function PWAProvider() {
 	useEffect(() => {
-		if ("serviceWorker" in navigator) {
-			void navigator.serviceWorker.register("/sw.js")
-		}
-
 		updatePWATheme()
 
 		const observer = new MutationObserver(() => {

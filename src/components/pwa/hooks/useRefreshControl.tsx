@@ -48,7 +48,8 @@ export const useRefreshControl = (
 	threshold: number,
 	fn: () => Promise<void> | void
 ) => {
-	const [maxPull, setMaxPull] = useState(0)
+	// Calculate maxPull once — window.innerHeight is stable during normal use
+	const [maxPull] = useState(() => window.innerHeight / 6)
 	const [isRefreshing, setIsRefreshing] = useState(false)
 	const [isPulling, setIsPulling] = useState(false)
 
@@ -60,20 +61,6 @@ export const useRefreshControl = (
 	fnRef.current = fn
 
 	const pull = useMotionValue(0)
-
-	useEffect(() => {
-		const updateMaxPull = () => {
-			setMaxPull(window.innerHeight / 6)
-		}
-
-		updateMaxPull()
-
-		window.addEventListener("resize", updateMaxPull)
-
-		return () => {
-			window.removeEventListener("resize", updateMaxPull)
-		}
-	}, [])
 
 	const reset = useCallback(() => {
 		startY.current = null

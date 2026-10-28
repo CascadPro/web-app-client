@@ -8,7 +8,7 @@ import { getCacheStats } from "@/libs/utils"
 import type { CacheSize, CacheStats } from "@/types/cache"
 
 const encoder = new TextEncoder()
-const DEBOUNCE_MS = 500
+const SAMPLE_INTERVAL_MS = 5000
 
 export const useCacheStats = () => {
 	const [querySize, setQuerySize] = useState<CacheSize | null>(null)
@@ -16,7 +16,6 @@ export const useCacheStats = () => {
 	const [isMeasuring, setIsMeasuring] = useState(false)
 	const [error, setError] = useState<string | null>(null)
 
-	const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 	const measuringRef = useRef(false)
 
 	const measureAndSet = useCallback(() => {
@@ -24,31 +23,11 @@ export const useCacheStats = () => {
 	}, [])
 
 	useEffect(() => {
-		const scheduleUpdate = () => {
-			if (timerRef.current) {
-				clearTimeout(timerRef.current)
-			}
+		const interval = setInterval(measureAndSet, SAMPLE_INTERVAL_MS)
+		// Initial measurement
+		measureAndSet()
 
-			timerRef.current = setTimeout(measureAndSet, DEBOUNCE_MS)
-		}
-
-		const unsubscribeQueries = queryClient
-			.getQueryCache()
-			.subscribe(scheduleUpdate)
-
-		const unsubscribeMutations = queryClient
-			.getMutationCache()
-			.subscribe(scheduleUpdate)
-
-		return () => {
-			unsubscribeQueries()
-			unsubscribeMutations()
-
-			if (timerRef.current) {
-				clearTimeout(timerRef.current)
-				timerRef.current = null
-			}
-		}
+		return () => clearInterval(interval)
 	}, [measureAndSet])
 
 	const refreshAll = useCallback(async () => {

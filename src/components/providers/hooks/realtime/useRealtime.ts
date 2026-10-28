@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useMemo } from "react"
+import { useCallback, useRef } from "react"
 
 import { useLogout } from "@/libs/hooks"
 import { queryClient } from "@/libs/query/client"
@@ -12,7 +12,7 @@ import {
 } from "@/libs/realtime/subscriptions"
 
 export function useRealtime() {
-	const logout = useLogout()
+	const logoutRef = useRef<(() => void) | null>(null)
 
 	const invalidateSessions = useCallback(() => {
 		void queryClient.invalidateQueries({
@@ -24,21 +24,22 @@ export function useRealtime() {
 		(client: WebSocketClient) => {
 			const unsubscribePresence = subscribeToPresence(client)
 
-			const unsubscribeSessions = subscribeToSessions(client, logout)
+			const unsubscribeSessions = subscribeToSessions(client, logoutRef.current!)
 
 			return () => {
 				unsubscribePresence()
 				unsubscribeSessions()
 			}
 		},
-		[logout]
+		[]
 	)
 
-	return useMemo(
-		() => ({
-			subscribe,
-			invalidateSessions
-		}),
-		[subscribe, invalidateSessions]
-	)
+	// Keep logout ref current to avoid re-creating subscribe
+	const logout = useLogout()
+	logoutRef.current = logout
+
+	return {
+		subscribe,
+		invalidateSessions
+	}
 }
