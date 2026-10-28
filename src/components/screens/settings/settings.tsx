@@ -4,6 +4,7 @@ import { AnimatePresence } from "motion/react"
 
 import { useSettingsContext } from "@/components/providers/settings-provider"
 
+import { SettingsAdvanced } from "./components/sections/settings-advanced"
 import { SettingsAppearance } from "./components/sections/settings-appearance"
 import { SettingsApplication } from "./components/sections/settings-application"
 import { SettingsNotifications } from "./components/sections/settings-notifications"
@@ -22,6 +23,8 @@ export const SettingsScreen = () => {
 				{hydrated && (
 					<>
 						<SettingsAppearance settings={settings} onChange={updateSettings} />
+
+						<SettingsAdvanced settings={settings} onChange={updateSettings} />
 
 						<SettingsNotifications
 							settings={settings.notifications}

@@ -1,11 +1,11 @@
-import { MonitorIcon, PaletteIcon, SunIcon, ZapIcon } from "lucide-react"
+import { MonitorIcon, PaletteIcon, SunIcon, TypeIcon } from "lucide-react"
 import { type FC, memo } from "react"
 
 import { Section } from "@/components/ui"
 import {
 	ACCENT_OPTIONS,
-	ANIMATION_OPTIONS,
 	DENSITY_OPTIONS,
+	TEXT_SIZE_OPTIONS,
 	THEME_OPTIONS
 } from "@/libs/constants/screens/settings"
 import { SettingsState } from "@/types/screens/settings"
@@ -54,6 +54,20 @@ const SettingsAppearanceComponent: FC<Props> = ({ settings, onChange }) => (
 		/>
 
 		<SettingsRow
+			title="Размер текста"
+			description="Размер текста в интерфейсе"
+			icon={TypeIcon}
+			trailing={
+				<SettingsSegmentedControl
+					label="Размер текста"
+					value={settings.textSize}
+					options={TEXT_SIZE_OPTIONS}
+					onChange={textSize => onChange({ textSize })}
+				/>
+			}
+		/>
+
+		<SettingsRow
 			title="Плотность интерфейса"
 			description="Компактный режим уменьшает расстояния между элементами."
 			icon={MonitorIcon}
@@ -63,20 +77,6 @@ const SettingsAppearanceComponent: FC<Props> = ({ settings, onChange }) => (
 					value={settings.density}
 					options={DENSITY_OPTIONS}
 					onChange={density => onChange({ density })}
-				/>
-			}
-		/>
-
-		<SettingsRow
-			title="Анимации"
-			description="Учитывать системные настройки движения"
-			icon={ZapIcon}
-			trailing={
-				<SettingsSegmentedControl
-					label="Анимации"
-					value={settings.animations}
-					options={ANIMATION_OPTIONS}
-					onChange={animations => onChange({ animations })}
 				/>
 			}
 		/>
