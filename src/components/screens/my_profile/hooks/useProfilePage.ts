@@ -1,9 +1,27 @@
 import { useMemo } from "react"
 
+import type { UsersTransportHttpGetCurrentUserResponse as User } from "@/api/generated"
 import { useCurrentUser } from "@/libs/query/hooks"
 import { useAuthStore } from "@/store/auth"
+import type { AuthStoreStatus } from "@/types/store"
 
-export const useProfilePage = () => {
+interface UseProfilePageReturn {
+	status: AuthStoreStatus
+	user: User | undefined
+	fullName: string
+	avatarUser: {
+		avatar_file_id: string | undefined
+		avatar_placeholder: string | undefined
+		name: string | undefined
+		surname: string | undefined
+	}
+	refetchUser: () => Promise<unknown>
+	isLoading: boolean
+	isFetching: boolean
+	error: unknown
+}
+
+export const useProfilePage = (): UseProfilePageReturn => {
 	const authStatus = useAuthStore(state => state.status)
 
 	const { data, refetch, isLoading, isFetching, error } = useCurrentUser()

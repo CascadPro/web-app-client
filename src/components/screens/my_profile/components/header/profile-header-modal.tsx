@@ -30,7 +30,7 @@ export const ProfileHeaderModal: FC<Props> = ({
 }) => {
 	const handleModalClose = () => setIsModalOpen(false)
 
-	const translate = useAvatarSwipe(
+	const { translate } = useAvatarSwipe(
 		isModalOpen && !isSheetOpen,
 		handleModalClose
 	)

@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useCallback, useEffect, useState } from "react"
+import type { UseFormReturn } from "react-hook-form"
 import { useForm } from "react-hook-form"
 
 import {
@@ -17,7 +18,13 @@ import { useAuthStore } from "@/store/auth"
 
 type Status = "default" | "loading" | "success" | "error"
 
-export const useLoginPage = () => {
+interface UseLoginPageReturn {
+	form: UseFormReturn<LoginFormFields>
+	handleSubmit: () => void
+	status: Status
+}
+
+export const useLoginPage = (): UseLoginPageReturn => {
 	const form = useForm({
 		resolver: zodResolver(loginScheme),
 		defaultValues: { email: "", password: "" },

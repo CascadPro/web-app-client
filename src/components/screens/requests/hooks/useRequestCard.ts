@@ -1,4 +1,5 @@
 import { CalendarDaysIcon, CircleCheckIcon, ClockIcon } from "lucide-react"
+import type { Dispatch, MutableRefObject, SetStateAction } from "react"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
 import type { RequestHttpDtoGetRequestsResponseRequest as Request } from "@/api/generated"
@@ -15,11 +16,25 @@ const VIEWPORT_PADDING = 16
 
 type Params = Pick<Request, "fields_remaining" | "created_at" | "deadline">
 
+interface UseRequestCardReturn {
+	ref: MutableRefObject<HTMLElement | null>
+	progress: number
+	descriptionData: RequestCardDescriptionData[]
+	isSelected: boolean
+	isCollapsed: boolean
+	selectedY: number
+	setIsCollapsed: Dispatch<SetStateAction<boolean>>
+	handleTouchStart: () => void
+	handleTouchEnd: () => void
+	handleTouchCancel: () => void
+	handleClickOutside: () => void
+}
+
 export const useRequestCard = ({
 	fields_remaining,
 	created_at,
 	deadline
-}: Params) => {
+}: Params): UseRequestCardReturn => {
 	const [isCollapsed, setIsCollapsed] = useState(true)
 	const [isSelected, setIsSelected] = useState(false)
 	const [selectedY, setSelectedY] = useState(0)

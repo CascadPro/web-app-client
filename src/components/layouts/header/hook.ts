@@ -1,6 +1,6 @@
 import { ChevronLeftIcon, MoveLeftIcon } from "lucide-react"
 import { usePathname } from "next/navigation"
-import { useState } from "react"
+import { useCallback, useRef, useState } from "react"
 
 import { AppRoutes } from "@/libs/constants"
 import { useIsIOS, useNavigation } from "@/libs/hooks"
@@ -12,6 +12,8 @@ const paths = {
 	[AppRoutes.SETTINGS]: "Настройки"
 } as const
 
+const BACK_ANIMATION_MS = 300
+
 export const useNestedHeader = () => {
 	const pathname = usePathname()
 	const { back } = useNavigation()
@@ -20,15 +22,23 @@ export const useNestedHeader = () => {
 
 	const [isActive, setIsActive] = useState(false)
 
-	const handleBack = () => {
+	const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+	const handleBack = useCallback(() => {
 		if (isIOS) return back()
 
 		setIsActive(true)
-		setTimeout(() => {
+
+		if (timeoutRef.current) {
+			clearTimeout(timeoutRef.current)
+		}
+
+		timeoutRef.current = setTimeout(() => {
 			back()
 			setIsActive(false)
-		}, 300)
-	}
+			timeoutRef.current = null
+		}, BACK_ANIMATION_MS)
+	}, [isIOS, back])
 
 	const title = paths[pathname as keyof typeof paths]
 

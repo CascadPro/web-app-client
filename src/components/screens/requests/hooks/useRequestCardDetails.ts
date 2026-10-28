@@ -1,12 +1,30 @@
-import { MailIcon, PhoneIcon, UsersIcon } from "lucide-react"
+import { type LucideIcon, MailIcon, PhoneIcon, UsersIcon } from "lucide-react"
 import { useCallback, useMemo } from "react"
 
-import type { RequestHttpDtoGetRequestsResponseOrigin as RequestOrigin } from "@/api/generated"
+import type {
+	RequestsTransportHttpGetRequestResponse as Request,
+	RequestHttpDtoGetRequestsResponseOrigin as RequestOrigin
+} from "@/api/generated"
 import { toast } from "@/components/ui/toast"
 import { useClipboardCopy } from "@/libs/hooks"
 import { useRequestDetail } from "@/libs/query/hooks/use-requests"
 
-export const useRequestCardDetails = (id: string, isCollapsed: boolean) => {
+interface UseRequestCardDetailsReturn {
+	request: Request | null
+	isPending: boolean
+	height: number
+}
+
+interface UseRequestCardDetailsOriginReturn {
+	Icon: LucideIcon
+	isCopied: boolean
+	handleClick: () => Promise<void>
+}
+
+export const useRequestCardDetails = (
+	id: string,
+	isCollapsed: boolean
+): UseRequestCardDetailsReturn => {
 	const { request, isPending } = useRequestDetail(id, !isCollapsed)
 
 	const height = useMemo(() => {
@@ -33,7 +51,10 @@ export const useRequestCardDetails = (id: string, isCollapsed: boolean) => {
 	return { request, isPending, height }
 }
 
-export const useRequestCardDetailsOrigin = ({ type, value }: RequestOrigin) => {
+export const useRequestCardDetailsOrigin = ({
+	type,
+	value
+}: RequestOrigin): UseRequestCardDetailsOriginReturn => {
 	const [isCopied, copyText] = useClipboardCopy()
 
 	const Icon = useMemo(() => {

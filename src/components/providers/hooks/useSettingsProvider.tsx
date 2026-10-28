@@ -2,7 +2,7 @@
 
 import { useReducedMotion } from "motion/react"
 import { useTheme } from "next-themes"
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
 import {
 	ACCENT_COLORS,
@@ -39,6 +39,9 @@ export const useSettingsProvider = () => {
 		isFetching,
 		updateSettings: syncSettings
 	} = useUserSettings()
+
+	const hydratedRef = useRef(hydrated)
+	hydratedRef.current = hydrated
 
 	const applyPatch = useCallback((patch: Partial<SettingsState>) => {
 		setSettings(current => ({
@@ -99,13 +102,15 @@ export const useSettingsProvider = () => {
 		]
 	)
 
+	// Phase 1: Hydrate from localStorage on mount
 	useEffect(() => {
 		setSettings(readSettings())
 		setHydrated(true)
 	}, [])
 
+	// Phase 2: Sync with remote settings after hydration
 	useEffect(() => {
-		if (!remoteSettings || !hydrated) return
+		if (!hydrated || !remoteSettings) return
 
 		void getQueuedSettingsChanges().then(queued => {
 			if (queued) {
@@ -116,10 +121,12 @@ export const useSettingsProvider = () => {
 			setSettings(settingsFromResponse(remoteSettings))
 			setPendingOfflineChanges(false)
 		})
-	}, [remoteSettings, hydrated])
+	}, [hydrated, remoteSettings])
 
+	// Phase 3: Apply settings to DOM after hydration
 	useEffect(() => {
-		if (!hydrated) return
+		if (!hydratedRef.current) return
+
 		writeSettings(settings)
 		setTheme(settings.theme)
 
@@ -143,8 +150,9 @@ export const useSettingsProvider = () => {
 			"--on-secondary-container",
 			accent.onSecondaryContainer
 		)
-	}, [settings, hydrated, setTheme, resolvedTheme])
+	}, [settings, setTheme, resolvedTheme])
 
+	// Cross-tab synchronization
 	useEffect(() => {
 		const handleStorage = (event: StorageEvent) => {
 			if (event.key !== SETTINGS_STORAGE_KEY && event.key !== null) return

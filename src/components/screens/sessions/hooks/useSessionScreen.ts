@@ -1,11 +1,25 @@
 import { useCallback, useState } from "react"
 
+import type { SessionsHttpDtoSessionDTO as Session } from "@/api/generated"
 import { toast, TOAST_ERROR_DURATION } from "@/components/ui/toast"
 import { useHaptic } from "@/libs/haptics"
 import { useDeleteSessions, useSessions } from "@/libs/query/hooks"
+import type { ErrorCatchResult } from "@/libs/utils"
 import { errorCatch } from "@/libs/utils"
 
-export const useSessionScreen = () => {
+interface UseSessionScreenReturn {
+	isOpen: boolean
+	setIsOpen: (state: boolean) => void
+	sessions: Session[] | null
+	currentSession: Session | null
+	isLoading: boolean
+	isFetching: boolean
+	isDeleting: boolean
+	error: ErrorCatchResult | null
+	handleDeleteAllSessions: () => Promise<void>
+}
+
+export const useSessionScreen = (): UseSessionScreenReturn => {
 	const [isOpen, setIsOpen] = useState(false)
 
 	const { sessions, currentSession, isLoading, isFetching, error } =

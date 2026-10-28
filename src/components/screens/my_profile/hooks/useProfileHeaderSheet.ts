@@ -1,3 +1,4 @@
+import type { RefObject } from "react"
 import { useCallback, useRef } from "react"
 
 import {
@@ -9,7 +10,18 @@ import { useDeleteAvatar, useUploadAvatar } from "@/libs/query/hooks"
 import { createIdempotencyKey } from "@/libs/query/idempotency"
 import { errorCatch } from "@/libs/utils"
 
-export const useProfileHeaderSheet = (handleClose: () => void) => {
+interface UseProfileHeaderSheetReturn {
+	inputRef: RefObject<HTMLInputElement | null>
+	handleUpdateClick: () => void
+	handleDeleteAvatar: () => Promise<void>
+	handleUploadAvatar: () => Promise<void>
+	isDeleting: boolean
+	isUploading: boolean
+}
+
+export const useProfileHeaderSheet = (
+	handleClose: () => void
+): UseProfileHeaderSheetReturn => {
 	const inputRef = useRef<HTMLInputElement>(null)
 
 	const { mutateAsync: deleteAvatar, isPending: isDeleting } = useDeleteAvatar()
@@ -68,13 +80,11 @@ export const useProfileHeaderSheet = (handleClose: () => void) => {
 				description: errorCatch(error).message
 			})
 		}
-	}, [inputRef.current, uploadAvatar, handleClose])
+	}, [uploadAvatar, handleClose])
 
 	const handleUpdateClick = useCallback(() => {
-		if (inputRef.current) {
-			inputRef.current?.click()
-		}
-	}, [inputRef.current])
+		inputRef.current?.click()
+	}, [])
 
 	return {
 		inputRef,

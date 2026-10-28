@@ -19,19 +19,17 @@ export const useCacheStats = () => {
 	const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 	const measuringRef = useRef(false)
 
-	const updateQuerySize = useCallback(() => {
+	const measureAndSet = useCallback(() => {
 		setQuerySize(measureQueryClient())
 	}, [])
 
 	useEffect(() => {
-		updateQuerySize()
-
 		const scheduleUpdate = () => {
 			if (timerRef.current) {
 				clearTimeout(timerRef.current)
 			}
 
-			timerRef.current = setTimeout(updateQuerySize, DEBOUNCE_MS)
+			timerRef.current = setTimeout(measureAndSet, DEBOUNCE_MS)
 		}
 
 		const unsubscribeQueries = queryClient
@@ -48,9 +46,10 @@ export const useCacheStats = () => {
 
 			if (timerRef.current) {
 				clearTimeout(timerRef.current)
+				timerRef.current = null
 			}
 		}
-	}, [updateQuerySize])
+	}, [measureAndSet])
 
 	const refreshAll = useCallback(async () => {
 		if (measuringRef.current) return
@@ -61,6 +60,7 @@ export const useCacheStats = () => {
 
 		try {
 			const result = await getCacheStats(queryClient)
+
 			setFullStats(result)
 			setQuerySize(result.queryClient)
 		} catch {

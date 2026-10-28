@@ -1,17 +1,29 @@
 import type { MouseEvent } from "react"
 import { useCallback, useMemo, useState } from "react"
 
-import type { SessionsHttpDtoSessionDtoMetadata } from "@/api/generated"
+import type {
+	SessionsHttpDtoSessionDtoMetadata,
+	SessionsHttpDtoSessionDtoMetadataLocation
+} from "@/api/generated"
 import { toast, TOAST_ERROR_DURATION } from "@/components/ui/toast"
 import { useHaptic } from "@/libs/haptics"
 import { useDeleteSession } from "@/libs/query/hooks"
 import { errorCatch } from "@/libs/utils"
 import { parseDevice } from "@/libs/utils/screens/sessions"
 
+interface UseSessionCardReturn {
+	device: ReturnType<typeof parseDevice>
+	location: SessionsHttpDtoSessionDtoMetadataLocation | undefined
+	isOpen: boolean
+	setIsOpen: (state: boolean) => void
+	handleDelete: (event: MouseEvent<HTMLButtonElement>) => Promise<void>
+	isDeleting: boolean
+}
+
 export const useSessionCard = (
 	id?: string,
 	metadata?: SessionsHttpDtoSessionDtoMetadata
-) => {
+): UseSessionCardReturn => {
 	const location = metadata?.location
 
 	const device = useMemo(
@@ -24,6 +36,12 @@ export const useSessionCard = (
 	const { haptic } = useHaptic()
 	const { mutateAsync, isPending } = useDeleteSession(id ?? "")
 
+	// Guard: prevent mutation execution when id is missing
+	const safeMutateAsync = useCallback(async () => {
+		if (!id) return
+		await mutateAsync()
+	}, [id, mutateAsync])
+
 	const handleDelete = useCallback(
 		async (event: MouseEvent<HTMLButtonElement>) => {
 			event.stopPropagation()
@@ -31,7 +49,7 @@ export const useSessionCard = (
 			if (!id || isPending) return
 
 			try {
-				await mutateAsync()
+				await safeMutateAsync()
 				setIsOpen(false)
 			} catch (error) {
 				haptic("medium")
@@ -42,7 +60,7 @@ export const useSessionCard = (
 				})
 			}
 		},
-		[id, isPending, mutateAsync, haptic]
+		[id, isPending, safeMutateAsync, haptic]
 	)
 
 	const handleOpenChange = useCallback(

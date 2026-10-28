@@ -73,22 +73,19 @@ export const useRequestPatchStatus = (id: string) => {
 		})
 	}, [client])
 
-	const approveMutation = useMutation({
-		mutationFn: () => service.patchRequestsIdApprove(id),
-		onSuccess: refreshRequests,
-		onError: refreshRequests
-	})
-
-	const rejectMutation = useMutation({
-		mutationFn: () => service.patchRequestsIdReject(id),
+	const patchMutation = useMutation({
+		mutationFn: (status: "approve" | "reject") => {
+			if (status === "approve") {
+				return service.patchRequestsIdApprove(id)
+			}
+			return service.patchRequestsIdReject(id)
+		},
 		onSuccess: refreshRequests,
 		onError: refreshRequests
 	})
 
 	return {
-		approve: approveMutation.mutateAsync,
-		reject: rejectMutation.mutateAsync,
-		isApproveLoading: approveMutation.isPending,
-		isRejectLoading: rejectMutation.isPending
+		patchStatus: patchMutation.mutateAsync,
+		isPending: patchMutation.isPending
 	}
 }

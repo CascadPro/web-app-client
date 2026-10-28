@@ -4,7 +4,7 @@ import { type FC, memo } from "react"
 import { Button } from "@/components/ui"
 import { useNavigation } from "@/libs/hooks"
 
-import type { MenuPageItemData } from "../hooks/useMenuPage"
+import { MenuPageItemData } from "../data"
 
 interface Props {
 	item: MenuPageItemData

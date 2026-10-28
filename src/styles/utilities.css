@@ -1,29 +1,29 @@
 @custom-variant pwa {
-  @media (display-mode: standalone) {
-    @slot;
-  }
+	@media (display-mode: standalone) {
+		@slot;
+	}
 }
 
 @utility shine {
-  position: relative;
-  overflow: hidden;
+	position: relative;
+	overflow: hidden;
 
-  &::after {
-    content: "";
-    position: absolute;
-    inset-block: -20%;
-    left: -30%;
-    width: 20%;
-    transform: skewX(-20deg);
+	&::after {
+		content: "";
+		position: absolute;
+		inset-block: -20%;
+		left: -30%;
+		width: 20%;
+		transform: skewX(-20deg);
 
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgb(255 255 255 / 25%),
-      transparent
-    );
+		background: linear-gradient(
+			90deg,
+			transparent,
+			rgb(255 255 255 / 25%),
+			transparent
+		);
 
-    animation: var(--animate-shine);
-    pointer-events: none;
-  }
+		animation: var(--animate-shine);
+		pointer-events: none;
+	}
 }

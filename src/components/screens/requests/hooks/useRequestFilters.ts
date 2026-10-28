@@ -1,10 +1,22 @@
+import type { Dispatch, SetStateAction } from "react"
 import { useCallback, useState } from "react"
 
-import type { DomainRequestStatus } from "@/api/generated"
+import type { DomainRequestStatus, DomainSortType } from "@/api/generated"
 
 import { useRequestContext } from "../requests-context"
 
-export const useRequestFilters = () => {
+interface UseRequestFiltersReturn {
+	sortType: DomainSortType
+	isOpen: boolean
+	isClearDisabled: boolean
+	isActive: (value: DomainRequestStatus) => boolean
+	setIsOpen: Dispatch<SetStateAction<boolean>>
+	toggleStatus: (status: DomainRequestStatus) => void
+	setSortType: (sort: DomainSortType) => void
+	clearFilters: () => void
+}
+
+export const useRequestFilters = (): UseRequestFiltersReturn => {
 	const {
 		statuses,
 		sortType,

@@ -1,10 +1,18 @@
 import { useMemo } from "react"
 
+import type { UsersTransportHttpGetCurrentUserResponse } from "@/api/generated"
 import { useLogout } from "@/libs/hooks/use-logout"
 import { useCurrentUser } from "@/libs/query/hooks"
 import { useAuthStore } from "@/store/auth"
 
-export const useMenuPage = () => {
+interface UseMenuPageReturn {
+	fullname: string
+	user: UsersTransportHttpGetCurrentUserResponse | undefined
+	loading: boolean
+	logout: () => Promise<void>
+}
+
+export const useMenuPage = (): UseMenuPageReturn => {
 	const status = useAuthStore(state => state.status)
 
 	const { data: user } = useCurrentUser()

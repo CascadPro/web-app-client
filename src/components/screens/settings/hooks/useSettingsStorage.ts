@@ -10,7 +10,14 @@ import {
 	SettingsUpdate
 } from "@/types/screens/settings"
 
-export const useSettingsStorage = () => {
+interface UseSettingsStorageReturn {
+	settings: SettingsState
+	hydrated: boolean
+	updateSettings: (patch: Partial<SettingsUpdate>) => void
+	updateNotification: (key: NotificationKey, value: boolean) => void
+}
+
+export const useSettingsStorage = (): UseSettingsStorageReturn => {
 	const [settings, setSettings] = useState<SettingsState>(DEFAULT_SETTINGS)
 	const [hydrated, setHydrated] = useState(false)
 

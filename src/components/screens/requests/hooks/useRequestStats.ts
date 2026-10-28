@@ -12,7 +12,13 @@ interface Stats {
 	onClick: () => void
 }
 
-const useRequestStatsHook = () => {
+interface UseRequestStatsHookReturn {
+	stats: Stats[]
+	reduceMotion: boolean | null
+	isPending: boolean
+}
+
+const useRequestStatsHook = (): UseRequestStatsHookReturn => {
 	const reduceMotion = useReducedMotion()
 
 	const { statistics, isPending } = useRequestStats()

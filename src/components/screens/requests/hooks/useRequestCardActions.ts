@@ -18,12 +18,16 @@ interface Action {
 	loading: boolean
 }
 
+interface UseRequestCardActionsReturn {
+	actions: Action[]
+	disabled: boolean
+}
+
 export const useRequestCardActions = (
 	id: string,
 	handleCollapse: () => void
-) => {
-	const { approve, reject, isApproveLoading, isRejectLoading } =
-		useRequestPatchStatus(id)
+): UseRequestCardActionsReturn => {
+	const { patchStatus, isPending } = useRequestPatchStatus(id)
 
 	const updateStatus = useCallback(
 		async (status: "approve" | "reject") => {
@@ -32,11 +36,7 @@ export const useRequestCardActions = (
 			})
 
 			try {
-				if (status === "approve") {
-					await approve()
-				} else {
-					await reject()
-				}
+				await patchStatus(status)
 
 				toast.update(toastId, {
 					type: "success",
@@ -57,7 +57,7 @@ export const useRequestCardActions = (
 				})
 			}
 		},
-		[approve, reject]
+		[patchStatus]
 	)
 
 	const approveRequest = useCallback(
@@ -83,28 +83,22 @@ export const useRequestCardActions = (
 				key: "approve",
 				title: "Подтвердить",
 				Icon: CheckCircleIcon,
-				loading: isApproveLoading,
+				loading: isPending,
 				onClick: approveRequest
 			},
 			{
 				key: "reject",
 				title: "Отклонить",
 				Icon: XCircleIcon,
-				loading: isRejectLoading,
+				loading: isPending,
 				onClick: rejectRequest
 			}
 		],
-		[
-			handleCollapse,
-			isApproveLoading,
-			isRejectLoading,
-			approveRequest,
-			rejectRequest
-		]
+		[handleCollapse, isPending, approveRequest, rejectRequest]
 	)
 
 	return {
 		actions,
-		disabled: isApproveLoading || isRejectLoading
+		disabled: isPending
 	}
 }

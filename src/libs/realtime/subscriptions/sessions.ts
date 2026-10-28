@@ -7,7 +7,7 @@ import {
 	handleSessionRevoked,
 	handleSessionRevokedAll,
 	handleSessionUpdated
-} from "@/libs/realtime/handlers";
+} from "@/libs/realtime/handlers"
 
 export function subscribeToSessions(
 	client: WebSocketClient,

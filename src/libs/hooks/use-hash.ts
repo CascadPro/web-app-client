@@ -10,9 +10,11 @@ export function useHash() {
 
 		updateHash()
 		window.addEventListener("hashchange", updateHash)
+		window.addEventListener("popstate", updateHash)
 
 		return () => {
 			window.removeEventListener("hashchange", updateHash)
+			window.removeEventListener("popstate", updateHash)
 		}
 	}, [])
 

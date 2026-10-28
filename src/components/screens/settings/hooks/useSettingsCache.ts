@@ -6,7 +6,14 @@ import { SETTINGS_CACHE_PREFIX } from "@/libs/constants/screens/settings"
 import { useCacheStats } from "@/libs/hooks"
 import { queryClient } from "@/libs/query/client"
 
-export const useSettingsCache = () => {
+interface UseSettingsCacheReturn {
+	totalCacheSize: string | undefined
+	isCacheMeasuring: boolean
+	clearing: boolean
+	clearCache: () => Promise<void>
+}
+
+export const useSettingsCache = (): UseSettingsCacheReturn => {
 	const { isMeasuring, querySize } = useCacheStats()
 
 	const [clearing, setClearing] = useState(false)

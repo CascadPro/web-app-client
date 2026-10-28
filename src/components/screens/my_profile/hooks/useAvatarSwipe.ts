@@ -1,6 +1,13 @@
 import { useEffect, useRef, useState } from "react"
 
-export const useAvatarSwipe = (open: boolean, onSwipeAction: () => void) => {
+interface UseAvatarSwipeReturn {
+	translate: number
+}
+
+export const useAvatarSwipe = (
+	open: boolean,
+	onSwipeAction: () => void
+): UseAvatarSwipeReturn => {
 	const startX = useRef(0)
 	const startY = useRef(0)
 
@@ -46,16 +53,16 @@ export const useAvatarSwipe = (open: boolean, onSwipeAction: () => void) => {
 			setTranslate(Math.floor((deltaY / window.innerHeight) * 100))
 		}
 
-		document.addEventListener("touchstart", handleTouchStart)
-		document.addEventListener("touchend", handleTouchEnd)
-		document.addEventListener("touchmove", handleTouchMove)
+		document.addEventListener("touchstart", handleTouchStart, true)
+		document.addEventListener("touchend", handleTouchEnd, true)
+		document.addEventListener("touchmove", handleTouchMove, true)
 
 		return () => {
-			document.removeEventListener("touchstart", handleTouchStart)
-			document.removeEventListener("touchend", handleTouchEnd)
-			document.removeEventListener("touchmove", handleTouchMove)
+			document.removeEventListener("touchstart", handleTouchStart, true)
+			document.removeEventListener("touchend", handleTouchEnd, true)
+			document.removeEventListener("touchmove", handleTouchMove, true)
 		}
 	}, [open, onSwipeAction])
 
-	return translate
+	return { translate }
 }
