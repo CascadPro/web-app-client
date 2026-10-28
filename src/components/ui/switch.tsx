@@ -44,7 +44,7 @@ export const Switch = forwardRef<HTMLButtonElement, SwitchProps>(
 			>
 				<m.span
 					aria-hidden="true"
-					animate={{ x: checked ? 30 : 2 }}
+					animate={{ x: checked ? "1.85rem" : "0.1rem" }}
 					whileTap={{ scale: 1.6 }}
 					transition={
 						reduceMotion

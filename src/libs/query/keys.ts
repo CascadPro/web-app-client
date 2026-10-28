@@ -9,6 +9,12 @@ export const QueryKeys = {
 		byId: (id: string) => [...QueryKeys.users.all, id] as const
 	},
 
+	settings: {
+		all: ["settings"] as const,
+
+		current: () => [...QueryKeys.settings.all, "user"] as const
+	},
+
 	sessions: {
 		all: ["sessions"] as const,
 

@@ -5,7 +5,6 @@ import { JetBrains_Mono, Nunito } from "next/font/google"
 import type { ReactNode } from "react"
 
 import { HapticProvider } from "@/components/providers/haptics"
-import { SettingsContextProvider } from "@/components/providers/settings-provider"
 import { ServiceWorkerRegister } from "@/components/pwa/pwa-service-worker"
 import { PWASplashScreen } from "@/components/pwa/pwa-splash-screen"
 import { ToastViewport } from "@/components/ui/toast/components/toast-viewport"
@@ -51,11 +50,9 @@ export default function Layout({ children }: Readonly<Props>) {
 			<body className={`${font.variable} antialiased`}>
 				<ThemeProvider attribute="class" defaultTheme="system" enableSystem>
 					<LazyMotion features={domAnimation} strict>
-						<SettingsContextProvider>
-							<PWASplashScreen>{children}</PWASplashScreen>
+						<PWASplashScreen>{children}</PWASplashScreen>
 
-							<ToastViewport />
-						</SettingsContextProvider>
+						<ToastViewport />
 					</LazyMotion>
 				</ThemeProvider>
 

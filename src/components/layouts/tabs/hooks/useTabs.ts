@@ -1,5 +1,5 @@
 import { usePathname } from "next/navigation"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useLayoutEffect, useState } from "react"
 
 import { useIsIOS } from "@/libs/hooks"
 
@@ -14,12 +14,12 @@ export const useTabs = (data: TabsData[]) => {
 	const [currentIndex, setCurrentIndex] = useState<number>(-1)
 
 	const onTabClick = useCallback((index: number) => {
-		setScale(1.35)
+		setScale(0.75)
 		setCurrentIndex(index)
 		setTimeout(() => setScale(1), 200)
 	}, [])
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		for (let i = 0; i < data.length; i++) {
 			if (data[i].href === pathname) {
 				setCurrentIndex(i)

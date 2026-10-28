@@ -1,13 +1,22 @@
 import type { LucideIcon } from "lucide-react"
 
-export type ThemePreference = "system" | "light" | "dark"
+import type {
+	AccentPreference,
+	AnimationPreference,
+	DensityPreference,
+	SessionExpireTerm,
+	TextSizePreference,
+	ThemePreference
+} from "@/api/settings"
 
-export type AccentPreference =
-	"orange" | "blue" | "mauve" | "green" | "teal" | "rose"
-
-export type AnimationPreference = "system" | "enabled" | "disabled"
-
-export type DensityPreference = "comfortable" | "compact"
+export type {
+	AccentPreference,
+	AnimationPreference,
+	DensityPreference,
+	SessionExpireTerm,
+	TextSizePreference,
+	ThemePreference
+} from "@/api/settings"
 
 export interface NotificationSettings {
 	requests: boolean
@@ -21,6 +30,10 @@ export interface SettingsState {
 	accent: AccentPreference
 	animations: AnimationPreference
 	density: DensityPreference
+	textSize: TextSizePreference
+	confirmImportantActions: boolean
+	sessionExpireTerm: SessionExpireTerm
+	session2FAEnabled: boolean
 	notifications: NotificationSettings
 }
 
@@ -46,6 +59,8 @@ export interface SettingsNotificationRow {
 export interface SettingsContextValue {
 	settings: SettingsState
 	hydrated: boolean
+	syncing: boolean
+	pendingOfflineChanges: boolean
 	updateSettings: (patch: Partial<SettingsUpdate>) => void
 	updateNotification: (key: NotificationKey, value: boolean) => void
 }
