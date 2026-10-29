@@ -1,4 +1,5 @@
 import type { SessionsHttpDtoSessionDTO } from "@/api/generated"
+import type { UserSettingsResponse } from "@/api/settings"
 
 import { WS_AUTH_EVENTS, WS_EVENTS, type WsEventType } from "./events"
 
@@ -67,6 +68,18 @@ export interface SessionRevokedAllEvent extends WsEvent<SessionRevokedEventData>
 	type: typeof WS_EVENTS.SESSION_REVOKED_ALL
 }
 
+export type SettingsUpdatedEventData = {
+	version: number
+	session_expire_term?: UserSettingsResponse["session_expire_term"]
+	session_2fa_enabled?: boolean
+	preferences?: Partial<UserSettingsResponse["preferences"]>
+	notifications?: Partial<UserSettingsResponse["notifications"]>
+}
+
+export interface SettingsUpdatedEvent extends WsEvent<SettingsUpdatedEventData> {
+	type: typeof WS_EVENTS.SETTINGS_UPDATED
+}
+
 export type WsServerEvent =
 	| PresenceOnlineEvent
 	| PresenceOfflineEvent
@@ -74,6 +87,7 @@ export type WsServerEvent =
 	| SessionUpdatedEvent
 	| SessionRevokedEvent
 	| SessionRevokedAllEvent
+	| SettingsUpdatedEvent
 
 export type WsMessage = WsAuthSuccess | WsAuthError | WsServerEvent
 

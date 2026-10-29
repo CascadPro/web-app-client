@@ -8,7 +8,8 @@ import { QueryKeys } from "@/libs/query/keys"
 import { WebSocketClient } from "@/libs/realtime"
 import {
 	subscribeToPresence,
-	subscribeToSessions
+	subscribeToSessions,
+	subscribeToSettings
 } from "@/libs/realtime/subscriptions"
 
 export function useRealtime() {
@@ -20,19 +21,19 @@ export function useRealtime() {
 		})
 	}, [])
 
-	const subscribe = useCallback(
-		(client: WebSocketClient) => {
-			const unsubscribePresence = subscribeToPresence(client)
+	const subscribe = useCallback((client: WebSocketClient) => {
+		const unsubscribePresence = subscribeToPresence(client)
 
-			const unsubscribeSessions = subscribeToSessions(client, logoutRef.current!)
+		const unsubscribeSessions = subscribeToSessions(client, logoutRef.current!)
 
-			return () => {
-				unsubscribePresence()
-				unsubscribeSessions()
-			}
-		},
-		[]
-	)
+		const unsubscribeSettings = subscribeToSettings(client)
+
+		return () => {
+			unsubscribePresence()
+			unsubscribeSessions()
+			unsubscribeSettings()
+		}
+	}, [])
 
 	// Keep logout ref current to avoid re-creating subscribe
 	const logout = useLogout()

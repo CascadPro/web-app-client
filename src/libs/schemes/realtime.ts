@@ -72,13 +72,45 @@ export const sessionRevokedAllEventScheme = z.object({
 	timestamp: z.iso.datetime().optional()
 })
 
+export const settingsUpdatedEventScheme = z.object({
+	id: z.uuid(),
+	type: z.literal("settings.updated"),
+	data: z.object({
+		version: z.number().int().positive(),
+		session_expire_term: z.string().optional(),
+		session_2fa_enabled: z.boolean().optional(),
+		preferences: z
+			.object({
+				theme: z.string().optional(),
+				accent: z.string().optional(),
+				animations: z.string().optional(),
+				density: z.string().optional(),
+				text_size: z.string().optional(),
+				confirm_important_actions: z.boolean().optional()
+			})
+			.partial()
+			.optional(),
+		notifications: z
+			.object({
+				requests: z.boolean().optional(),
+				sessions: z.boolean().optional(),
+				system: z.boolean().optional(),
+				push: z.boolean().optional()
+			})
+			.partial()
+			.optional()
+	}),
+	timestamp: z.iso.datetime().optional()
+})
+
 export const wsServerEventScheme = z.discriminatedUnion("type", [
 	presenceOnlineEventScheme,
 	presenceOfflineEventScheme,
 	sessionCreatedEventScheme,
 	sessionUpdatedEventScheme,
 	sessionRevokedEventScheme,
-	sessionRevokedAllEventScheme
+	sessionRevokedAllEventScheme,
+	settingsUpdatedEventScheme
 ])
 
 export const wsPongScheme = z.object({

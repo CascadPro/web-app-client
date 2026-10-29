@@ -6,3 +6,5 @@ export {
 	handleSessionRevokedAll,
 	handleSessionUpdated
 } from "./sessions"
+
+export { handleSettingsUpdated } from "./settings"
