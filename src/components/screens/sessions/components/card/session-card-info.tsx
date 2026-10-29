@@ -1,8 +1,7 @@
-import { CheckIcon, CopyIcon, type LucideIcon } from "lucide-react"
+import type { LucideIcon } from "lucide-react"
 import type { FC } from "react"
 
-import { Button } from "@/components/ui"
-import { toast } from "@/components/ui/toast"
+import { CopyIcon } from "@/components/ui/components/copy-icon"
 import { useClipboardCopy } from "@/libs/hooks"
 
 interface Props {
@@ -16,11 +15,7 @@ export const SessionCardInfo: FC<Props> = ({ Icon, value, toCopy }) => {
 
 	const [isCopied, copy] = useClipboardCopy()
 
-	const handleCopy = async () => {
-		await copy(toCopy ?? value)
-
-		toast.info("Текст скопирован!", { miniature: true, duration: 2000 })
-	}
+	const handleCopy = async () => await copy(toCopy ?? value)
 
 	return (
 		<div className="border-outline/40 mb-1 flex min-w-0 items-center justify-between border-b pb-2">
@@ -32,15 +27,7 @@ export const SessionCardInfo: FC<Props> = ({ Icon, value, toCopy }) => {
 				<span className="truncate text-base">{value}</span>
 			</div>
 
-			{toCopy && (
-				<Button
-					variant="ghost"
-					className="text-on-surface-variant active:bg-primary/10 p-1"
-					onClick={handleCopy}
-				>
-					{isCopied ? <CheckIcon size={20} /> : <CopyIcon size={20} />}
-				</Button>
-			)}
+			{toCopy && <CopyIcon isCopied={isCopied} size={20} onCopy={handleCopy} />}
 		</div>
 	)
 }

@@ -1,14 +1,15 @@
+import { useReducedMotion } from "motion/react"
 import type { Dispatch, SetStateAction } from "react"
 import { useCallback, useState } from "react"
 
-import { toast } from "@/components/ui/toast"
 import { useClipboardCopy, useScrollLocked } from "@/libs/hooks"
 
 interface UseProfileHeaderReturn {
+	reduceMotion: boolean | null
 	isModalOpen: boolean
 	isSheetOpen: boolean
 	isCopied: boolean
-	handleCopy: () => Promise<void>
+	handleCopy: (text: string) => Promise<void>
 	handleAvatarClick: () => void
 	handleSheetOpen: () => void
 	handleSheetCloseModal: () => void
@@ -17,23 +18,13 @@ interface UseProfileHeaderReturn {
 }
 
 export const useProfileHeader = (
-	id: string | undefined,
 	avatar?: string | null
 ): UseProfileHeaderReturn => {
+	const reduceMotion = useReducedMotion()
+
 	const [isModalOpen, setIsModalOpen] = useState(false)
 	const [isSheetOpen, setIsSheetOpen] = useState(false)
 	const [isCopied, copyToClipboard] = useClipboardCopy()
-
-	const handleCopy = useCallback(async () => {
-		if (!id) return
-
-		await copyToClipboard(id)
-
-		toast.info("Текст скопирован!", {
-			miniature: true,
-			duration: 2000
-		})
-	}, [id, copyToClipboard])
 
 	const handleAvatarClick = useCallback(() => {
 		if (avatar) {
@@ -54,10 +45,11 @@ export const useProfileHeader = (
 	useScrollLocked(isSheetOpen)
 
 	return {
+		reduceMotion,
 		isModalOpen,
 		isSheetOpen,
 		isCopied,
-		handleCopy,
+		handleCopy: copyToClipboard,
 		handleAvatarClick,
 		handleSheetOpen,
 		handleSheetCloseModal,

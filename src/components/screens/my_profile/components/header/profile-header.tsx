@@ -1,11 +1,12 @@
-import { BadgeCheckIcon, CheckIcon, CopyIcon } from "lucide-react"
+import { BadgeCheckIcon } from "lucide-react"
 import { m } from "motion/react"
 import dynamic from "next/dynamic"
 import type { FC } from "react"
 import { memo } from "react"
 
 import type { DomainUserRole } from "@/api/generated"
-import { Button, Title } from "@/components/ui"
+import { Title } from "@/components/ui"
+import { CopyIcon } from "@/components/ui/components/copy-icon"
 import {
 	UserAvatar,
 	type UserAvatarUser
@@ -41,7 +42,7 @@ const ProfileHeaderComponent: FC<Props> = ({ user, fullname, role, id }) => {
 		handleCopy,
 		handleAvatarClick,
 		handleSheetCloseModal
-	} = useProfileHeader(id, user?.avatar_file_id)
+	} = useProfileHeader(user?.avatar_file_id)
 
 	return (
 		<>
@@ -78,22 +79,22 @@ const ProfileHeaderComponent: FC<Props> = ({ user, fullname, role, id }) => {
 							</span>
 						</div>
 
-						<Button
-							variant="ghost"
-							className="text-on-surface-variant active:bg-primary/10 mt-2 justify-center gap-2 rounded-md p-1 text-sm select-none sm:justify-start"
-							onClick={handleCopy}
-							disabled={!id}
-						>
-							<span className="truncate">
+						<div className="mt-2 flex min-w-0 items-center justify-center gap-1 sm:justify-start">
+							<span className="text-on-surface-variant min-w-0 truncate text-sm select-text">
 								{`ID: ${id ? `${id.slice(0, 20)}...` : "—"}`}
 							</span>
 
-							{isCopied ? (
-								<CheckIcon size={14} className="shrink-0" />
-							) : (
-								<CopyIcon size={14} className="shrink-0" />
-							)}
-						</Button>
+							<CopyIcon
+								isCopied={isCopied}
+								size={14}
+								disabled={!id}
+								onCopy={async () => await handleCopy(id ?? "")}
+							/>
+
+							<span className="sr-only" aria-live="polite">
+								{isCopied ? "ID скопирован" : ""}
+							</span>
+						</div>
 					</div>
 				</div>
 			</m.section>
