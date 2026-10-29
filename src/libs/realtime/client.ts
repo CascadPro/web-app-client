@@ -1,5 +1,12 @@
 import { v4 as uuidv4 } from "uuid"
 
+import type { WsPongSchema } from "@/libs/schemes/realtime"
+import {
+	wsAuthErrorScheme,
+	wsAuthSuccessScheme,
+	wsPongScheme,
+	wsServerEventScheme
+} from "@/libs/schemes/realtime"
 import type { ConnectionMetrics, ConnectionQuality } from "@/types/store"
 
 import { WS_AUTH_EVENTS, WS_HEARTBEAT_EVENTS, type WsEventType } from "./events"
@@ -10,7 +17,6 @@ import type {
 	WsEventHandler,
 	WsServerEvent
 } from "./types"
-import { isWsServerEvent } from "./utils"
 
 interface WebSocketClientOptions {
 	url: string
@@ -237,45 +243,69 @@ export class WebSocketClient {
 	}
 
 	private handleMessage(rawMessage: string): void {
-		let message: unknown
+		let parsed: unknown
 
 		try {
-			message = JSON.parse(rawMessage)
+			parsed = JSON.parse(rawMessage)
 		} catch {
 			return
 		}
 
 		if (
-			typeof message !== "object" ||
-			message === null ||
-			!("type" in message) ||
-			typeof message.type !== "string"
+			typeof parsed !== "object" ||
+			parsed === null ||
+			!("type" in parsed) ||
+			typeof parsed.type !== "string"
 		) {
 			return
 		}
 
-		switch (message.type) {
-			case WS_AUTH_EVENTS.AUTH_SUCCESS:
+		const type = parsed.type
+
+		switch (type) {
+			case WS_AUTH_EVENTS.AUTH_SUCCESS: {
+				const result = wsAuthSuccessScheme.safeParse(parsed)
+
+				if (!result.success) {
+					return
+				}
+
 				this.handleAuthenticated()
 				return
+			}
 
-			case WS_AUTH_EVENTS.AUTH_ERROR:
-				this.handleAuthError(message as WsAuthError)
+			case WS_AUTH_EVENTS.AUTH_ERROR: {
+				const result = wsAuthErrorScheme.safeParse(parsed)
+
+				if (!result.success) {
+					return
+				}
+
+				this.handleAuthError(result.data)
 				return
+			}
 
-			case WS_HEARTBEAT_EVENTS.PONG:
-				this.handleHeartbeatPong(message as WsEvent<undefined>)
+			case WS_HEARTBEAT_EVENTS.PONG: {
+				const result = wsPongScheme.safeParse(parsed)
+
+				if (!result.success) {
+					return
+				}
+
+				this.handleHeartbeatPong(result.data)
 				return
+			}
 
-			default:
-				break
+			default: {
+				const result = wsServerEventScheme.safeParse(parsed)
+
+				if (!result.success) {
+					return
+				}
+
+				this.emit(result.data)
+			}
 		}
-
-		if (!isWsServerEvent(message)) {
-			return
-		}
-
-		this.emit(message)
 	}
 
 	private handleAuthenticated(): void {
@@ -293,7 +323,7 @@ export class WebSocketClient {
 		this.options.onAuthenticated?.()
 	}
 
-	private handleAuthError(_message: WsAuthError): void {
+	private handleAuthError(message: WsAuthError): void {
 		this.authenticated = false
 		this.manuallyClosed = true
 
@@ -309,7 +339,7 @@ export class WebSocketClient {
 		this.options.onDisconnected?.()
 	}
 
-	private handleHeartbeatPong(message: WsEvent<undefined>): void {
+	private handleHeartbeatPong(message: WsPongSchema): void {
 		const sentAt = this.pendingPings.get(message.id)
 
 		if (sentAt === undefined) {

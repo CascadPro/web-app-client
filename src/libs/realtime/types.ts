@@ -22,7 +22,7 @@ export interface WsAuthError {
 	type: typeof WS_AUTH_EVENTS.AUTH_ERROR
 	code: string
 	message: string
-	timestamp: number
+	timestamp: string
 }
 
 export interface PresenceEventData {
