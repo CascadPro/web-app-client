@@ -1,6 +1,7 @@
-import { useReducedMotion } from "motion/react"
 import { usePathname, useSearchParams } from "next/navigation"
 import { useCallback, useEffect, useRef, useState } from "react"
+
+import { useReduceMotion } from "@/libs/motion"
 
 const NAVIGATION_TIMEOUT = 10_000
 const SLOW_NAVIGATION_DELAY = 800
@@ -8,7 +9,7 @@ const SLOW_NAVIGATION_DELAY = 800
 export const useNavigationProgress = () => {
 	const pathname = usePathname()
 	const searchParams = useSearchParams()
-	const reducedMotion = useReducedMotion()
+	const reducedMotion = useReduceMotion()
 
 	const [isLoading, setIsLoading] = useState(false)
 	const [isSlow, setIsSlow] = useState(false)

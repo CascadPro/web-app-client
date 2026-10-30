@@ -1,10 +1,11 @@
 "use client"
 
 import type { LucideIcon } from "lucide-react"
-import { m, useReducedMotion } from "motion/react"
+import { m } from "motion/react"
 import type { FC, PropsWithChildren } from "react"
 
 import { Title } from "@/components/ui"
+import { useReduceMotion } from "@/libs/motion"
 import { cn } from "@/libs/utils"
 
 interface Props extends PropsWithChildren {
@@ -25,7 +26,7 @@ export const Section: FC<Props> = ({
 	renderContainer = true,
 	children
 }) => {
-	const reduceMotion = useReducedMotion()
+	const reduceMotion = useReduceMotion()
 
 	return (
 		<m.section

@@ -1,12 +1,13 @@
-import { useReducedMotion } from "motion/react"
 import { useEffect, useState } from "react"
+
+import { useReduceMotion } from "@/libs/motion"
 
 import { toast } from "../toast"
 import type { ToastData, ToastPosition } from "../types"
 
 export const useToastViewport = () => {
 	const [items, setItems] = useState<ToastData[]>([])
-	const reduceMotion = useReducedMotion()
+	const reduceMotion = useReduceMotion()
 
 	useEffect(() => toast.subscribe(setItems), [])
 

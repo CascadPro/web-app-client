@@ -2,11 +2,12 @@ import type { MotionValue } from "motion/react"
 import {
 	animate,
 	useMotionValue,
-	useReducedMotion,
 	useTransform
 } from "motion/react"
 import type { RefObject } from "react"
 import { useCallback, useLayoutEffect, useRef, useState } from "react"
+
+import { useReduceMotion } from "@/libs/motion"
 
 const LEADING = { type: "spring", stiffness: 600, damping: 36 } as const
 const TRAILING = { type: "spring", stiffness: 160, damping: 24 } as const
@@ -25,7 +26,7 @@ export const useSegmentedControl = <T>(
 	value: T,
 	options: unknown[]
 ): UseSegmentedControlReturn => {
-	const reduceMotion = useReducedMotion()
+	const reduceMotion = useReduceMotion()
 
 	const containerRef = useRef<HTMLFieldSetElement>(null)
 	const itemRefs = useRef(new Map<T, HTMLButtonElement>())

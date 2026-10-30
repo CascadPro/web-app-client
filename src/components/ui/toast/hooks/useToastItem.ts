@@ -1,11 +1,12 @@
-import { useReducedMotion } from "motion/react"
 import { useCallback, useEffect, useState } from "react"
+
+import { useReduceMotion } from "@/libs/motion"
 
 import { toast } from "../toast"
 import { ToastData } from "../types"
 
 export const useToastItem = (item: ToastData) => {
-	const reduceMotion = useReducedMotion()
+	const reduceMotion = useReduceMotion()
 
 	const [remaining, setRemaining] = useState(item.duration ?? 0)
 	const [paused, setPaused] = useState(false)

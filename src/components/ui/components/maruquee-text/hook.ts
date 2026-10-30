@@ -1,10 +1,11 @@
 import {
 	type Easing,
 	useAnimationControls,
-	useInView,
-	useReducedMotion
+	useInView
 } from "motion/react"
 import { useCallback, useEffect, useRef, useState } from "react"
+
+import { useReduceMotion } from "@/libs/motion"
 
 import type { MarqueeTextOptions } from "./types"
 
@@ -23,7 +24,7 @@ export const useMarqueeText = ({
 	const controls = useAnimationControls()
 	const isInView = useInView(containerRef, { amount: 0.6 })
 
-	const shouldReduceMotion = useReducedMotion()
+	const shouldReduceMotion = useReduceMotion()
 
 	const [distance, setDistance] = useState(0)
 	const [isMobile, setIsMobile] = useState(false)

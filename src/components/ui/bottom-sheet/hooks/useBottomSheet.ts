@@ -1,7 +1,7 @@
-import { useReducedMotion } from "motion/react"
 import { useCallback, useEffect, useId, useRef, useState } from "react"
 
 import { useScrollLocked } from "@/libs/hooks"
+import { useReduceMotion } from "@/libs/motion"
 
 import type { BottomSheetProps } from "../types"
 
@@ -18,7 +18,7 @@ export const useBottomSheet = (
 
 	const panelRef = useRef<HTMLDivElement>(null)
 	const titleId = useId()
-	const reducedMotion = useReducedMotion() === true
+	const reducedMotion = useReduceMotion() === true
 
 	const close = useCallback(() => {
 		onChange(false)

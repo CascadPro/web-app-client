@@ -4,6 +4,7 @@ import { useCallback, useRef, useState } from "react"
 
 import { AppRoutes } from "@/libs/constants"
 import { useIsIOS, useNavigation } from "@/libs/hooks"
+import { useReduceMotion } from "@/libs/motion"
 
 const paths = {
 	[AppRoutes.MY_PROFILE]: "Мой профиль",
@@ -17,6 +18,8 @@ const BACK_ANIMATION_MS = 300
 export const useNestedHeader = () => {
 	const pathname = usePathname()
 	const { back } = useNavigation()
+
+	const reduceMotion = useReduceMotion()
 
 	const isIOS = useIsIOS()
 
@@ -44,5 +47,5 @@ export const useNestedHeader = () => {
 
 	const Icon = isIOS ? ChevronLeftIcon : MoveLeftIcon
 
-	return { Icon, title, handleBack, isIOS, isActive }
+	return { Icon, title, handleBack, reduceMotion, isIOS, isActive }
 }

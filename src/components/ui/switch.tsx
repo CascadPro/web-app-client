@@ -1,8 +1,9 @@
 "use client"
 
-import { m, useReducedMotion } from "motion/react"
+import { m } from "motion/react"
 import { type ButtonHTMLAttributes, forwardRef, type MouseEvent } from "react"
 
+import { useReduceMotion } from "@/libs/motion"
 import { cn } from "@/libs/utils"
 
 export interface SwitchProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -17,7 +18,7 @@ export const Switch = forwardRef<HTMLButtonElement, SwitchProps>(
 		{ checked, onCheckedChange, isLoading, disabled, label, onClick, ...props },
 		ref
 	) => {
-		const reduceMotion = useReducedMotion()
+		const reduceMotion = useReduceMotion()
 
 		const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
 			onCheckedChange(!checked)

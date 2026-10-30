@@ -1,14 +1,14 @@
-import { useReducedMotion } from "motion/react"
 import { useCallback, useEffect, useRef } from "react"
 
 import { useScrollLocked } from "@/libs/hooks"
+import { useReduceMotion } from "@/libs/motion"
 
 export const useModal = (
 	isOpen: boolean,
 	onOpenChange: (open: boolean) => void,
 	closeOnEscape = true
 ) => {
-	const reducedMotion = useReducedMotion() === true
+	const reducedMotion = useReduceMotion() === true
 
 	const previousActiveElement = useRef<HTMLElement | null>(null)
 

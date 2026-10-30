@@ -1,7 +1,7 @@
-import { useReducedMotion } from "motion/react"
 import { usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
 
+import { useReduceMotion } from "@/libs/motion"
 import { useAppReadinessStore } from "@/store/app-readiness"
 import { useAuthStore } from "@/store/auth"
 
@@ -20,7 +20,7 @@ export const usePWASplashScreen = () => {
 	const pathname = usePathname()
 	const status = useAuthStore(state => state.status)
 	const queryRestored = useAppReadinessStore(state => state.queryRestored)
-	const reduceMotion = useReducedMotion()
+	const reduceMotion = useReduceMotion()
 
 	const [clientMounted, setClientMounted] = useState(false)
 	const [dismissed, setDismissed] = useState(false)

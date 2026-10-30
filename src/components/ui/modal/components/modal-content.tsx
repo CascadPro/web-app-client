@@ -1,8 +1,9 @@
 "use client"
 
-import { type HTMLMotionProps, m, useReducedMotion } from "motion/react"
+import { type HTMLMotionProps, m } from "motion/react"
 import { memo, type ReactNode } from "react"
 
+import { useReduceMotion } from "@/libs/motion"
 import { cn } from "@/libs/utils"
 
 import { useModalContent } from "../hooks/useModalContent"
@@ -19,7 +20,7 @@ const ModalContentComponent = memo(function ModalContent({
 	onFocus,
 	...props
 }: Readonly<ModalContentProps>) {
-	const reducedMotion = useReducedMotion() === true
+	const reducedMotion = useReduceMotion() === true
 	const { contentRef, handleFocus } = useModalContent(onFocus)
 
 	return (

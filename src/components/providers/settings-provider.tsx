@@ -8,6 +8,7 @@ import {
 	useContext
 } from "react"
 
+import { MotionPreferenceProvider } from "@/libs/motion"
 import { SettingsContextValue } from "@/types/screens/settings"
 
 import { useSettingsProvider } from "./hooks/useSettingsProvider"
@@ -21,9 +22,11 @@ export const SettingsContextProvider: FC<PropsWithChildren> = ({
 
 	return (
 		<SettingsContext.Provider value={contextValue}>
-			<MotionConfig reducedMotion={reduceMotion ? "always" : "never"}>
-				{children}
-			</MotionConfig>
+			<MotionPreferenceProvider value={reduceMotion}>
+				<MotionConfig reducedMotion={reduceMotion ? "always" : "never"}>
+					{children}
+				</MotionConfig>
+			</MotionPreferenceProvider>
 		</SettingsContext.Provider>
 	)
 }

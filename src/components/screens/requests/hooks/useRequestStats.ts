@@ -1,7 +1,7 @@
-import { useReducedMotion } from "motion/react"
 import { useCallback, useEffect, useMemo, useRef } from "react"
 
 import { DomainRequestStatus } from "@/api/generated"
+import { useReduceMotion } from "@/libs/motion"
 import { useRequestStats } from "@/libs/query/hooks/use-requests"
 
 import { useRequestContext } from "../requests-context"
@@ -19,7 +19,7 @@ interface UseRequestStatsHookReturn {
 }
 
 const useRequestStatsHook = (): UseRequestStatsHookReturn => {
-	const reduceMotion = useReducedMotion()
+	const reduceMotion = useReduceMotion()
 
 	const { statistics, isPending } = useRequestStats()
 	const { setStatuses } = useRequestContext()
