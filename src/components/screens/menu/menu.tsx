@@ -2,7 +2,13 @@
 
 import { LogOutIcon } from "lucide-react"
 
-import { Button, Container, Separator } from "@/components/ui"
+import {
+	Button,
+	Container,
+	Separator,
+	Stagger,
+	StaggerItem
+} from "@/components/ui"
 
 import { MenuItem } from "./components/menu-item"
 import { ProfileBadge } from "./components/profile-badge"
@@ -17,27 +23,35 @@ export const MenuScreen = () => {
 			<ProfileBadge
 				fullname={fullname}
 				role={user?.role ?? ""}
-				avararUrl={user?.avatar_file_id}
+				avatarUrl={user?.avatar_file_id}
 				avatarHash={user?.avatar_placeholder}
 				loading={loading}
 			/>
 
-			<div className="mt-10 flex flex-col gap-5">
+			<Stagger
+				className="mt-10 flex flex-col gap-5"
+				stagger={0.045}
+				delay={0.05}
+			>
 				{MENU_ITEMS_DATA.map(item => (
-					<MenuItem key={String(item.href)} item={item} />
+					<StaggerItem key={String(item.href)}>
+						<MenuItem item={item} />
+					</StaggerItem>
 				))}
 
 				<Separator type="horizontal" className="bg-secondary my-4" />
 
-				<Button
-					variant="destructive-outline"
-					className="w-full items-center justify-start gap-2 p-3"
-					onClick={logout}
-				>
-					<LogOutIcon size={24} />
-					Выйти из системы
-				</Button>
-			</div>
+				<StaggerItem>
+					<Button
+						variant="destructive-outline"
+						className="w-full items-center justify-start gap-2 p-3"
+						onClick={logout}
+					>
+						<LogOutIcon size={24} />
+						Выйти из системы
+					</Button>
+				</StaggerItem>
+			</Stagger>
 		</Container>
 	)
 }
