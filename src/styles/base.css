@@ -34,6 +34,14 @@ a {
 	cursor: pointer;
 }
 
+/* В @layer base, чтобы utility-классы Tailwind (focus-visible:outline-none и т.п.) побеждали */
+@layer base {
+	:where(a, button, input, textarea, select, summary, [role="switch"], [tabindex]):focus-visible {
+		outline: 2px solid var(--primary);
+		outline-offset: 2px;
+	}
+}
+
 kbd {
 	font-weight: 400;
 	font-size: var(--text-sm);

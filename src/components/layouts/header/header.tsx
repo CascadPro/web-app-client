@@ -1,5 +1,6 @@
 "use client"
 
+import { m } from "motion/react"
 import { memo } from "react"
 
 import { Button, Title } from "@/components/ui"
@@ -8,7 +9,8 @@ import { cn } from "@/libs/utils"
 import { useNestedHeader } from "./hook"
 
 export const NestedHeader = memo(() => {
-	const { Icon, title, isActive, isIOS, handleBack } = useNestedHeader()
+	const { Icon, title, isActive, reduceMotion, isIOS, handleBack } =
+		useNestedHeader()
 
 	return (
 		<header className="fixed inset-x-0 top-0 z-50 pt-[env(safe-area-inset-top)]">
@@ -37,12 +39,20 @@ export const NestedHeader = memo(() => {
 					/>
 				</Button>
 
-				<Title
-					size="xl"
-					className={cn("text-xl", { "w-full text-center": isIOS })}
+				<m.div
+					key={title}
+					className={cn("min-w-0", { "w-full": isIOS })}
+					initial={reduceMotion ? false : { opacity: 0, y: 6 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
 				>
-					{title}
-				</Title>
+					<Title
+						size="xl"
+						className={cn("text-xl", { "w-full text-center": isIOS })}
+					>
+						{title}
+					</Title>
+				</m.div>
 			</div>
 		</header>
 	)

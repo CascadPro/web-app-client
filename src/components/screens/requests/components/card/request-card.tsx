@@ -1,7 +1,7 @@
 import { m } from "motion/react"
 import dynamic from "next/dynamic"
-import type { FC } from "react"
-import { memo } from "react"
+import type { FC, Ref } from "react"
+import { memo, useCallback } from "react"
 
 import type { RequestHttpDtoGetRequestsResponseRequest as Request } from "@/api/generated"
 import { MarqueeText } from "@/components/ui/components/maruquee-text/marquee-text"
@@ -32,9 +32,11 @@ const DynamicRequestCardDetails = dynamic(
 
 interface Props {
 	request: Request
+	/** Нужен AnimatePresence (mode="popLayout") для измерения уходящей карточки */
+	ref?: Ref<HTMLElement>
 }
 
-const RequestCardComponent: FC<Props> = ({ request }) => {
+const RequestCardComponent: FC<Props> = ({ request, ref: forwardedRef }) => {
 	const {
 		ref,
 		progress,
@@ -49,6 +51,17 @@ const RequestCardComponent: FC<Props> = ({ request }) => {
 		handleClickOutside
 	} = useRequestCard(request)
 
+	// Внутренний ref нужен хуку для измерений, внешний — AnimatePresence
+	const setRefs = useCallback(
+		(node: HTMLElement | null) => {
+			ref.current = node
+
+			if (typeof forwardedRef === "function") forwardedRef(node)
+			else if (forwardedRef) forwardedRef.current = node
+		},
+		[ref, forwardedRef]
+	)
+
 	return (
 		<>
 			<DynamicRequestCardOverlay
@@ -57,11 +70,12 @@ const RequestCardComponent: FC<Props> = ({ request }) => {
 			/>
 
 			<m.article
-				ref={ref}
+				ref={setRefs}
 				layout
 				initial={{ opacity: 0, y: 15, scale: 0.98 }}
 				whileInView={{ opacity: 1, scale: 1 }}
 				viewport={{ once: true, amount: "some" }}
+				exit={{ opacity: 0, scale: 0.96 }}
 				whileTap={isSelected ? undefined : { scale: 0.98 }}
 				animate={{
 					y: isSelected ? selectedY : 0,
@@ -113,12 +127,20 @@ const RequestCardComponent: FC<Props> = ({ request }) => {
 								<span>{progress}%</span>
 							</div>
 
-							<div className="bg-outline/20 h-1.5 overflow-hidden rounded-full">
+							<div
+								role="progressbar"
+								aria-label="Заполнение"
+								aria-valuemin={0}
+								aria-valuemax={100}
+								aria-valuenow={progress}
+								className="bg-outline/20 h-1.5 overflow-hidden rounded-full"
+							>
+								{/* transform вместо width: не вызывает layout на каждом кадре */}
 								<m.div
 									initial={false}
-									animate={{ width: `${progress}%` }}
+									animate={{ x: `${progress - 100}%` }}
 									transition={{ duration: 0.4, ease: "easeOut" }}
-									className="bg-primary h-full rounded-full"
+									className="bg-primary h-full w-full rounded-full"
 								/>
 							</div>
 						</div>

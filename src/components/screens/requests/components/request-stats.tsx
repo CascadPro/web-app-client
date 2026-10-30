@@ -28,6 +28,7 @@ const RequestsStatsComponent = () => {
 							/>
 						) : (
 							<m.span
+								key={stat.value}
 								initial={reduceMotion ? false : { y: 15, opacity: 0 }}
 								animate={{ y: 0, opacity: 1 }}
 								transition={{ type: reduceMotion ? false : "tween" }}

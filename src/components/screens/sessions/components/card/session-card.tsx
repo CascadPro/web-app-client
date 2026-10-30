@@ -1,7 +1,7 @@
 import { MoreVerticalIcon } from "lucide-react"
 import { m } from "motion/react"
 import dynamic from "next/dynamic"
-import type { FC } from "react"
+import type { FC, Ref } from "react"
 import { memo } from "react"
 
 import type { SessionsHttpDtoSessionDTO } from "@/api/generated"
@@ -23,12 +23,15 @@ interface Props {
 	session: SessionsHttpDtoSessionDTO | null
 	current?: boolean
 	index?: number
+	/** Нужен AnimatePresence (mode="popLayout") для измерения уходящей карточки */
+	ref?: Ref<HTMLElement>
 }
 
 const SessionCardComponent: FC<Props> = ({
 	session,
 	current = false,
-	index = 0
+	index = 0,
+	ref
 }) => {
 	const { location, device, isOpen, setIsOpen, handleDelete, isDeleting } =
 		useSessionCard(session?.id, session?.metadata)
@@ -47,7 +50,9 @@ const SessionCardComponent: FC<Props> = ({
 	return (
 		<>
 			<m.article
+				ref={ref}
 				layout={!current}
+				whileTap={isDeleting ? undefined : { scale: 0.985 }}
 				initial={{ opacity: 0, y: 12 }}
 				animate={{ opacity: 1, y: 0 }}
 				exit={{ opacity: 0, y: 12 }}

@@ -25,7 +25,7 @@ const MotionSkeleton: FC<HTMLMotionProps<"div">> = ({
 	return (
 		<m.div
 			className={cn(
-				"bg-muted/40 animate-pulse rounded-md motion-reduce:animate-none",
+				"bg-on-background/20 animate-pulse rounded-md motion-reduce:animate-none",
 				className
 			)}
 			{...props}

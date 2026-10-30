@@ -25,11 +25,22 @@ const LinkUI: Type = ({
 	const newHref = asAnchor ? `#${href}` : href
 
 	return (
-		<Link href={newHref} className={cn("inline-flex", className)} {...props}>
+		<Link
+			href={newHref}
+			className={cn(
+				"group inline-flex transition-opacity will-change-auto active:opacity-70 motion-reduce:transition-none",
+				className
+			)}
+			{...props}
+		>
 			{children}
 			{isOutside && (
 				<span className="inline-flex">
-					<ArrowUpRightIcon size={14} className="" />
+					<ArrowUpRightIcon
+						aria-hidden="true"
+						size={14}
+						className="transition-transform will-change-auto group-hover:translate-x-0.5 group-hover:-translate-y-0.5 motion-reduce:transition-none"
+					/>
 				</span>
 			)}
 		</Link>
