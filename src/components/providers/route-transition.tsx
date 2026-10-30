@@ -1,92 +1,42 @@
 "use client"
 
-import {
-	AnimatePresence,
-	m,
-	useIsPresent,
-	useReducedMotion
-} from "motion/react"
-import { LayoutRouterContext } from "next/dist/shared/lib/app-router-context.shared-runtime"
+import { m } from "motion/react"
 import { usePathname } from "next/navigation"
-import {
-	type FC,
-	type PropsWithChildren,
-	useContext,
-	useLayoutEffect,
-	useRef
-} from "react"
+import { type FC, type PropsWithChildren, useEffect, useRef } from "react"
 
-import { useSettingsContext } from "@/components/providers/settings-provider"
+import { EASE_OUT, useReduceMotion } from "@/libs/motion"
 
 interface Props extends PropsWithChildren {}
 
-const RouteTransitionContent: FC<Props> = ({ children }) => {
-	const isPresent = useIsPresent()
-	const routerContext = useContext(LayoutRouterContext)
-	const previousContext = useRef(routerContext)
+/**
+ * Анимация входа новой страницы. Ключ — pathname, поэтому контент
+ * перемонтируется при навигации.
+ *
+ * Раньше здесь была анимация выхода через внутренний LayoutRouterContext из
+ * next/dist — он не входит в публичный API и может сломаться при обновлении Next.
+ * Теперь только вход (opacity + y), без внутренних импортов.
+ */
+export const RouteTransitionProvider: FC<Props> = ({ children }) => {
+	const pathname = usePathname()
+	const reduceMotion = useReduceMotion()
 
-	useLayoutEffect(() => {
-		if (isPresent) {
-			previousContext.current = routerContext
-		}
-	}, [isPresent, routerContext])
+	// Первую загрузку не анимируем — страницу уже закрывает сплеш
+	const isFirstRender = useRef(true)
 
-	return (
-		<LayoutRouterContext.Provider
-			value={isPresent ? routerContext : previousContext.current}
-		>
-			<div
-				inert={!isPresent}
-				style={{
-					pointerEvents: isPresent ? "auto" : "none"
-				}}
-			>
-				{children}
-			</div>
-		</LayoutRouterContext.Provider>
-	)
-}
-
-const RouteTransition: FC<Props> = ({ children }) => {
-	const systemReducedMotion = useReducedMotion()
-	const { settings } = useSettingsContext()
-
-	const reduceMotion =
-		settings.animations === "disabled" ||
-		(settings.animations !== "enabled" && Boolean(systemReducedMotion))
+	useEffect(() => {
+		isFirstRender.current = false
+	}, [])
 
 	return (
 		<m.div
-			initial={reduceMotion ? false : "hidden"}
-			animate="visible"
-			exit="exit"
-			variants={{
-				hidden: { opacity: 0, scale: 0.97 },
-				visible: { opacity: 1, scale: 1 },
-				exit: { opacity: 0, y: 8, scale: 0.97 }
-			}}
-			transition={{
-				opacity: {
-					duration: reduceMotion ? 0 : 0.16,
-					ease: "easeOut"
-				},
-				y: {
-					duration: reduceMotion ? 0 : 0.2,
-					ease: [0.22, 1, 0.36, 1]
-				}
-			}}
+			key={pathname}
+			initial={
+				reduceMotion || isFirstRender.current ? false : { opacity: 0, y: 8 }
+			}
+			animate={{ opacity: 1, y: 0 }}
+			transition={{ duration: 0.2, ease: EASE_OUT }}
 		>
-			<RouteTransitionContent>{children}</RouteTransitionContent>
+			{children}
 		</m.div>
-	)
-}
-
-export const RouteTransitionProvider: FC<Props> = ({ children }) => {
-	const pathname = usePathname()
-
-	return (
-		<AnimatePresence mode="wait" initial={false}>
-			<RouteTransition key={pathname}>{children}</RouteTransition>
-		</AnimatePresence>
 	)
 }
