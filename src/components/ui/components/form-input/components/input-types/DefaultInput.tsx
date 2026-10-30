@@ -1,4 +1,4 @@
-import type { FC, PropsWithChildren } from "react"
+import { type FC, type PropsWithChildren, useId } from "react"
 
 import { Input, Skeleton } from "@/components/ui"
 import { cn } from "@/libs/utils"
@@ -16,12 +16,16 @@ const DefaultInput: FC<PropsWithChildren<FormDefaultInputProps>> = ({
 	className,
 	isLoading,
 	label,
+	errorId,
 	children,
 	...props
 }) => {
+	const labelId = useId()
+
 	const {
 		clear,
 		clearError,
+		error,
 		isPassword,
 		isShowPassword,
 		onInput,
@@ -50,6 +54,9 @@ const DefaultInput: FC<PropsWithChildren<FormDefaultInputProps>> = ({
 				placeholder={placeholder}
 				type={type}
 				disabled={props?.disabled || isLoading}
+				aria-invalid={error ? true : undefined}
+				aria-describedby={error ? errorId : props["aria-describedby"]}
+				aria-labelledby={label ? labelId : props["aria-labelledby"]}
 				{...register(name, { onChange: clearError })}
 			/>
 
@@ -63,7 +70,11 @@ const DefaultInput: FC<PropsWithChildren<FormDefaultInputProps>> = ({
 
 			{props.required && <span className={styles["required"]}>*</span>}
 
-			{label && <span className={styles["label"]}>{label}</span>}
+			{label && (
+				<span id={labelId} className={styles["label"]}>
+					{label}
+				</span>
+			)}
 
 			{children}
 

@@ -1,7 +1,7 @@
 "use client"
 
 import { AnimatePresence } from "motion/react"
-import type { FC, PropsWithChildren } from "react"
+import { type FC, type PropsWithChildren, useId } from "react"
 
 import { cn } from "@/libs/utils"
 
@@ -26,6 +26,8 @@ const FormInput: FC<PropsWithChildren<FormInputProps>> = ({
 	...props
 }) => {
 	const { error, input_type } = useFormInput(name)
+	const id = useId()
+	const errorId = `${id}-error`
 
 	return (
 		<div className={cn(styles["wrapper"], containerClassName)}>
@@ -35,6 +37,7 @@ const FormInput: FC<PropsWithChildren<FormInputProps>> = ({
 					setMask={setMask}
 					clearBtnClassName={clearBtnClassName}
 					isLoading={isLoading}
+					errorId={errorId}
 					{...props}
 				/>
 			)}
@@ -43,6 +46,7 @@ const FormInput: FC<PropsWithChildren<FormInputProps>> = ({
 				<DefaultTextarea
 					clearBtnClassName={clearBtnClassName}
 					isLoading={isLoading}
+					errorId={errorId}
 					{...textareaProps}
 					name={name}
 					label={props.label}
@@ -54,6 +58,7 @@ const FormInput: FC<PropsWithChildren<FormInputProps>> = ({
 			<AnimatePresence>
 				{error && (
 					<ErrorText
+						id={errorId}
 						error={error as string}
 						className={cn(
 							"absolute -bottom-4 px-1.5 text-sm leading-3",

@@ -22,6 +22,7 @@ export const useFormDefaultTextarea = (name: FormInputFieldNames) => {
 		onInput,
 		clear,
 		clearError,
+		error,
 		register,
 		value
 	}

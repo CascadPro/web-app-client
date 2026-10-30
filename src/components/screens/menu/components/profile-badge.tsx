@@ -9,7 +9,7 @@ import {
 import { cn, roleName } from "@/libs/utils"
 
 interface Props {
-	avararUrl?: string
+	avatarUrl?: string
 	avatarHash?: string
 	fullname: string
 	role: DomainUserRole
@@ -21,7 +21,7 @@ const ProfileBadgeComponent: FC<Props> = ({
 	size = "md",
 	fullname,
 	role,
-	avararUrl,
+	avatarUrl: avararUrl,
 	avatarHash,
 	loading
 }) => {

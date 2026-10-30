@@ -18,6 +18,7 @@ export const Separator: FC<Props> = ({
 				type === "horizontal" ? "h-px w-full" : "h-full w-px",
 				className
 			)}
-		></div>
+			{...props}
+		/>
 	)
 }

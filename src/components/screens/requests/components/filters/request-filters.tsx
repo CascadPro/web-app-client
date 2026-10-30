@@ -70,6 +70,7 @@ const RequestFiltersComponent: FC<Props> = ({ isLoading }) => {
 						<Button
 							key={status.value}
 							variant="outline"
+							aria-pressed={isActive(status.value)}
 							onClick={() => toggleStatus(status.value)}
 							disabled={isLoading}
 							className={cn("p-2", {

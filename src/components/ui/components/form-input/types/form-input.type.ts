@@ -33,6 +33,8 @@ export interface FormDefaultInputProps extends InputHTMLAttributes<HTMLInputElem
 	clearBtnClassName?: string
 	setMask?: FormInputSetMask
 	isLoading?: boolean
+	/** id сообщения об ошибке — для aria-describedby */
+	errorId?: string
 }
 
 export interface FormDefaultTextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
@@ -41,4 +43,6 @@ export interface FormDefaultTextareaProps extends TextareaHTMLAttributes<HTMLTex
 	label?: string
 	clearBtnClassName?: string
 	isLoading?: boolean
+	/** id сообщения об ошибке — для aria-describedby */
+	errorId?: string
 }

@@ -57,6 +57,7 @@ export const useFormDefaultInput = (
 		showPassword,
 		clear,
 		clearError,
+		error,
 		register,
 		value
 	}

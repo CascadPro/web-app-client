@@ -25,6 +25,7 @@ const TabsComponent: FC<Props> = ({ data }) => {
 
 	return (
 		<nav
+			aria-label="Основная навигация"
 			className={cn("fixed z-50 flex", {
 				"glass pwa:bottom-4 bottom-2 left-1/2 min-h-14 w-fit -translate-x-1/2 gap-1 rounded-4xl p-1":
 					isIOS,

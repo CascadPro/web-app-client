@@ -6,7 +6,7 @@ import { type ButtonHTMLAttributes, forwardRef } from "react"
 import { cn } from "@/libs/utils"
 
 const buttonVariants = cva(
-	"relative inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm motion-reduce:transition-none transition-all will-change-auto [&_svg]:pointer-events-none [&_svg]:select-none disabled:opacity-50! disabled:cursor-not-allowed disabled:pointer-events-none",
+	"relative inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm motion-reduce:transition-none transition-all will-change-auto active:scale-[.97] [&_svg]:pointer-events-none [&_svg]:select-none disabled:opacity-50! disabled:cursor-not-allowed disabled:pointer-events-none",
 	{
 		variants: {
 			variant: {
@@ -42,32 +42,46 @@ export interface ButtonProps
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 	({ className, variant, isLoading, children, href, ...props }, ref) => {
-		let content: React.ReactNode
-
-		if (isLoading) {
-			content = (
-				<Loader2Icon className="h-5 w-5 animate-spin motion-reduce:animate-none" />
-			)
-		} else if (href) {
-			content = (
-				<Link href={href} className="h-full w-full">
-					{children}
-				</Link>
-			)
-		} else {
-			content = children
-		}
+		const content = href ? (
+			<Link href={href} className="h-full w-full">
+				{children}
+			</Link>
+		) : (
+			children
+		)
 
 		return (
 			<button
 				className={cn(buttonVariants({ variant, className }))}
 				type="button"
 				ref={ref}
-				disabled={isLoading || props.disabled}
 				{...props}
+				disabled={isLoading || props.disabled}
+				aria-busy={isLoading || undefined}
 				data-loading={isLoading}
 			>
-				{content}
+				{isLoading ? (
+					<>
+						{/* Контент остаётся в потоке, поэтому ширина кнопки не «прыгает» */}
+						<span
+							aria-hidden="true"
+							className="invisible inline-flex items-center justify-center"
+						>
+							{content}
+						</span>
+
+						<span className="animate-pop absolute inset-0 grid place-items-center">
+							<Loader2Icon
+								aria-hidden="true"
+								className="h-5 w-5 animate-spin motion-reduce:animate-none"
+							/>
+
+							<span className="sr-only">Загрузка</span>
+						</span>
+					</>
+				) : (
+					content
+				)}
 			</button>
 		)
 	}

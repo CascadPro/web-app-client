@@ -34,6 +34,7 @@ const TabsItemComponent: FC<Props> = ({
 	return (
 		<Button
 			variant="ghost"
+			aria-current={active ? "page" : undefined}
 			className={cn("flex-1 flex-col active:scale-90", {
 				"hover:bg-primary/10 text-shadow-[0px_1px_6px]": !isIOS,
 				"text-on-surface-variant w-28 rounded-4xl px-10 py-1": isIOS,

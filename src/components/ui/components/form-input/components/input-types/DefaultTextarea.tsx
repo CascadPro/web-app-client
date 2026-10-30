@@ -1,4 +1,4 @@
-import { type FC, type PropsWithChildren } from "react"
+import { type FC, type PropsWithChildren, useId } from "react"
 
 import { cn } from "@/libs/utils"
 
@@ -14,14 +14,17 @@ const DefaultTextarea: FC<PropsWithChildren<FormDefaultTextareaProps>> = ({
 	className,
 	isLoading,
 	label,
+	errorId,
 	children,
 	counter,
 	rows,
 	cols,
 	...props
 }) => {
-	const { clear, clearError, onInput, register, value } =
+	const { clear, clearError, error, onInput, register, value } =
 		useFormDefaultTextarea(name)
+
+	const labelId = useId()
 
 	let placeholder = ""
 	if (!isLoading) {
@@ -42,12 +45,19 @@ const DefaultTextarea: FC<PropsWithChildren<FormDefaultTextareaProps>> = ({
 				placeholder={placeholder}
 				spellCheck={true}
 				disabled={props?.disabled || isLoading}
+				aria-invalid={error ? true : undefined}
+				aria-describedby={error ? errorId : props["aria-describedby"]}
+				aria-labelledby={label ? labelId : props["aria-labelledby"]}
 				{...register(name, { onChange: clearError })}
 			/>
 
 			{props.required && <span className={styles["required"]}>*</span>}
 
-			{label && <span className={styles["label"]}>{label}</span>}
+			{label && (
+				<span id={labelId} className={styles["label"]}>
+					{label}
+				</span>
+			)}
 
 			{children}
 
