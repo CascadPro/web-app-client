@@ -10,7 +10,7 @@ const OfflineScreenComponent = () => {
 			<div className="text-center">
 				<Title size="lg">Нет подключения</Title>
 
-				<p className="text-muted-foreground mt-2">
+				<p className="text-on-surface-variant mt-2">
 					Проверь интернет и попробуй снова
 				</p>
 

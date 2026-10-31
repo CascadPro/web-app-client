@@ -106,7 +106,7 @@ export const BottomSheetPanel: FC<BottomSheetPanelProps> = ({
 			className={cn(
 				"fixed inset-x-0 isolate overflow-hidden",
 				"flex max-h-[calc(100dvh-env(safe-area-inset-top)-1rem)] flex-col",
-				"not-motion-reduce:glass not-motion-reduce:glass-highlight motion-reduce:bg-background",
+				"glass-thick glass-highlight",
 				"text-on-background rounded-t-3xl outline-none",
 				panelCN
 			)}

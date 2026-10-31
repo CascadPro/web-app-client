@@ -1,16 +1,12 @@
 import type { MotionValue } from "motion/react"
-import {
-	animate,
-	useMotionValue,
-	useTransform
-} from "motion/react"
+import { animate, useMotionValue, useTransform } from "motion/react"
 import type { RefObject } from "react"
 import { useCallback, useLayoutEffect, useRef, useState } from "react"
 
-import { useReduceMotion } from "@/libs/motion"
+import { SPRING, useReduceMotion } from "@/libs/motion"
 
-const LEADING = { type: "spring", stiffness: 600, damping: 36 } as const
-const TRAILING = { type: "spring", stiffness: 160, damping: 24 } as const
+const LEADING = SPRING.segmented
+const TRAILING = SPRING.segmentedTrail
 
 interface UseSegmentedControlReturn {
 	containerRef: RefObject<HTMLFieldSetElement | null>

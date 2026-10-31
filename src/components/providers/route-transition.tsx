@@ -20,7 +20,6 @@ export const RouteTransitionProvider: FC<Props> = ({ children }) => {
 	const pathname = usePathname()
 	const reduceMotion = useReduceMotion()
 
-	// Первую загрузку не анимируем — страницу уже закрывает сплеш
 	const isFirstRender = useRef(true)
 
 	useEffect(() => {
@@ -31,7 +30,7 @@ export const RouteTransitionProvider: FC<Props> = ({ children }) => {
 		<m.div
 			key={pathname}
 			initial={
-				reduceMotion || isFirstRender.current ? false : { opacity: 0, y: 8 }
+				reduceMotion || isFirstRender.current ? false : { opacity: 0, y: 10 }
 			}
 			animate={{ opacity: 1, y: 0 }}
 			transition={{ duration: 0.2, ease: EASE_OUT }}

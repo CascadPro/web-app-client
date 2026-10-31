@@ -4,6 +4,7 @@ import { XIcon } from "lucide-react"
 import { m } from "motion/react"
 import { type FC, memo } from "react"
 
+import { DURATION, EASE_OUT } from "@/libs/motion"
 import { cn } from "@/libs/utils"
 
 import { TOAST_TYPE_ACCENTS, TOAST_TYPE_ICONS } from "../constants"
@@ -36,8 +37,8 @@ export const ToastItem: FC<Props> = memo(({ item }) => {
 			animate={{ opacity: 1, y: 0, scale: 1 }}
 			exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -8, scale: 0.98 }}
 			transition={{
-				duration: reduceMotion ? 0.01 : 0.22,
-				ease: [0.22, 1, 0.36, 1]
+				duration: reduceMotion ? 0.01 : DURATION.base,
+				ease: EASE_OUT
 			}}
 			role={item.type === "error" ? "alert" : "status"}
 			aria-live={item.type === "error" ? "assertive" : "polite"}
@@ -51,7 +52,7 @@ export const ToastItem: FC<Props> = memo(({ item }) => {
 				}
 			}}
 			className={cn(
-				"group bg-surface/75! text-on-surface glass relative isolate flex items-center overflow-hidden shadow-[0_12px_40px_var(--glass-shadow)]",
+				"group text-on-surface glass-thick relative isolate flex items-center overflow-hidden",
 				{
 					"w-fit gap-10 place-self-center rounded-2xl px-2 py-1.5":
 						item.miniature,
@@ -93,7 +94,7 @@ export const ToastItem: FC<Props> = memo(({ item }) => {
 					type="button"
 					onClick={handleClose}
 					aria-label="Закрыть уведомление"
-					className="text-on-surface-variant hover:bg-on-surface/5 hover:text-on-surface focus-visible:ring-primary active:text-on-background -mr-1 grid shrink-0 place-items-center rounded-lg p-1 ring-2 ring-transparent transition-all will-change-auto active:scale-80 motion-reduce:transition-none"
+					className="text-on-surface-variant hover:bg-on-surface/5 hover:text-on-surface focus-visible:ring-primary active:text-on-background -mr-1 grid shrink-0 place-items-center rounded-lg p-1 ring-2 ring-transparent transition-ui will-change-auto active:scale-80 motion-reduce:transition-none"
 				>
 					<XIcon size={24} />
 				</button>

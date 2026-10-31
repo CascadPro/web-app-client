@@ -3,7 +3,7 @@
 import { type HTMLMotionProps, m } from "motion/react"
 import { type FC, useMemo } from "react"
 
-import { createStagger, fadeUp, useReduceMotion } from "@/libs/motion"
+import { createStagger, fadeUp, useLowPerf, useReduceMotion } from "@/libs/motion"
 
 interface StaggerProps extends HTMLMotionProps<"div"> {
 	stagger?: number
@@ -12,7 +12,8 @@ interface StaggerProps extends HTMLMotionProps<"div"> {
 
 /**
  * Контейнер: дочерние `StaggerItem` появляются по очереди.
- * При «уменьшить анимации» всё сразу рендерится в конечном состоянии.
+ * При «уменьшить анимации» и на слабых устройствах всё сразу рендерится
+ * в конечном состоянии (без лишней работы на каждый элемент).
  */
 export const Stagger: FC<StaggerProps> = ({
 	stagger = 0.05,
@@ -20,6 +21,7 @@ export const Stagger: FC<StaggerProps> = ({
 	...props
 }) => {
 	const reduceMotion = useReduceMotion()
+	const lowPerf = useLowPerf()
 	const variants = useMemo(
 		() => createStagger(stagger, delay),
 		[stagger, delay]
@@ -28,7 +30,7 @@ export const Stagger: FC<StaggerProps> = ({
 	return (
 		<m.div
 			variants={variants}
-			initial={reduceMotion ? false : "hidden"}
+			initial={reduceMotion || lowPerf ? false : "hidden"}
 			animate="visible"
 			{...props}
 		/>

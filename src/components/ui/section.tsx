@@ -5,7 +5,7 @@ import { m } from "motion/react"
 import type { FC, PropsWithChildren } from "react"
 
 import { Title } from "@/components/ui"
-import { useReduceMotion } from "@/libs/motion"
+import { DURATION, EASE_OUT, useLowPerf, useReduceMotion } from "@/libs/motion"
 import { cn } from "@/libs/utils"
 
 interface Props extends PropsWithChildren {
@@ -27,13 +27,17 @@ export const Section: FC<Props> = ({
 	children
 }) => {
 	const reduceMotion = useReduceMotion()
+	const lowPerf = useLowPerf()
 
 	return (
 		<m.section
-			initial={{ opacity: 0, y: 10 }}
+			initial={reduceMotion || lowPerf ? false : { opacity: 0, y: 10 }}
 			whileInView={{ opacity: 1, y: 0 }}
 			viewport={{ once: true, amount: "some" }}
-			transition={{ duration: reduceMotion ? 0 : 0.3 }}
+			transition={{
+				duration: reduceMotion ? 0 : DURATION.slow,
+				ease: EASE_OUT
+			}}
 			aria-labelledby={`${id}-title`}
 			className={cn("relative min-w-0 space-y-3", className)}
 		>

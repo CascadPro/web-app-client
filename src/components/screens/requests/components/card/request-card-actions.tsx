@@ -2,6 +2,7 @@ import { AnimatePresence, m } from "motion/react"
 import type { FC } from "react"
 
 import { Button } from "@/components/ui"
+import { EASE_OUT } from "@/libs/motion"
 import type { ReactStateHook } from "@/types/base"
 
 import { useRequestCardActions } from "../../hooks/useRequestCardActions"
@@ -62,7 +63,7 @@ const RequestCardActionsContent: FC<ContentProps> = ({
 			exit={{ opacity: 0, y: 16, height: 0, padding: 0 }}
 			transition={{
 				duration: 0.22,
-				ease: [0.22, 1, 0.36, 1]
+				ease: EASE_OUT
 			}}
 		>
 			{actions.map(({ key, title, Icon, loading, onClick }) => (

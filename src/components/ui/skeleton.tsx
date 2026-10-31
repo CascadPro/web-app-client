@@ -10,7 +10,7 @@ const Skeleton: FC<HTMLAttributes<HTMLDivElement>> = ({
 	return (
 		<div
 			className={cn(
-				"bg-on-background/20 animate-pulse rounded-md motion-reduce:animate-none",
+				"skeleton rounded-md",
 				className
 			)}
 			{...props}
@@ -25,7 +25,7 @@ const MotionSkeleton: FC<HTMLMotionProps<"div">> = ({
 	return (
 		<m.div
 			className={cn(
-				"bg-on-background/20 animate-pulse rounded-md motion-reduce:animate-none",
+				"skeleton rounded-md",
 				className
 			)}
 			{...props}

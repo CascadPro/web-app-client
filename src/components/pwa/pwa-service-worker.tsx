@@ -20,7 +20,7 @@ export function ServiceWorkerRegister() {
 				role="status"
 				aria-live="polite"
 				aria-label="Доступна новая версия"
-				className="bg-background/90! glass glass-highlight ring-outline/20 pointer-events-auto mx-auto flex max-w-lg flex-col gap-5 rounded-2xl p-4 shadow-xl ring"
+				className="glass-thick glass-highlight pointer-events-auto mx-auto flex max-w-lg flex-col gap-5 rounded-2xl p-4"
 			>
 				<div className="flex min-w-0 items-start gap-3">
 					<span className="bg-primary/20 text-primary mt-1.5 rounded-lg p-2">

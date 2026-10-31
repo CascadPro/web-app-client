@@ -53,7 +53,7 @@ const NavigationProgressInner = () => {
 						transition={{ duration: reducedMotion ? 0 : 0.2 }}
 					>
 						<m.div
-							className="glass bg-surface/70! text-on-surface flex animate-pulse items-center gap-2 rounded-2xl px-(--row-padding-x) py-(--row-padding-y) text-sm shadow-xl motion-reduce:animate-none"
+							className="glass-thick text-on-surface flex animate-pulse items-center gap-2 rounded-2xl px-(--row-padding-x) py-(--row-padding-y) text-sm motion-reduce:animate-none"
 							initial={reducedMotion ? false : { y: 6, scale: 0.98 }}
 							animate={{ y: 0, scale: 1 }}
 							exit={reducedMotion ? undefined : { y: 4, scale: 0.98 }}

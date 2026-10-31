@@ -1,10 +1,4 @@
-import {
-	AlertCircleIcon,
-	RefreshCwIcon,
-	ShieldCheckIcon,
-	WifiIcon,
-	WifiOffIcon
-} from "lucide-react"
+import { AlertCircleIcon, RefreshCwIcon, ShieldCheckIcon, WifiIcon, WifiOffIcon } from "lucide-react"
 
 export const STATUS_CONFIG = {
 	idle: {
@@ -34,8 +28,8 @@ export const STATUS_CONFIG = {
 	online: {
 		label: "Подключено",
 		description: "Все события синхронизируются",
-		color: "bg-emerald-500",
-		textColor: "text-emerald-400",
+		color: "bg-success",
+		textColor: "text-success",
 		icon: WifiIcon,
 		pulse: true
 	},
@@ -58,8 +52,8 @@ export const STATUS_CONFIG = {
 	error: {
 		label: "Ошибка соединения",
 		description: "Не удалось подключиться",
-		color: "bg-red-400",
-		textColor: "text-red-300",
+		color: "bg-error",
+		textColor: "text-error",
 		icon: AlertCircleIcon,
 		pulse: false
 	}

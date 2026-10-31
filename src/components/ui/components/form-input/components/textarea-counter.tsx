@@ -10,13 +10,13 @@ interface IProps {
 
 const TextareaCounter: FC<IProps> = ({ length, maxLength }) => {
 	return (
-		<div className="text-muted absolute right-2 bottom-2 flex items-center text-sm">
+		<div className="text-on-surface-variant absolute right-2 bottom-2 flex items-center text-sm">
 			<AnimatePresence mode="popLayout">
 				<p
 					className={cn(
-						"transition-all will-change-auto motion-reduce:transition-none",
+						"transition-ui will-change-auto motion-reduce:transition-none",
 						{
-							"text-base text-black": maxLength === length
+							"text-on-surface text-base": maxLength === length
 						}
 					)}
 				>

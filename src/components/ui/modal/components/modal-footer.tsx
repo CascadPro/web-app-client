@@ -7,7 +7,7 @@ export const ModalFooter: FC<ModalSectionProps> = ({
 	className = ""
 }) => (
 	<div
-		className={`flex shrink-0 flex-col-reverse gap-2 border-t border-black/5 p-4 sm:flex-row sm:justify-end sm:px-6 ${className} `}
+		className={`flex shrink-0 flex-col-reverse gap-2 border-t border-outline/20 p-4 sm:flex-row sm:justify-end sm:px-6 ${className} `}
 	>
 		{children}
 	</div>

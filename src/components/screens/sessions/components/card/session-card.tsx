@@ -6,6 +6,7 @@ import { memo } from "react"
 
 import type { SessionsHttpDtoSessionDTO } from "@/api/generated"
 import { Title } from "@/components/ui"
+import { EASE_OUT } from "@/libs/motion"
 import { capitalize, cn } from "@/libs/utils"
 import { formatRelativeDate } from "@/libs/utils/screens/sessions"
 
@@ -63,10 +64,10 @@ const SessionCardComponent: FC<Props> = ({
 					},
 					y: {
 						duration: 0.25,
-						ease: [0.22, 1, 0.36, 1],
+						ease: EASE_OUT,
 						delay: Math.min(index * 0.08, 0.24)
 					},
-					layout: { duration: 0.25, ease: [0.22, 1, 0.36, 1] }
+					layout: { duration: 0.25, ease: EASE_OUT }
 				}}
 				className={cn(
 					"border-outline/20 bg-surface rounded-2xl border px-(--row-padding-x) py-(--row-padding-y) shadow-sm",

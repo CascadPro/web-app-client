@@ -2,11 +2,13 @@ import type { Dispatch, SetStateAction } from "react"
 import { useCallback, useState } from "react"
 
 import type { DomainRequestStatus, DomainSortType } from "@/api/generated"
+import { useIsIOS } from "@/libs/hooks"
 
 import { useRequestContext } from "../requests-context"
 
 interface UseRequestFiltersReturn {
 	sortType: DomainSortType
+	isIOS: boolean
 	isOpen: boolean
 	isClearDisabled: boolean
 	isActive: (value: DomainRequestStatus) => boolean
@@ -25,6 +27,8 @@ export const useRequestFilters = (): UseRequestFiltersReturn => {
 		setSortType,
 		clearFilters
 	} = useRequestContext()
+
+	const isIOS = useIsIOS()
 
 	const [isOpen, setIsOpen] = useState(false)
 
@@ -46,6 +50,7 @@ export const useRequestFilters = (): UseRequestFiltersReturn => {
 
 	return {
 		sortType,
+		isIOS,
 		isOpen,
 		isClearDisabled,
 		isActive,

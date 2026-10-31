@@ -124,8 +124,8 @@ export const Indicator = () => {
 			className="bg-surface absolute right-1 bottom-1 grid size-5 place-items-center rounded-full *:rounded-full"
 			aria-hidden
 		>
-			<span className="size-3 animate-ping bg-emerald-500 motion-reduce:animate-none" />
-			<span className="absolute size-3 bg-emerald-500" />
+			<span className="bg-success size-3 animate-ping motion-reduce:animate-none" />
+			<span className="bg-success absolute size-3" />
 		</span>
 	)
 }

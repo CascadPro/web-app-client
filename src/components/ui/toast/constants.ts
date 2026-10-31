@@ -1,10 +1,4 @@
-import {
-	AlertCircle,
-	Check,
-	Info,
-	LoaderCircle,
-	TriangleAlert
-} from "lucide-react"
+import { AlertCircle, Check, Info, LoaderCircle, TriangleAlert } from "lucide-react"
 
 import type { ToastPosition } from "./types"
 
@@ -20,10 +14,10 @@ export const TOAST_TYPE_ICONS = {
 } as const
 
 export const TOAST_TYPE_ACCENTS = {
-	success: "text-emerald-600 bg-emerald-500/20 ring-emerald-500/30",
+	success: "text-success bg-success/15 ring-success/30",
 	error: "text-error bg-error-container/20 ring-error/30",
 	info: "text-primary bg-primary/20 ring-primary/30",
-	warning: "text-amber-600 bg-amber-500/20 ring-amber-500/30",
+	warning: "text-warning bg-warning/15 ring-warning/30",
 	loading: "text-primary bg-primary/20 ring-primary/30"
 } as const
 

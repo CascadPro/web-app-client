@@ -17,7 +17,7 @@ const ErrorText: FC<IProps> = ({ error, id, className }) => {
 			initial={{ opacity: 0, y: 5 }}
 			animate={{ opacity: 1, y: 0 }}
 			exit={{ opacity: 0, y: 5 }}
-			className={cn("text-sm text-red-500", className)}
+			className={cn("text-sm text-error", className)}
 		>
 			{/* key — чтобы встряска проигрывалась и при смене текста ошибки */}
 			<span key={error} className="animate-shake inline-block">
