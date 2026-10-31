@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useLayoutEffect, useState } from "react"
 
 const IOS_DETECTION_REGEX = /iPhone|iPad|iPod/i
 
@@ -14,7 +14,7 @@ function detectIOS(): boolean {
 export function useIsIOS(): boolean {
 	const [isIOS, setIsIOS] = useState(false)
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		setIsIOS(detectIOS())
 	}, [])
 

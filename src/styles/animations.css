@@ -1,8 +1,9 @@
 @theme {
 	--animate-shine: shine 2.5s ease-in-out infinite;
 	--animate-shake: shake 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
-	--animate-pop: pop 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
-	--animate-fade-up: fade-up 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+	--animate-pop: pop var(--motion-slow) var(--ease-ui-out) both;
+	--animate-fade-up: fade-up var(--motion-slow) var(--ease-ui-out) both;
+	--animate-shimmer: shimmer 1.6s var(--ease-ui-in-out) infinite;
 
 	@keyframes shake {
 		10%,
@@ -48,6 +49,12 @@
 		100% {
 			opacity: 1;
 			transform: translateY(0);
+		}
+	}
+
+	@keyframes shimmer {
+		100% {
+			transform: translateX(100%);
 		}
 	}
 

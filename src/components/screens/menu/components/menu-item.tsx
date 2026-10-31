@@ -26,7 +26,7 @@ const MenuItemComponent: FC<Props> = ({ item }) => {
 				<span>{item.title}</span>
 			</div>
 
-			<div className="bg-primary/10 rounded-lg p-1">
+			<div className="bg-primary/10 glass-lite glass-highlight rounded-lg p-1">
 				<ChevronRightIcon
 					aria-hidden="true"
 					size={24}

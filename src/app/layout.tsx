@@ -9,6 +9,7 @@ import { MotionRoot } from "@/components/providers/motion-root"
 import { ServiceWorkerRegister } from "@/components/pwa/pwa-service-worker"
 import { PWASplashScreen } from "@/components/pwa/pwa-splash-screen"
 import { ToastViewport } from "@/components/ui/toast/components/toast-viewport"
+import { BOOT_SCRIPT, DESIGN_CSS, NEUTRAL_COLORS } from "@/libs/design"
 
 import "./globals.css"
 
@@ -42,12 +43,28 @@ export const viewport: Viewport = {
 	width: "device-width",
 	initialScale: 1,
 	viewportFit: "cover",
-	themeColor: "#121212"
+	themeColor: [
+		{
+			media: "(prefers-color-scheme: light)",
+			color: NEUTRAL_COLORS.light.background
+		},
+		{
+			media: "(prefers-color-scheme: dark)",
+			color: NEUTRAL_COLORS.dark.background
+		}
+	]
 }
 
 export default function Layout({ children }: Readonly<Props>) {
 	return (
 		<html lang="ru" data-scroll-behavior="smooth" suppressHydrationWarning>
+			<head>
+				<style
+					id="design-tokens"
+					dangerouslySetInnerHTML={{ __html: DESIGN_CSS }}
+				/>
+				<script dangerouslySetInnerHTML={{ __html: BOOT_SCRIPT }} />
+			</head>
 			<body className={`${font.variable} antialiased`}>
 				<ThemeProvider attribute="class" defaultTheme="system" enableSystem>
 					<LazyMotion features={domAnimation} strict>

@@ -3,7 +3,7 @@
 import { m } from "motion/react"
 import { type ButtonHTMLAttributes, forwardRef, type MouseEvent } from "react"
 
-import { useReduceMotion } from "@/libs/motion"
+import { INSTANT, SPRING, useReduceMotion } from "@/libs/motion"
 import { cn } from "@/libs/utils"
 
 export interface SwitchProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -46,13 +46,12 @@ export const Switch = forwardRef<HTMLButtonElement, SwitchProps>(
 				<m.span
 					aria-hidden="true"
 					animate={{ x: checked ? "1.85rem" : "0.1rem" }}
-					whileTap={{ scale: 1.6 }}
-					transition={
-						reduceMotion
-							? { duration: 0 }
-							: { type: "spring", stiffness: 750, mass: 1, damping: 24 }
-					}
-					className="glass glass-highlight size-6 rounded-full shadow-sm will-change-auto"
+					whileTap={{ scaleX: 1.35, scaleY: 1.1 }}
+					transition={reduceMotion ? INSTANT : SPRING.toggle}
+					className={cn(
+						"size-6 rounded-full will-change-auto",
+						checked ? "glass-pearl" : "glass-lite glass-highlight"
+					)}
 				/>
 			</button>
 		)

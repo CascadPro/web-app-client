@@ -1,7 +1,6 @@
 import { ChevronDownIcon, SortDescIcon, XIcon } from "lucide-react"
 import dynamic from "next/dynamic"
-import type { FC } from "react"
-import { memo } from "react"
+import { type FC, memo } from "react"
 
 import { Button, Separator } from "@/components/ui"
 import { REQUEST_STATUSES } from "@/libs/constants/screens/requests"
@@ -21,6 +20,7 @@ interface Props {
 const RequestFiltersComponent: FC<Props> = ({ isLoading }) => {
 	const {
 		sortType,
+		isIOS,
 		isOpen,
 		isClearDisabled,
 		isActive,
@@ -73,10 +73,11 @@ const RequestFiltersComponent: FC<Props> = ({ isLoading }) => {
 							aria-pressed={isActive(status.value)}
 							onClick={() => toggleStatus(status.value)}
 							disabled={isLoading}
-							className={cn("p-2", {
-								"bg-primary/10 border-primary text-primary": isActive(
+							className={cn("glass-thick glass-highlight p-2", {
+								"bg-primary/20 ring-primary text-primary": isActive(
 									status.value
-								)
+								),
+								"rounded-2xl px-3 ring-0!": isIOS
 							})}
 						>
 							{status.label}

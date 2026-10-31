@@ -35,7 +35,7 @@ export function RealtimeStatusIndicator() {
 			}}
 			className={cn(
 				"fixed bottom-[calc(env(safe-area-inset-bottom)+4rem)] z-100 translate-x-1/2",
-				"ring-outline/30 bg-surface/50 overflow-hidden rounded-3xl shadow-2xl ring-2 backdrop-blur-xl",
+				"glass-thick overflow-hidden rounded-3xl",
 				!visible && "pointer-events-none",
 				isCompact && "mr-8 flex items-center justify-center"
 			)}
@@ -75,7 +75,7 @@ export function RealtimeStatusIndicator() {
 						className={cn(config.textColor, {
 							"animate-spin motion-reduce:animate-none":
 								status === "reconnecting",
-							"text-amber-500": quality === "degraded",
+							"text-warning": quality === "degraded",
 							"text-error": quality === "poor"
 						})}
 					/>
@@ -122,7 +122,7 @@ interface IndicatorDotProps {
 const IndicatorDot: FC<IndicatorDotProps> = memo(
 	({ color, quality, className }) => {
 		const commonCN = cn(color, {
-			"bg-amber-500": quality === "degraded",
+			"bg-warning": quality === "degraded",
 			"bg-error": quality === "poor"
 		})
 

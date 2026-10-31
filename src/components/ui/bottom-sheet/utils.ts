@@ -1,13 +1,10 @@
-export const SHEET_SPRING = {
-	type: "spring" as const,
-	damping: 32,
-	stiffness: 320,
-	mass: 0.8
-}
+import { DURATION, EASE_OUT, SPRING } from "@/libs/motion"
+
+export const SHEET_SPRING = SPRING.sheet
 
 export const BACKDROP_TRANSITION = {
-	duration: 0.2,
-	ease: "easeOut" as const
+	duration: DURATION.base,
+	ease: EASE_OUT
 }
 
 export const getSheetTransition = (reducedMotion: boolean) =>

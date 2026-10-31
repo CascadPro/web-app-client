@@ -1,45 +1,13 @@
+/*
+ * Значения цветов НЕ хранятся здесь: они генерируются из src/libs/design/palette.ts
+ * (см. libs/design/css.ts → <style id="design-tokens"> в app/layout.tsx).
+ * Здесь только маппинг переменных на утилиты Tailwind (bg-primary, text-success, ...).
+ */
 :root {
 	--safe-area-top: env(safe-area-inset-top, 0px);
 	--safe-area-right: env(safe-area-inset-right, 0px);
 	--safe-area-bottom: env(safe-area-inset-bottom, 0px);
 	--safe-area-left: env(safe-area-inset-left, 0px);
-}
-
-:root {
-	--primary: #ff9800;
-	--on-primary: #ffffff;
-	--primary-container: #ffb74d;
-	--on-primary-container: #ffcc80;
-
-	--secondary: #ff5722;
-	--on-secondary: #ffffff;
-	--secondary-container: #e64a19;
-	--on-secondary-container: #ffccbc;
-
-	--background: #ffffff;
-	--on-background: #212121;
-
-	--surface: #f5f5f5;
-	--on-surface: #000000;
-
-	--surface-variant: #eeeeee;
-	--on-surface-variant: #757575;
-
-	--outline: #bdbdbd;
-
-	--error: #d32f2f;
-	--on-error: #ffffff;
-	--error-container: #ffccd2;
-	--on-error-container: #b00020;
-
-	/* Liquid Glass — light theme */
-	--glass-bg: rgb(255 255 255 / 30%);
-	--glass-border: rgb(255 255 255 / 65%);
-	--glass-highlight: rgb(255 255 255 / 85%);
-	--glass-reflection: rgb(255 255 255 / 45%);
-	--glass-shadow: rgb(100 100 120 / 4%);
-	--glass-blur: 5px;
-	--glass-saturation: 200%;
 }
 
 @theme inline {
@@ -63,46 +31,25 @@
 	--color-on-surface-variant: var(--on-surface-variant);
 
 	--color-outline: var(--outline);
+	--color-scrim: var(--scrim);
 
 	--color-error: var(--error);
 	--color-on-error: var(--on-error);
 	--color-error-container: var(--error-container);
 	--color-on-error-container: var(--on-error-container);
-}
 
-.dark {
-	--primary: #64b5f6;
-	--on-primary: #ffffff;
-	--primary-container: #1976d2;
-	--on-primary-container: #e3f2fd;
+	--color-success: var(--success);
+	--color-on-success: var(--on-success);
+	--color-success-container: var(--success-container);
+	--color-on-success-container: var(--on-success-container);
 
-	--secondary: #90caf9;
-	--on-secondary: #000000;
-	--secondary-container: #0d47a1;
-	--on-secondary-container: #bbdefb;
+	--color-warning: var(--warning);
+	--color-on-warning: var(--on-warning);
+	--color-warning-container: var(--warning-container);
+	--color-on-warning-container: var(--on-warning-container);
 
-	--background: #121212;
-	--on-background: #e0e0e0;
-
-	--surface: #1e1e1e;
-	--on-surface: #ffffff;
-
-	--surface-variant: #2d2d2d;
-	--on-surface-variant: #b0bec5;
-
-	--outline: #90a4ae;
-
-	--error: #cf6679;
-	--on-error: #000000;
-	--error-container: #b00020;
-	--on-error-container: #ffdad6;
-
-	/* Liquid Glass — dark theme */
-	--glass-bg: rgb(30 30 30 / 58%);
-	--glass-border: rgb(255 255 255 / 14%);
-	--glass-highlight: rgb(255 255 255 / 18%);
-	--glass-reflection: rgb(255 255 255 / 7%);
-	--glass-shadow: rgb(0 0 0 / 28%);
-	--glass-blur: 1px;
-	--glass-saturation: 300%;
+	--color-info: var(--info);
+	--color-on-info: var(--on-info);
+	--color-info-container: var(--info-container);
+	--color-on-info-container: var(--on-info-container);
 }

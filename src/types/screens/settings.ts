@@ -61,6 +61,7 @@ export interface SettingsContextValue {
 	hydrated: boolean
 	syncing: boolean
 	pendingOfflineChanges: boolean
+
 	updateSettings: (patch: Partial<SettingsUpdate>) => void
 	updateNotification: (key: NotificationKey, value: boolean) => void
 }

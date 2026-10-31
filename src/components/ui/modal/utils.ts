@@ -1,3 +1,5 @@
+import { DURATION, EASE_OUT, SPRING } from "@/libs/motion"
+
 const FOCUSABLE_SELECTOR = [
 	"a[href]",
 	"button:not([disabled])",
@@ -18,16 +20,11 @@ export function getFocusableElements(container: HTMLElement): HTMLElement[] {
 	)
 }
 
-export const MODAL_SPRING = {
-	type: "spring" as const,
-	stiffness: 420,
-	damping: 32,
-	mass: 0.7
-}
+export const MODAL_SPRING = SPRING.modal
 
 export const BACKDROP_TRANSITION = {
-	duration: 0.2,
-	ease: "easeOut" as const
+	duration: DURATION.base,
+	ease: EASE_OUT
 }
 
 export const getModalTransition = (reducedMotion: boolean) =>

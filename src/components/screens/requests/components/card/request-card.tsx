@@ -5,6 +5,7 @@ import { memo, useCallback } from "react"
 
 import type { RequestHttpDtoGetRequestsResponseRequest as Request } from "@/api/generated"
 import { MarqueeText } from "@/components/ui/components/maruquee-text/marquee-text"
+import { EASE_OUT } from "@/libs/motion"
 import { cn } from "@/libs/utils"
 
 import { useRequestCard } from "../../hooks/useRequestCard"
@@ -51,7 +52,6 @@ const RequestCardComponent: FC<Props> = ({ request, ref: forwardedRef }) => {
 		handleClickOutside
 	} = useRequestCard(request)
 
-	// Внутренний ref нужен хуку для измерений, внешний — AnimatePresence
 	const setRefs = useCallback(
 		(node: HTMLElement | null) => {
 			ref.current = node
@@ -83,8 +83,8 @@ const RequestCardComponent: FC<Props> = ({ request, ref: forwardedRef }) => {
 				}}
 				transition={{
 					opacity: { duration: 0.2 },
-					y: { duration: 0.3, ease: [0.22, 1, 0.36, 1] },
-					layout: { duration: 0.25, ease: [0.22, 1, 0.36, 1] }
+					y: { duration: 0.3, ease: EASE_OUT },
+					layout: { duration: 0.25, ease: EASE_OUT }
 				}}
 				className="flex flex-col justify-center gap-3 select-none"
 				onContextMenu={e => e.preventDefault()}

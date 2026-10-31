@@ -6,6 +6,8 @@ import {
 } from "motion/react"
 import { useRef, useState } from "react"
 
+import { SPRING } from "@/libs/motion"
+
 export const useBottomSheetPanel = (
 	dismissThreshold: number,
 	dragToClose: boolean,
@@ -21,10 +23,7 @@ export const useBottomSheetPanel = (
 
 	const rubberScaleValue = useMotionValue(1)
 
-	const rubberScale = useSpring(rubberScaleValue, {
-		stiffness: 400,
-		damping: 28
-	})
+	const rubberScale = useSpring(rubberScaleValue, SPRING.rubber)
 
 	const [dragHeight, setDragHeight] = useState<number | null>(null)
 	const dragStartHeight = useRef(0)
@@ -35,13 +34,11 @@ export const useBottomSheetPanel = (
 	) => {
 		const deltaY = info.offset.y
 
-		// Свайп вверх — расширяем
 		if (deltaY < -60 && expandable && !expanded) {
 			onExpandedChange(true)
 			return
 		}
 
-		// Свайп вниз — сначала сворачиваем
 		if (deltaY > 60 && expanded) {
 			onExpandedChange(false)
 			return

@@ -3,6 +3,7 @@
 }
 
 html {
+	-webkit-text-size-adjust: 100%;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	-webkit-tap-highlight-color: transparent;
@@ -32,6 +33,8 @@ img {
 button,
 a {
 	cursor: pointer;
+	/* убирает задержку тапа и случайный double-tap zoom */
+	touch-action: manipulation;
 }
 
 /* В @layer base, чтобы utility-классы Tailwind (focus-visible:outline-none и т.п.) побеждали */
@@ -69,4 +72,19 @@ ul {
 	.glass-highlight::before {
 		transition: none !important;
 	}
+}
+
+/*
+ * Слабые устройства (html[data-perf="low"], определяется в boot-скрипте):
+ * выключаем бесконечные декоративные анимации. Индикаторы загрузки (animate-spin) остаются.
+ */
+:root[data-perf="low"] .shine::after,
+:root[data-perf="low"] .skeleton::after,
+:root[data-perf="low"] .animate-ping,
+:root[data-perf="low"] .animate-pulse {
+	animation: none;
+}
+
+:root[data-perf="low"] {
+	scroll-behavior: auto;
 }

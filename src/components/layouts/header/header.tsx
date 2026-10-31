@@ -4,6 +4,7 @@ import { m } from "motion/react"
 import { memo } from "react"
 
 import { Button, Title } from "@/components/ui"
+import { EASE_OUT } from "@/libs/motion"
 import { cn } from "@/libs/utils"
 
 import { useNestedHeader } from "./hook"
@@ -16,8 +17,7 @@ export const NestedHeader = memo(() => {
 		<header className="fixed inset-x-0 top-0 z-50 pt-[env(safe-area-inset-top)]">
 			<div
 				className={cn("flex min-h-16 items-center p-2", {
-					"bg-background/40 border-outline/20 gap-2 border-b backdrop-blur-lg":
-						!isIOS,
+					"bg-background/95 border-outline/20 gap-2 border-b": !isIOS,
 					"header-background pt-3": isIOS
 				})}
 			>
@@ -44,7 +44,7 @@ export const NestedHeader = memo(() => {
 					className={cn("min-w-0", { "w-full": isIOS })}
 					initial={reduceMotion ? false : { opacity: 0, y: 6 }}
 					animate={{ opacity: 1, y: 0 }}
-					transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+					transition={{ duration: 0.2, ease: EASE_OUT }}
 				>
 					<Title
 						size="xl"

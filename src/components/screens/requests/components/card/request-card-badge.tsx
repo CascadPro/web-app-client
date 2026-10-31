@@ -8,7 +8,7 @@ import { getRequestStatusLabel } from "@/libs/utils/screens/requests"
 const styles: Record<DomainRequestStatus, string> = {
 	default: "bg-outline/30 text-on-surface-variant",
 	waiting: "bg-primary/10 text-primary",
-	approved: "bg-emerald-600/10 text-emerald-500",
+	approved: "bg-success/10 text-success",
 	rejected: "bg-error/10 text-error",
 	"": ""
 }

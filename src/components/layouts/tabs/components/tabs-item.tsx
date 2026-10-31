@@ -45,15 +45,16 @@ const TabsItemComponent: FC<Props> = ({
 			<Icon
 				size={26}
 				className={cn({
-					"translate-y-3 transition-all will-change-auto motion-reduce:transition-none":
+					"transition-ui translate-y-3 will-change-auto motion-reduce:transition-none":
 						!isIOS,
+					"animate-pop motion-reduce:animate-none": active && isIOS,
 					"text-primary translate-y-0": active && !isIOS
 				})}
 			/>
 
 			<span
 				className={cn({
-					"translate-y-4 opacity-0 transition-all will-change-auto": !isIOS,
+					"transition-ui translate-y-4 opacity-0 will-change-auto": !isIOS,
 					"text-primary translate-y-0 opacity-100": active && !isIOS
 				})}
 			>

@@ -35,7 +35,6 @@ export function useRealtime() {
 		}
 	}, [])
 
-	// Keep logout ref current to avoid re-creating subscribe
 	const logout = useLogout()
 	logoutRef.current = logout
 

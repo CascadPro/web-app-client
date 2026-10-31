@@ -30,7 +30,7 @@ export const SettingsSegmentedControl = <T extends string>({
 		>
 			<m.span
 				aria-hidden
-				className="bg-primary shadow-primary/20 pointer-events-none absolute top-0 left-0 rounded-lg shadow-md will-change-transform"
+				className="glass bg-primary/90 pointer-events-none absolute top-0 left-0 rounded-xl will-change-transform"
 				style={{
 					x: left,
 					y: top,
@@ -52,10 +52,10 @@ export const SettingsSegmentedControl = <T extends string>({
 						}}
 						variant="ghost"
 						aria-pressed={active}
-						onClick={() => onChange(option.value)}
+						onClick={active ? undefined : () => onChange(option.value)}
 						className={cn(
 							"text-on-surface-variant relative z-10 flex-1 rounded-lg bg-transparent px-3 py-2",
-							"hover:text-on-surface transition-all duration-200 will-change-auto hover:bg-transparent",
+							"hover:text-on-surface transition-ui will-change-auto hover:bg-transparent",
 							"focus-visible:ring-primary focus-visible:ring-2",
 							"active:scale-95",
 							{ "text-on-primary hover:text-on-primary": active }

@@ -1,15 +1,11 @@
-import {
-	type Easing,
-	useAnimationControls,
-	useInView
-} from "motion/react"
+import { type Easing, useAnimationControls, useInView } from "motion/react"
 import { useCallback, useEffect, useRef, useState } from "react"
 
-import { useReduceMotion } from "@/libs/motion"
+import { EASE_OUT, useReduceMotion } from "@/libs/motion"
 
 import type { MarqueeTextOptions } from "./types"
 
-const ease: Easing = [0.22, 1, 0.36, 1]
+const ease: Easing = EASE_OUT
 
 export const useMarqueeText = ({
 	speed = 0.2,

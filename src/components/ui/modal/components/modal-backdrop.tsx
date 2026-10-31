@@ -13,7 +13,7 @@ export const ModalBackdrop: FC<Props> = ({ onClick, reducedMotion }) => {
 		<m.div
 			tabIndex={-1}
 			aria-label="Закрыть окно"
-			className="pointer-events-auto absolute inset-0 cursor-default bg-black/50 backdrop-blur-xs select-none"
+			className="pointer-events-auto absolute inset-0 scrim cursor-default select-none"
 			initial={{ opacity: 0 }}
 			animate={{ opacity: 1 }}
 			exit={{ opacity: 0 }}
