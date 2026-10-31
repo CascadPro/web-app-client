@@ -48,7 +48,6 @@ export const useRefreshControl = (
 	threshold: number,
 	fn: () => Promise<void> | void
 ) => {
-	// Calculate maxPull once — window.innerHeight is stable during normal use
 	const [maxPull] = useState(() => window.innerHeight / 6)
 	const [isRefreshing, setIsRefreshing] = useState(false)
 	const [isPulling, setIsPulling] = useState(false)
