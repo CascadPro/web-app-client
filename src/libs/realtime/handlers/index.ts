@@ -8,3 +8,5 @@ export {
 } from "./sessions"
 
 export { handleSettingsUpdated } from "./settings"
+
+export { handleUsersUpdate as handleUserUpdate } from "./users"

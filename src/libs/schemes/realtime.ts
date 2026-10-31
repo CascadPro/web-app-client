@@ -1,6 +1,7 @@
 import { z } from "zod"
 
-const sidRegex = /^[a-f0-9]{24}$/
+const SESSION_ID_REGEX = /^[a-f0-9]{24}$/
+const AVATAR_FILE_ID_REGEX = /^[a-f0-9]{48}$/
 
 export const wsAuthSuccessScheme = z.object({
 	type: z.literal("auth.success"),
@@ -18,7 +19,7 @@ export const presenceOnlineEventScheme = z.object({
 	id: z.uuid(),
 	type: z.literal("presence.online"),
 	data: z.object({
-		sid: z.string().regex(sidRegex),
+		sid: z.string().regex(SESSION_ID_REGEX),
 		uid: z.uuid()
 	}),
 	timestamp: z.iso.datetime().optional()
@@ -28,7 +29,7 @@ export const presenceOfflineEventScheme = z.object({
 	id: z.uuid(),
 	type: z.literal("presence.offline"),
 	data: z.object({
-		sid: z.string().regex(sidRegex),
+		sid: z.string().regex(SESSION_ID_REGEX),
 		uid: z.uuid()
 	}),
 	timestamp: z.iso.datetime().optional()
@@ -56,7 +57,7 @@ export const sessionRevokedEventScheme = z.object({
 	id: z.uuid(),
 	type: z.literal("session.revoked"),
 	data: z.object({
-		sid: z.string().regex(sidRegex),
+		sid: z.string().regex(SESSION_ID_REGEX),
 		reason: z.string().optional()
 	}),
 	timestamp: z.iso.datetime().optional()
@@ -66,7 +67,7 @@ export const sessionRevokedAllEventScheme = z.object({
 	id: z.uuid(),
 	type: z.literal("session.revoked.all"),
 	data: z.object({
-		sid: z.string().regex(sidRegex),
+		sid: z.string().regex(SESSION_ID_REGEX),
 		reason: z.string().optional()
 	}),
 	timestamp: z.iso.datetime().optional()
@@ -103,6 +104,17 @@ export const settingsUpdatedEventScheme = z.object({
 	timestamp: z.iso.datetime().optional()
 })
 
+const userAvatarUpdatedData = z.object({
+	avatar: z.string().regex(AVATAR_FILE_ID_REGEX).nullable()
+})
+
+export const userAvatarUpdatedScheme = z.object({
+	id: z.uuid(),
+	type: z.literal("user.avatar.updated"),
+	data: userAvatarUpdatedData,
+	timestamp: z.iso.datetime().optional()
+})
+
 export const wsServerEventScheme = z.discriminatedUnion("type", [
 	presenceOnlineEventScheme,
 	presenceOfflineEventScheme,
@@ -110,7 +122,8 @@ export const wsServerEventScheme = z.discriminatedUnion("type", [
 	sessionUpdatedEventScheme,
 	sessionRevokedEventScheme,
 	sessionRevokedAllEventScheme,
-	settingsUpdatedEventScheme
+	settingsUpdatedEventScheme,
+	userAvatarUpdatedScheme
 ])
 
 export const wsPongScheme = z.object({

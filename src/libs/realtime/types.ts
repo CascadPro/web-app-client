@@ -68,7 +68,7 @@ export interface SessionRevokedAllEvent extends WsEvent<SessionRevokedEventData>
 	type: typeof WS_EVENTS.SESSION_REVOKED_ALL
 }
 
-export type SettingsUpdatedEventData = {
+export interface SettingsUpdatedEventData {
 	version: number
 	session_expire_term?: UserSettingsResponse["session_expire_term"]
 	session_2fa_enabled?: boolean
@@ -80,6 +80,20 @@ export interface SettingsUpdatedEvent extends WsEvent<SettingsUpdatedEventData> 
 	type: typeof WS_EVENTS.SETTINGS_UPDATED
 }
 
+export interface UserAvatarUpdatedEventData {
+	avatar: string | null
+}
+
+export interface UserAvatarUpdatedEvent extends WsEvent<UserAvatarUpdatedEventData> {
+	type: typeof WS_EVENTS.USER_AVATAR_UPDATED
+}
+
+export interface UserUpdatedEventData extends Partial<UserAvatarUpdatedEventData> {}
+
+export interface UserUpdatedEvent extends WsEvent<UserUpdatedEventData> {
+	type: typeof WS_EVENTS.USER_UPDATED
+}
+
 export type WsServerEvent =
 	| PresenceOnlineEvent
 	| PresenceOfflineEvent
@@ -88,6 +102,8 @@ export type WsServerEvent =
 	| SessionRevokedEvent
 	| SessionRevokedAllEvent
 	| SettingsUpdatedEvent
+	| UserAvatarUpdatedEvent
+	| UserUpdatedEvent
 
 export type WsMessage = WsAuthSuccess | WsAuthError | WsServerEvent
 

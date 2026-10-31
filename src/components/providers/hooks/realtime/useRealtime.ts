@@ -9,7 +9,8 @@ import { WebSocketClient } from "@/libs/realtime"
 import {
 	subscribeToPresence,
 	subscribeToSessions,
-	subscribeToSettings
+	subscribeToSettings,
+	subscribeToUser
 } from "@/libs/realtime/subscriptions"
 
 export function useRealtime() {
@@ -28,10 +29,13 @@ export function useRealtime() {
 
 		const unsubscribeSettings = subscribeToSettings(client)
 
+		const unsubscribeUser = subscribeToUser(client)
+
 		return () => {
 			unsubscribePresence()
 			unsubscribeSessions()
 			unsubscribeSettings()
+			unsubscribeUser()
 		}
 	}, [])
 

@@ -18,7 +18,10 @@ export const WS_EVENTS = {
 	SESSION_REVOKED: "session.revoked",
 	SESSION_REVOKED_ALL: "session.revoked.all",
 
-	SETTINGS_UPDATED: "settings.updated"
+	SETTINGS_UPDATED: "settings.updated",
+
+	USER_UPDATED: "user.updated",
+	USER_AVATAR_UPDATED: "user.avatar.updated"
 } as const
 
 export type WsAuthEventType =
