@@ -4,6 +4,19 @@
 	}
 }
 
+/*
+ * Вместо transition-all: анимируем только то, что дёшево (цвет, opacity, transform),
+ * и не трогаем width/height/margin — они вызывают layout на каждом кадре.
+ * Длительность и easing — из единого конфига (--motion-base, --ease-ui-out).
+ */
+@utility transition-ui {
+	transition-property:
+		color, background-color, border-color, text-decoration-color, fill, stroke,
+		opacity, box-shadow, transform, translate, scale, rotate;
+	transition-timing-function: var(--ease-ui-out);
+	transition-duration: var(--motion-base);
+}
+
 @utility shine {
 	position: relative;
 	overflow: hidden;
@@ -24,6 +37,28 @@
 		);
 
 		animation: var(--animate-shine);
+		pointer-events: none;
+	}
+}
+
+/* Скелетон: shimmer на transform (композитор), на слабых устройствах — статичный */
+@utility skeleton {
+	position: relative;
+	overflow: hidden;
+	background: color-mix(in oklab, var(--on-background) 10%, transparent);
+
+	&::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+		transform: translateX(-100%);
+		background: linear-gradient(
+			90deg,
+			transparent,
+			color-mix(in oklab, var(--on-background) 9%, transparent),
+			transparent
+		);
+		animation: var(--animate-shimmer);
 		pointer-events: none;
 	}
 }
