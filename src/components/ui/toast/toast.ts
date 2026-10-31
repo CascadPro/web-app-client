@@ -40,7 +40,6 @@ function show(type: ToastType, title: string, options: ToastOptions = {}) {
 		position: options.position ?? "top-right"
 	}
 
-	// Не допускаем бесконечного роста списка.
 	if (items.length >= MAX_TOASTS) {
 		const oldest = items.find(entry => entry.type !== "loading")
 

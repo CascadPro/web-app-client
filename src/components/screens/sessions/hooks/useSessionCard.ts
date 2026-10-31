@@ -36,7 +36,6 @@ export const useSessionCard = (
 	const { haptic } = useHaptic()
 	const { mutateAsync, isPending } = useDeleteSession(id ?? "")
 
-	// Guard: prevent mutation execution when id is missing
 	const safeMutateAsync = useCallback(async () => {
 		if (!id) return
 		await mutateAsync()
