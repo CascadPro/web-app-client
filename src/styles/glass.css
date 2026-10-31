@@ -1,49 +1,180 @@
-@utility glass {
-	background: var(--glass-bg);
-	border: 1px solid var(--glass-border);
+/*
+ * Liquid Glass — ТОЛЬКО iOS.
+ *
+ * Как это включается (вся логика в CSS, компоненты ничего не знают о платформе):
+ *   html[data-platform="ios"]  — выставляет boot-скрипт (libs/design/boot.ts) до первой отрисовки
+ *   html[data-perf="low"]      — слабое устройство: backdrop-filter отключается
+ *   prefers-reduced-transparency: reduce — системная настройка «Уменьшить прозрачность»
+ *
+ * Значения (цвета, blur, saturate) — из src/libs/design/config.ts → --glass-*.
+ *
+ * Классы:
+ *   .glass            обычное стекло: бары, плавающие элементы
+ *   .glass-thick      плотное стекло: шторки, тосты, баннеры (лучше читается текст)
+ *   .glass-lite       без backdrop-filter: для вложенных/анимируемых элементов
+ *                     (индикатор табов) — не умножает стоимость blur
+ *   .glass-pearl      непрозрачная «жемчужина» с бликом: thumb переключателя (все платформы)
+ *   .glass-highlight  дополнительный блик-спекуляр (::before), только iOS
+ *   .header-background  шапка iOS с прогрессивным размытием
+ *   .scrim / .scrim-blur / .scrim-strong  подложки под модалки и оверлеи
+ */
 
-	-webkit-backdrop-filter: blur(var(--glass-blur))
-		saturate(var(--glass-saturation));
-	backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+@layer components {
+	/* ---------- Fallback: Android / desktop / слабые устройства / reduce transparency ---------- */
 
-	box-shadow:
-		inset 0 1px 1px var(--glass-highlight),
-		inset 0 -1px 0 var(--glass-reflection),
-		0 -18px 60px var(--glass-shadow);
-}
+	.glass,
+	.glass-thick {
+		background: color-mix(in oklab, var(--surface) 90%, transparent);
+		border: 1px solid color-mix(in oklab, var(--outline) 22%, transparent);
+		box-shadow: 0 8px 24px
+			color-mix(in oklab, var(--on-background) 10%, transparent);
+	}
 
-@utility glass-highlight {
-	&::before {
+	.glass-thick {
+		background: color-mix(in oklab, var(--surface) 96%, transparent);
+	}
+
+	.glass-lite {
+		background: color-mix(in oklab, var(--surface) 80%, transparent);
+		box-shadow: 0 1px 3px rgb(0 0 0 / 18%);
+	}
+
+	.glass-pearl {
+		background: linear-gradient(180deg, #fff 0%, #f1f1f4 100%);
+		box-shadow:
+			inset 0 1px 0 #fff,
+			0 2px 6px rgb(0 0 0 / 28%);
+	}
+
+	.glass-highlight {
+		position: relative;
+		isolation: isolate;
+	}
+
+	.scrim {
+		background: var(--scrim);
+	}
+
+	.scrim-strong {
+		background: color-mix(in oklab, var(--background) 72%, transparent);
+	}
+
+	.header-background {
+		isolation: isolate;
+		background: linear-gradient(
+			180deg,
+			color-mix(in oklab, var(--background) 100%, transparent) 0%,
+			color-mix(in oklab, var(--background) 92%, transparent) 30%,
+			color-mix(in oklab, var(--background) 70%, transparent) 60%,
+			transparent 100%
+		);
+	}
+
+	/* ---------- iOS Liquid Glass ---------- */
+
+	:root[data-platform="ios"]:not([data-perf="low"]) .glass,
+	:root[data-platform="ios"]:not([data-perf="low"]) .glass-thick {
+		background:
+			linear-gradient(180deg, var(--glass-sheen) 0%, transparent 46%),
+			var(--glass-bg);
+		border: 1px solid var(--glass-border);
+
+		-webkit-backdrop-filter: blur(var(--glass-blur))
+			saturate(var(--glass-saturate)) brightness(var(--glass-brightness));
+		backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate))
+			brightness(var(--glass-brightness));
+
+		/* верхний блик + нижняя кромка + внутреннее свечение + мягкая тень */
+		box-shadow:
+			inset 0 1px 0 var(--glass-edge),
+			inset 0 -1px 0 var(--glass-rim),
+			inset 0 0 22px -8px var(--glass-sheen),
+			0 10px 32px var(--glass-shadow);
+	}
+
+	:root[data-platform="ios"]:not([data-perf="low"]) .glass-thick {
+		background:
+			linear-gradient(180deg, var(--glass-sheen) 0%, transparent 38%),
+			var(--glass-bg-thick);
+	}
+
+	/* Без backdrop-filter: индикатор табов (тонируется через bg-primary/15!) */
+	:root[data-platform="ios"]:not([data-perf="low"]) .glass-lite {
+		background:
+			linear-gradient(180deg, var(--glass-sheen) 0%, transparent 75%),
+			var(--glass-bg);
+		box-shadow:
+			inset 0 1px 0 var(--glass-edge),
+			inset 0 -1px 0 var(--glass-rim),
+			0 2px 8px var(--glass-shadow);
+	}
+
+	/* Спекулярный блик: статичный, без анимаций и blend-режимов */
+	:root[data-platform="ios"]:not([data-perf="low"]) .glass-highlight::before {
 		content: "";
 		position: absolute;
 		inset: 0;
 		z-index: -1;
 		border-radius: inherit;
 		pointer-events: none;
-		transition: opacity 150ms ease;
-		will-change: auto;
-
+		transition: opacity var(--motion-fast) var(--ease-ui-out);
 		background:
-			radial-gradient(
-				ellipse at 50% 0%,
-				var(--glass-highlight),
-				transparent 58%
-			),
+			radial-gradient(ellipse at 50% 0%, var(--glass-edge), transparent 58%),
 			linear-gradient(
 				115deg,
-				var(--glass-reflection),
+				var(--glass-sheen),
 				transparent 40%,
-				var(--glass-reflection)
+				var(--glass-sheen)
 			);
+		opacity: 0.55;
 	}
 
-	&::after {
+	/* Шапка iOS: размытие плавно «растворяется» вниз (mask), контент не маскируется */
+	:root[data-platform="ios"]:not([data-perf="low"]) .header-background::before {
 		content: "";
 		position: absolute;
 		inset: 0;
-		border-radius: inherit;
+		z-index: -1;
 		pointer-events: none;
-		border-top: 1px solid var(--glass-highlight);
-		mask-image: linear-gradient(to bottom, black, transparent 55%);
+		-webkit-backdrop-filter: blur(var(--glass-blur))
+			saturate(var(--glass-saturate));
+		backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+		-webkit-mask-image: linear-gradient(to bottom, #000 45%, transparent);
+		mask-image: linear-gradient(to bottom, #000 45%, transparent);
+	}
+
+	/* Подложки: blur только на iOS и не на слабых устройствах */
+	:root[data-platform="ios"]:not([data-perf="low"]) .scrim {
+		-webkit-backdrop-filter: blur(6px);
+		backdrop-filter: blur(6px);
+	}
+
+	:root[data-platform="ios"]:not([data-perf="low"]) .scrim-strong {
+		background: color-mix(in oklab, var(--background) 28%, transparent);
+		-webkit-backdrop-filter: blur(14px) saturate(var(--glass-saturate));
+		backdrop-filter: blur(14px) saturate(var(--glass-saturate));
+	}
+
+	/* ---------- Системная настройка «Уменьшить прозрачность»: возвращаем fallback ---------- */
+
+	@media (prefers-reduced-transparency: reduce) {
+		:root[data-platform="ios"] .glass,
+		:root[data-platform="ios"] .glass-thick,
+		:root[data-platform="ios"] .glass-lite,
+		:root[data-platform="ios"] .scrim,
+		:root[data-platform="ios"] .scrim-strong,
+		:root[data-platform="ios"] .header-background::before {
+			-webkit-backdrop-filter: none;
+			backdrop-filter: none;
+		}
+
+		:root[data-platform="ios"] .glass,
+		:root[data-platform="ios"] .glass-thick {
+			background: var(--surface);
+		}
+
+		:root[data-platform="ios"] .glass-highlight::before {
+			display: none;
+		}
 	}
 }
