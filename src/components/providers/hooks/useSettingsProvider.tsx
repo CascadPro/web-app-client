@@ -5,10 +5,10 @@ import { useTheme } from "next-themes"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
 import {
-	ACCENT_COLORS,
 	DEFAULT_SETTINGS,
 	SETTINGS_STORAGE_KEY
 } from "@/libs/constants/screens/settings"
+import { NEUTRAL_COLORS } from "@/libs/design/palette"
 import { useUserSettings } from "@/libs/query/hooks/use-user-settings"
 import {
 	getQueuedSettingsChanges,
@@ -132,24 +132,17 @@ export const useSettingsProvider = () => {
 
 		const root = document.documentElement
 		const theme = resolvedTheme === "dark" ? "dark" : "light"
-		const accent = ACCENT_COLORS[settings.accent][theme]
-
-		// Batch all CSS variable updates into a single style assignment
-		root.style.cssText = [
-			`--primary:${accent.primary}`,
-			`--on-primary:${accent.onPrimary}`,
-			`--primary-container:${accent.primaryContainer}`,
-			`--on-primary-container:${accent.onPrimaryContainer}`,
-			`--secondary:${accent.secondary}`,
-			`--on-secondary:${accent.onSecondary}`,
-			`--secondary-container:${accent.secondaryContainer}`,
-			`--on-secondary-container:${accent.onSecondaryContainer}`
-		].join(";")
 
 		root.dataset.accent = settings.accent
 		root.dataset.density = settings.density
 		root.dataset.motion = settings.animations
 		root.dataset.textSize = settings.textSize
+
+		document
+			.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]')
+			.forEach(meta => {
+				meta.content = NEUTRAL_COLORS[theme].background
+			})
 	}, [settings, setTheme, resolvedTheme])
 
 	// Cross-tab synchronization
