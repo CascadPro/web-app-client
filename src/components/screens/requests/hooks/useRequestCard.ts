@@ -1,5 +1,5 @@
 import { CalendarDaysIcon, CircleCheckIcon, ClockIcon } from "lucide-react"
-import type { Dispatch, MutableRefObject, SetStateAction } from "react"
+import type { KeyboardEvent, MutableRefObject } from "react"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
 import type { RequestHttpDtoGetRequestsResponseRequest as Request } from "@/api/generated"
@@ -11,7 +11,8 @@ import {
 import type { RequestCardDescriptionData } from "@/types/screens/requests"
 
 const LONG_PRESS_DELAY = 450
-const ACTIONS_HEIGHT = 400
+/** Высота меню действий (4 пункта + отступы) вместе с зазором под карточкой */
+const ACTIONS_HEIGHT = 240
 const VIEWPORT_PADDING = 16
 
 type Params = Pick<Request, "fields_remaining" | "created_at" | "deadline">
@@ -21,12 +22,11 @@ interface UseRequestCardReturn {
 	progress: number
 	descriptionData: RequestCardDescriptionData[]
 	isSelected: boolean
-	isCollapsed: boolean
 	selectedY: number
-	setIsCollapsed: Dispatch<SetStateAction<boolean>>
 	handleTouchStart: () => void
 	handleTouchEnd: () => void
 	handleTouchCancel: () => void
+	handleKeyDown: (event: KeyboardEvent) => void
 	handleClickOutside: () => void
 }
 
@@ -35,7 +35,6 @@ export const useRequestCard = ({
 	created_at,
 	deadline
 }: Params): UseRequestCardReturn => {
-	const [isCollapsed, setIsCollapsed] = useState(true)
 	const [isSelected, setIsSelected] = useState(false)
 	const [selectedY, setSelectedY] = useState(0)
 
@@ -83,7 +82,6 @@ export const useRequestCard = ({
 	const closeCard = useCallback(() => {
 		clearLongPress()
 		setIsSelected(false)
-		setIsCollapsed(true)
 		setSelectedY(0)
 	}, [clearLongPress])
 
@@ -130,6 +128,33 @@ export const useRequestCard = ({
 	const handleTouchEnd = clearLongPress
 	const handleTouchCancel = clearLongPress
 
+	// Для клавиатуры: клавиша меню или Shift+F10 открывают действия (как долгое нажатие)
+	const handleKeyDown = useCallback(
+		(event: KeyboardEvent) => {
+			if (
+				event.key === "ContextMenu" ||
+				(event.shiftKey && event.key === "F10")
+			) {
+				event.preventDefault()
+
+				if (!isSelected) selectCard()
+			}
+		},
+		[isSelected, selectCard]
+	)
+
+	useEffect(() => {
+		if (!isSelected) return
+
+		const handleEscape = (event: globalThis.KeyboardEvent) => {
+			if (event.key === "Escape") closeCard()
+		}
+
+		document.addEventListener("keydown", handleEscape)
+
+		return () => document.removeEventListener("keydown", handleEscape)
+	}, [isSelected, closeCard])
+
 	useEffect(() => clearLongPress, [clearLongPress])
 
 	useScrollLocked(isSelected)
@@ -139,12 +164,11 @@ export const useRequestCard = ({
 		progress,
 		descriptionData,
 		isSelected,
-		isCollapsed,
 		selectedY,
-		setIsCollapsed,
 		handleTouchStart,
 		handleTouchEnd,
 		handleTouchCancel,
+		handleKeyDown,
 		handleClickOutside: closeCard
 	}
 }

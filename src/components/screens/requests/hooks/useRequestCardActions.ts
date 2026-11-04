@@ -1,104 +1,119 @@
+"use client"
+
 import {
 	CheckCircleIcon,
+	InfoIcon,
 	type LucideIcon,
-	MoreHorizontalIcon,
+	PencilIcon,
 	XCircleIcon
 } from "lucide-react"
 import { useCallback, useMemo } from "react"
 
+import type { DomainRequestStatus } from "@/api/generated"
 import { toast, TOAST_ERROR_DURATION } from "@/components/ui/toast"
 import { useRequestPatchStatus } from "@/libs/query/hooks/use-requests"
 import { errorCatch } from "@/libs/utils"
 
-interface Action {
-	key: string
+export type RequestActionTone = "default" | "success" | "error"
+
+export interface RequestCardAction {
+	key: "details" | "edit" | "approve" | "reject"
 	title: string
 	Icon: LucideIcon
-	onClick: () => void
+	tone: RequestActionTone
 	loading: boolean
+	disabled: boolean
+	/** Пояснение под названием: почему действие недоступно */
+	hint?: string
+	onClick: () => void
 }
 
-interface UseRequestCardActionsReturn {
-	actions: Action[]
-	disabled: boolean
+interface Options {
+	status?: DomainRequestStatus
+	onDetails: () => void
+	onEdit: () => void
+	/** Действие со статусом выполнено — карточку можно «опустить» */
+	onDone: () => void
 }
 
 export const useRequestCardActions = (
 	id: string,
-	handleCollapse: () => void
-): UseRequestCardActionsReturn => {
-	const { patchStatus, isPending } = useRequestPatchStatus(id)
+	{ status, onDetails, onEdit, onDone }: Options
+): RequestCardAction[][] => {
+	const { patchStatus, isPending, pendingStatus } = useRequestPatchStatus(id)
 
 	const updateStatus = useCallback(
-		async (status: "approve" | "reject") => {
-			const toastId = toast.loading("Пожалуйста, подождите...", {
-				dismissible: false
-			})
-
+		async (next: "approve" | "reject") => {
 			try {
-				await patchStatus(status)
+				await patchStatus(next)
 
-				toast.update(toastId, {
-					type: "success",
-					title: `Запрос успешно ${
-						status === "approve" ? "одобрен" : "отклонен"
-					}`
-				})
+				toast.success(`Заявка ${next === "approve" ? "одобрена" : "отклонена"}`)
+
+				onDone()
 			} catch (error) {
 				const { message: description, code } = errorCatch(error)
 
-				toast.update(toastId, {
-					type: code === "request_not_enough_fields" ? "info" : "error",
-					title: `Не удалось ${
-						status === "approve" ? "одобрить" : "отклонить"
-					} запрос`,
-					description,
-					duration: TOAST_ERROR_DURATION
-				})
+				const title = `Не удалось ${
+					next === "approve" ? "одобрить" : "отклонить"
+				} заявку`
+
+				// «Не хватает полей» — не сбой, а подсказка, что нужно дозаполнить
+				if (code === "request_not_enough_fields") {
+					toast.info(title, { description })
+					return
+				}
+
+				toast.error(title, { description, duration: TOAST_ERROR_DURATION })
 			}
 		},
-		[patchStatus]
+		[patchStatus, onDone]
 	)
 
-	const approveRequest = useCallback(
-		() => updateStatus("approve"),
-		[updateStatus]
-	)
-
-	const rejectRequest = useCallback(
-		() => updateStatus("reject"),
-		[updateStatus]
-	)
-
-	const actions = useMemo<Action[]>(
+	return useMemo<RequestCardAction[][]>(
 		() => [
-			{
-				key: "details",
-				title: "Подробнее",
-				Icon: MoreHorizontalIcon,
-				loading: false,
-				onClick: handleCollapse
-			},
-			{
-				key: "approve",
-				title: "Подтвердить",
-				Icon: CheckCircleIcon,
-				loading: isPending,
-				onClick: approveRequest
-			},
-			{
-				key: "reject",
-				title: "Отклонить",
-				Icon: XCircleIcon,
-				loading: isPending,
-				onClick: rejectRequest
-			}
+			[
+				{
+					key: "details",
+					title: "Подробнее",
+					Icon: InfoIcon,
+					tone: "default",
+					loading: false,
+					disabled: isPending,
+					onClick: onDetails
+				},
+				{
+					key: "edit",
+					title: "Изменить",
+					Icon: PencilIcon,
+					tone: "default",
+					loading: false,
+					disabled: isPending,
+					onClick: onEdit
+				}
+			],
+			[
+				{
+					key: "approve",
+					title: "Подтвердить",
+					Icon: CheckCircleIcon,
+					tone: "success",
+					loading: pendingStatus === "approve",
+					disabled: isPending || status === "approved",
+					hint: status === "approved" ? "Уже одобрена" : undefined,
+					onClick: () => void updateStatus("approve")
+				},
+				{
+					key: "reject",
+					title: "Отклонить",
+					Icon: XCircleIcon,
+					tone: "error",
+					loading: pendingStatus === "reject",
+					disabled: isPending || status === "rejected",
+					hint: status === "rejected" ? "Уже отклонена" : undefined,
+					onClick: () => void updateStatus("reject")
+				}
+			]
 		],
-		[handleCollapse, isPending, approveRequest, rejectRequest]
+		[isPending, pendingStatus, status, onDetails, onEdit, updateStatus]
 	)
-
-	return {
-		actions,
-		disabled: isPending
-	}
 }
