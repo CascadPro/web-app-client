@@ -1,5 +1,5 @@
 import type { DragControls, PanInfo } from "motion/react"
-import type { PropsWithChildren, RefObject } from "react"
+import type { PropsWithChildren, ReactNode, RefObject } from "react"
 
 export interface BottomSheetProps extends PropsWithChildren {
 	open: boolean
@@ -46,6 +46,10 @@ export interface BottomSheetProps extends PropsWithChildren {
 	defaultExpanded?: boolean
 	onExpandedChange?: (expanded: boolean) => void
 	expandedHeight?: number | string
+
+	/** Блок под прокручиваемым содержимым — всегда виден (кнопки действий) */
+	footer?: ReactNode
+	footerCN?: string
 }
 
 export interface BottomSheetBackdropProps {
@@ -80,6 +84,8 @@ export interface BottomSheetPanelProps {
 	expanded: boolean
 	expandedHeight: number | string
 	onExpandedChange: (expanded: boolean) => void
+	footer?: ReactNode
+	footerCN?: string
 }
 
 export type BottomSheetDragEndHandler = (

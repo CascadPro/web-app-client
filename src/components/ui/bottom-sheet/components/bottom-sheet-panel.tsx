@@ -31,7 +31,9 @@ export const BottomSheetPanel: FC<BottomSheetPanelProps> = ({
 	expanded,
 	expandable,
 	expandedHeight,
-	onExpandedChange
+	onExpandedChange,
+	footer,
+	footerCN
 }) => {
 	const {
 		contentRef,
@@ -163,6 +165,17 @@ export const BottomSheetPanel: FC<BottomSheetPanelProps> = ({
 
 				{children}
 			</div>
+
+			{footer && (
+				<div
+					className={cn(
+						"border-outline/20 mx-auto w-full max-w-3xl shrink-0 border-t px-4 pt-3 pb-2",
+						footerCN
+					)}
+				>
+					{footer}
+				</div>
+			)}
 		</m.div>
 	)
 }

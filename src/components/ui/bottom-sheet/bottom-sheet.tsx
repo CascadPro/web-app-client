@@ -33,7 +33,9 @@ const BottomSheetComponent = memo(function BottomSheetComponent({
 	expanded,
 	defaultExpanded = false,
 	onExpandedChange,
-	expandedHeight = "90dvh"
+	expandedHeight = "90dvh",
+	footer,
+	footerCN
 }: Readonly<BottomSheetProps>) {
 	const {
 		panelRef,
@@ -98,6 +100,8 @@ const BottomSheetComponent = memo(function BottomSheetComponent({
 							expandable={expandable}
 							expandedHeight={expandedHeight}
 							onExpandedChange={setIsExpanded}
+							footer={footer}
+							footerCN={footerCN}
 						>
 							{children}
 						</BottomSheetPanel>
