@@ -41,6 +41,16 @@ export const QueryKeys = {
 
 		stats: () => [...QueryKeys.requests.all, "stats"] as const,
 
+		create: () => [...QueryKeys.requests.all, "create"] as const,
+
+		update: (id: string) => [...QueryKeys.requests.all, "update", id] as const,
+
+		fileUpload: (id: string, index: number) =>
+			[...QueryKeys.requests.all, "file-upload", id, index] as const,
+
+		fileDelete: (id: string, index: number) =>
+			[...QueryKeys.requests.all, "file-delete", id, index] as const,
+
 		details: () => [...QueryKeys.requests.all, "detail"] as const,
 
 		detail: (id: string) => [...QueryKeys.requests.details(), id] as const

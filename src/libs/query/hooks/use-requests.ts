@@ -1,13 +1,32 @@
 "use client"
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import {
+	type QueryClient,
+	useIsMutating,
+	useMutation,
+	useQuery,
+	useQueryClient
+} from "@tanstack/react-query"
+import type { AxiosProgressEvent } from "axios"
 import { useCallback, useMemo } from "react"
 
-import type { RequestsTransportHttpGetRequestsRequest as GetRequestsParams } from "@/api/generated"
+import type {
+	RequestsTransportHttpGetRequestsRequest as GetRequestsParams,
+	RequestsTransportHttpPatchRequestRequest as PatchRequestBody,
+	RequestHttpDtoCreateRequestRequest
+} from "@/api/generated"
 import { service } from "@/api/instance"
+import type { RequestDocKey } from "@/libs/constants/screens/request-docs"
 import { ms } from "@/libs/utils"
 
+import { idempotencyHeaders } from "../idempotency"
 import { QueryKeys } from "../keys"
+import {
+	addRequestToCache,
+	patchRequestInCache,
+	refreshRequestFiles,
+	removeRequestDocFromCache
+} from "../requests-cache"
 
 const EMPTY_REQUESTS: NonNullable<
 	Awaited<ReturnType<typeof service.getRequests>>["data"]["requests"]
@@ -52,17 +71,26 @@ export const useRequestStats = () => {
 	return { statistics: data ?? null, ...other }
 }
 
+/** Общие настройки запроса детальной заявки: хук и предзагрузка работают с одним кэшем */
+const requestDetailQuery = (id: string) => ({
+	queryKey: QueryKeys.requests.detail(id),
+	queryFn: async () => (await service.getRequestsId(id)).data,
+	staleTime: ms("3min"),
+	gcTime: ms("10min")
+})
+
 export const useRequestDetail = (id: string, enabled = true) => {
 	const { data, ...other } = useQuery({
-		queryKey: QueryKeys.requests.detail(id),
-		queryFn: async () => (await service.getRequestsId(id)).data,
-		enabled: Boolean(id) && enabled,
-		staleTime: ms("3min"),
-		gcTime: ms("10min")
+		...requestDetailQuery(id),
+		enabled: Boolean(id) && enabled
 	})
 
 	return { request: data ?? null, ...other }
 }
+
+/** Заранее подгружает детали: к нажатию «Подробнее» или «Изменить» они уже в кэше */
+export const prefetchRequestDetail = (client: QueryClient, id: string) =>
+	id ? client.query(requestDetailQuery(id)) : Promise.resolve()
 
 export const useRequestPatchStatus = (id: string) => {
 	const client = useQueryClient()
@@ -86,6 +114,118 @@ export const useRequestPatchStatus = (id: string) => {
 
 	return {
 		patchStatus: patchMutation.mutateAsync,
-		isPending: patchMutation.isPending
+		isPending: patchMutation.isPending,
+		/** Какое именно действие сейчас выполняется (для спиннера на нужной кнопке) */
+		pendingStatus: patchMutation.isPending
+			? (patchMutation.variables ?? null)
+			: null
 	}
+}
+
+export interface CreateRequestVariables {
+	body: RequestHttpDtoCreateRequestRequest
+	/** Один и тот же ключ при повторе — сервер не создаст дубль */
+	idempotencyKey: string
+}
+
+export const useCreateRequest = () => {
+	const client = useQueryClient()
+
+	return useMutation({
+		mutationKey: QueryKeys.requests.create(),
+		mutationFn: async ({ body, idempotencyKey }: CreateRequestVariables) =>
+			(
+				await service.postRequests(body, {
+					headers: idempotencyHeaders(idempotencyKey)
+				})
+			).data,
+		onSuccess: created => addRequestToCache(client, created)
+	})
+}
+
+export const useUpdateRequest = (id: string) => {
+	const client = useQueryClient()
+
+	return useMutation({
+		mutationKey: QueryKeys.requests.update(id),
+		mutationFn: async (body: PatchRequestBody) => {
+			await service.patchRequestsId(id, body)
+
+			return body
+		},
+		onSuccess: body => patchRequestInCache(client, id, body)
+	})
+}
+
+export interface UploadRequestFileVariables {
+	file: File
+	idempotencyKey: string
+	onProgress?: (percent: number) => void
+}
+
+export const useUploadRequestFile = (id: string, index: number) => {
+	const client = useQueryClient()
+
+	return useMutation({
+		mutationKey: QueryKeys.requests.fileUpload(id, index),
+		mutationFn: async ({
+			file,
+			idempotencyKey,
+			onProgress
+		}: UploadRequestFileVariables) =>
+			await service.postRequestsIdFileIndex(
+				id,
+				index,
+				{ file, tag: "docs" },
+				{
+					headers: {
+						...idempotencyHeaders(idempotencyKey),
+						"Content-Type": "multipart/form-data"
+					},
+					onUploadProgress: (event: AxiosProgressEvent) => {
+						if (event.total) {
+							onProgress?.(Math.round((event.loaded / event.total) * 100))
+						}
+					}
+				}
+			),
+		onSuccess: () => refreshRequestFiles(client, id)
+	})
+}
+
+export interface DeleteRequestFileVariables {
+	idempotencyKey: string
+	docKey: RequestDocKey
+}
+
+export const useDeleteRequestFile = (id: string, index: number) => {
+	const client = useQueryClient()
+
+	return useMutation({
+		mutationKey: QueryKeys.requests.fileDelete(id, index),
+		mutationFn: async ({ idempotencyKey }: DeleteRequestFileVariables) =>
+			await service.deleteRequestsIdFileIndex(id, index, {
+				headers: idempotencyHeaders(idempotencyKey)
+			}),
+		onSuccess: (_, { docKey }) => {
+			removeRequestDocFromCache(client, id, docKey)
+
+			return refreshRequestFiles(client, id)
+		}
+	})
+}
+
+/**
+ * Идёт ли сейчас загрузка/удаление файла в слоте. Состояние хранится в кэше мутаций,
+ * поэтому не теряется, если шторку закрыли и открыли снова посреди загрузки.
+ */
+export const useRequestFileBusy = (id: string, index: number) => {
+	const uploading = useIsMutating({
+		mutationKey: QueryKeys.requests.fileUpload(id, index)
+	})
+	const deleting = useIsMutating({
+		mutationKey: QueryKeys.requests.fileDelete(id, index)
+	})
+
+	return { isUploading: uploading > 0, isDeleting: deleting > 0 }
 }
