@@ -1,14 +1,16 @@
 import { m } from "motion/react"
 import dynamic from "next/dynamic"
 import type { FC, Ref } from "react"
-import { memo, useCallback } from "react"
+import { memo, useCallback, useEffect } from "react"
 
 import type { RequestHttpDtoGetRequestsResponseRequest as Request } from "@/api/generated"
 import { MarqueeText } from "@/components/ui/components/maruquee-text/marquee-text"
 import { EASE_OUT } from "@/libs/motion"
 import { cn } from "@/libs/utils"
+import { useRequestsUiStore } from "@/store/requests"
 
 import { useRequestCard } from "../../hooks/useRequestCard"
+import { useRequestCardSheets } from "../../hooks/useRequestCardSheets"
 
 import { RequestCardBadge } from "./request-card-badge"
 import { RequestCardDescription } from "./request-card-description"
@@ -20,14 +22,6 @@ const DynamicRequestCardOverlay = dynamic(
 
 const DynamicRequestCardActions = dynamic(
 	() => import("./request-card-actions").then(mod => mod.RequestCardActions),
-	{ ssr: false }
-)
-
-const DynamicRequestCardDetails = dynamic(
-	() =>
-		import("./details/request-card-details").then(
-			mod => mod.RequestCardDetails
-		),
 	{ ssr: false }
 )
 
@@ -44,13 +38,49 @@ const RequestCardComponent: FC<Props> = ({ request, ref: forwardedRef }) => {
 		descriptionData,
 		isSelected,
 		selectedY,
-		isCollapsed,
-		setIsCollapsed,
 		handleTouchStart,
 		handleTouchEnd,
 		handleTouchCancel,
+		handleKeyDown,
 		handleClickOutside
 	} = useRequestCard(request)
+
+	const {
+		DetailsSheet,
+		EditSheet,
+		isDetailsOpen,
+		isEditOpen,
+		setDetailsOpen,
+		setEditOpen,
+		openDetails,
+		openEdit,
+		editFromDetails,
+		preload
+	} = useRequestCardSheets(request.id || "")
+
+	const id = request.id || ""
+
+	// Селектор возвращает boolean: перерисовывается только карточка, у которой он меняется
+	const isHighlighted = useRequestsUiStore(
+		state => state.highlightId === request.id
+	)
+
+	// Шторки подгружаем, как только карточку выделили: к нажатию «Подробнее»
+	// или «Изменить» чанки уже на месте, и шторка выезжает без задержки
+	useEffect(() => {
+		if (isSelected) preload()
+	}, [isSelected, preload])
+
+	// Карточка «опускается» на место, а шторка выезжает поверх
+	const handleDetails = useCallback(() => {
+		handleClickOutside()
+		void openDetails()
+	}, [handleClickOutside, openDetails])
+
+	const handleEdit = useCallback(() => {
+		handleClickOutside()
+		void openEdit()
+	}, [handleClickOutside, openEdit])
 
 	const setRefs = useCallback(
 		(node: HTMLElement | null) => {
@@ -91,8 +121,9 @@ const RequestCardComponent: FC<Props> = ({ request, ref: forwardedRef }) => {
 			>
 				<div
 					className={cn(
-						"bg-surface border-outline/20 grid overflow-hidden rounded-2xl border shadow-sm transition-colors will-change-auto motion-reduce:transition-none sm:p-1",
-						isSelected && "border-transparent shadow-lg"
+						"bg-surface border-outline/20 grid overflow-hidden rounded-2xl border shadow-sm transition-[color,background-color,border-color,box-shadow] duration-500 will-change-auto motion-reduce:transition-none sm:p-1",
+						isSelected && "border-transparent shadow-lg",
+						isHighlighted && "ring-primary/60 ring-2"
 					)}
 				>
 					<button
@@ -103,6 +134,7 @@ const RequestCardComponent: FC<Props> = ({ request, ref: forwardedRef }) => {
 						onTouchEnd={handleTouchEnd}
 						onTouchCancel={handleTouchCancel}
 						onTouchMove={handleTouchCancel}
+						onKeyDown={handleKeyDown}
 						className="flex w-full flex-col gap-3 px-(--row-padding-x) py-(--row-padding-y) text-left sm:px-5"
 					>
 						<div className="flex justify-between gap-5">
@@ -135,7 +167,6 @@ const RequestCardComponent: FC<Props> = ({ request, ref: forwardedRef }) => {
 								aria-valuenow={progress}
 								className="bg-outline/20 h-1.5 overflow-hidden rounded-full"
 							>
-								{/* transform вместо width: не вызывает layout на каждом кадре */}
 								<m.div
 									initial={false}
 									animate={{ x: `${progress - 100}%` }}
@@ -145,22 +176,30 @@ const RequestCardComponent: FC<Props> = ({ request, ref: forwardedRef }) => {
 							</div>
 						</div>
 					</button>
-
-					{isSelected && (
-						<DynamicRequestCardDetails
-							id={request.id || ""}
-							isCollapsed={isCollapsed}
-						/>
-					)}
 				</div>
 
 				<DynamicRequestCardActions
-					id={request.id || ""}
+					id={id}
+					status={request.status}
 					selected={isSelected}
-					isCollapsed={isCollapsed}
-					setIsCollapsed={setIsCollapsed}
+					onDetails={handleDetails}
+					onEdit={handleEdit}
+					onDone={handleClickOutside}
 				/>
 			</m.article>
+
+			{DetailsSheet && (
+				<DetailsSheet
+					id={id}
+					open={isDetailsOpen}
+					onOpenChange={setDetailsOpen}
+					onEdit={editFromDetails}
+				/>
+			)}
+
+			{EditSheet && (
+				<EditSheet id={id} open={isEditOpen} onOpenChange={setEditOpen} />
+			)}
 		</>
 	)
 }

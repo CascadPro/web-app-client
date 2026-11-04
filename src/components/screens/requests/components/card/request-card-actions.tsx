@@ -1,83 +1,93 @@
-import { AnimatePresence, m } from "motion/react"
-import type { FC } from "react"
+"use client"
 
-import { Button } from "@/components/ui"
-import { EASE_OUT } from "@/libs/motion"
-import type { ReactStateHook } from "@/types/base"
+import { AnimatePresence, m, type Variants } from "motion/react"
+import { type FC, Fragment } from "react"
+
+import type { DomainRequestStatus } from "@/api/generated"
+import { DURATION, EASE_OUT, SPRING } from "@/libs/motion"
 
 import { useRequestCardActions } from "../../hooks/useRequestCardActions"
 
+import {
+	actionItemVariants,
+	RequestCardActionItem
+} from "./request-card-action"
+
+/** Меню «вырастает» из правого верхнего угла — оттуда, где палец держал карточку */
+const menuVariants: Variants = {
+	hidden: { opacity: 0, scale: 0.92, y: -8 },
+	visible: {
+		opacity: 1,
+		scale: 1,
+		y: 0,
+		transition: {
+			...SPRING.snappy,
+			staggerChildren: 0.04,
+			delayChildren: 0.06
+		}
+	},
+	exit: {
+		opacity: 0,
+		scale: 0.96,
+		y: -4,
+		transition: { duration: DURATION.fast, ease: EASE_OUT }
+	}
+}
+
 export interface Props {
 	id: string
+	status?: DomainRequestStatus
 	selected: boolean
-	isCollapsed: boolean
-	setIsCollapsed: ReactStateHook<boolean>
+	onDetails: () => void
+	onEdit: () => void
+	onDone: () => void
 }
 
-export const RequestCardActions: FC<Props> = ({
+export const RequestCardActions: FC<Props> = ({ selected, ...props }) => (
+	<AnimatePresence>
+		{selected && <RequestCardActionsContent key={props.id} {...props} />}
+	</AnimatePresence>
+)
+
+const RequestCardActionsContent: FC<Omit<Props, "selected">> = ({
 	id,
-	selected,
-	isCollapsed,
-	setIsCollapsed
+	status,
+	onDetails,
+	onEdit,
+	onDone
 }) => {
-	return (
-		<AnimatePresence>
-			{selected && (
-				<RequestCardActionsContent
-					key={id}
-					id={id}
-					isCollapsed={isCollapsed}
-					setIsCollapsed={setIsCollapsed}
-				/>
-			)}
-		</AnimatePresence>
-	)
-}
-
-interface ContentProps {
-	id: string
-	isCollapsed: boolean
-	setIsCollapsed: ReactStateHook<boolean>
-}
-
-const RequestCardActionsContent: FC<ContentProps> = ({
-	id,
-	isCollapsed,
-	setIsCollapsed
-}) => {
-	const handleCollapse = () => {
-		setIsCollapsed(previous => !previous)
-	}
-
-	const { actions, disabled } = useRequestCardActions(id, handleCollapse)
+	const groups = useRequestCardActions(id, {
+		status,
+		onDetails,
+		onEdit,
+		onDone
+	})
 
 	return (
 		<m.div
-			className="bg-surface static w-fit space-y-2 self-end overflow-hidden rounded-2xl p-3 shadow-lg"
-			initial={{ opacity: 0.75, height: 0, y: 8 }}
-			animate={{
-				opacity: 1,
-				height: !isCollapsed ? "3.75rem" : "9.5rem",
-				y: 0
-			}}
-			exit={{ opacity: 0, y: 16, height: 0, padding: 0 }}
-			transition={{
-				duration: 0.22,
-				ease: EASE_OUT
-			}}
+			role="group"
+			aria-label="Действия с заявкой"
+			variants={menuVariants}
+			initial="hidden"
+			animate="visible"
+			exit="exit"
+			style={{ transformOrigin: "top right" }}
+			className="bg-surface border-outline/20 w-[min(17rem,100%)] self-end rounded-2xl border p-1.5 shadow-xl"
 		>
-			{actions.map(({ key, title, Icon, loading, onClick }) => (
-				<Button
-					key={key}
-					variant="ghost"
-					className="active:bg-outline/20 flex w-full justify-start gap-2 rounded-xl px-6 py-2 transition-colors will-change-auto motion-reduce:transition-none"
-					onClick={onClick}
-					isLoading={loading}
-					disabled={disabled || (key !== "details" && !isCollapsed)}
-				>
-					<Icon size={18} className="mt-0.5" />
-					{title}
-				</Button>
+			{groups.map((group, index) => (
+				<Fragment key={index}>
+					{index > 0 && (
+						<m.div
+							role="separator"
+							variants={actionItemVariants}
+							className="bg-outline/15 mx-2 my-1 h-px"
+						/>
+					)}
+
+					{group.map(({ key, ...action }) => (
+						<RequestCardActionItem key={key} {...action} />
+					))}
+				</Fragment>
 			))}
 		</m.div>
 	)
