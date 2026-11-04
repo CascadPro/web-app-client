@@ -1,24 +1,26 @@
+"use client"
+
 import { m } from "motion/react"
 
-import { Button } from "@/components/ui"
+import { Button } from "@/components/ui/button"
 import { cn } from "@/libs/utils"
-import { SettingsOption } from "@/types/screens/settings"
 
-import { useSegmentedControl } from "../hooks/useSegmentedControl"
+import { useSegmentedControl } from "./hooks/useSegmentedControl"
+import type { SegmentedControlProps, SegmentedControlSize } from "./types"
 
-interface SettingsSegmentedControlProps<T extends string> {
-	value: T
-	options: SettingsOption<T>[]
-	label: string
-	onChange: (value: T) => void
+const ITEM_SIZE: Record<SegmentedControlSize, string> = {
+	md: "px-3 py-2",
+	sm: "px-2.5 py-1.5"
 }
 
-export const SettingsSegmentedControl = <T extends string>({
+export const SegmentedControl = <T extends string>({
 	value,
 	options,
 	label,
-	onChange
-}: SettingsSegmentedControlProps<T>) => {
+	onChange,
+	size = "md",
+	className
+}: SegmentedControlProps<T>) => {
 	const { containerRef, left, top, width, height, ready, itemRefs } =
 		useSegmentedControl(value, options)
 
@@ -26,11 +28,14 @@ export const SettingsSegmentedControl = <T extends string>({
 		<fieldset
 			ref={containerRef}
 			aria-label={label}
-			className="bg-surface-variant/60 relative m-0 flex max-w-full min-w-0 flex-wrap gap-1 rounded-xl border-0 p-1"
+			className={cn(
+				"bg-surface-variant/60 relative m-0 flex max-w-full min-w-0 flex-wrap gap-1 rounded-xl border-0 p-1",
+				className
+			)}
 		>
 			<m.span
 				aria-hidden
-				className="glass bg-primary/90 pointer-events-none absolute top-0 left-0 rounded-xl will-change-transform"
+				className="glass-lite bg-primary/90 pointer-events-none absolute top-0 left-0 rounded-xl will-change-transform"
 				style={{
 					x: left,
 					y: top,
@@ -54,7 +59,8 @@ export const SettingsSegmentedControl = <T extends string>({
 						aria-pressed={active}
 						onClick={active ? undefined : () => onChange(option.value)}
 						className={cn(
-							"text-on-surface-variant relative z-10 flex-1 rounded-lg bg-transparent px-3 py-2",
+							"text-on-surface-variant relative z-10 flex-1 rounded-lg bg-transparent",
+							ITEM_SIZE[size],
 							"hover:text-on-surface transition-ui will-change-auto hover:bg-transparent",
 							"focus-visible:ring-primary focus-visible:ring-2",
 							"active:scale-95",

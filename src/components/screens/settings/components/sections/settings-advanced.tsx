@@ -1,7 +1,7 @@
 import { LockKeyholeIcon, Settings2Icon, ZapIcon } from "lucide-react"
 import { type FC, memo } from "react"
 
-import { Section, Switch } from "@/components/ui"
+import { Section, SegmentedControl, Switch } from "@/components/ui"
 import {
 	ANIMATION_OPTIONS,
 	SESSION_EXPIRE_OPTIONS
@@ -9,7 +9,6 @@ import {
 import type { SettingsState } from "@/types/screens/settings"
 
 import { SettingsRow } from "../settings-row"
-import { SettingsSegmentedControl } from "../settings-segmented-control"
 
 interface Props {
 	settings: SettingsState
@@ -28,7 +27,7 @@ const SettingsAdvancedComponent: FC<Props> = ({ settings, onChange }) => (
 			description="Учитывать системные настройки движения"
 			icon={ZapIcon}
 			trailing={
-				<SettingsSegmentedControl
+				<SegmentedControl
 					label="Анимации"
 					value={settings.animations}
 					options={ANIMATION_OPTIONS}
@@ -42,7 +41,7 @@ const SettingsAdvancedComponent: FC<Props> = ({ settings, onChange }) => (
 			description="Период действия сеанса до истечения срока"
 			icon={LockKeyholeIcon}
 			trailing={
-				<SettingsSegmentedControl
+				<SegmentedControl
 					label="Срок действия сеанса"
 					value={settings.sessionExpireTerm}
 					options={SESSION_EXPIRE_OPTIONS}

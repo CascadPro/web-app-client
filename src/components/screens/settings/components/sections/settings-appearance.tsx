@@ -1,7 +1,7 @@
 import { MonitorIcon, PaletteIcon, SunIcon, TypeIcon } from "lucide-react"
 import { type FC, memo } from "react"
 
-import { Section } from "@/components/ui"
+import { Section, SegmentedControl } from "@/components/ui"
 import {
 	ACCENT_OPTIONS,
 	DENSITY_OPTIONS,
@@ -11,7 +11,6 @@ import {
 import { SettingsState } from "@/types/screens/settings"
 
 import { SettingsRow } from "../settings-row"
-import { SettingsSegmentedControl } from "../settings-segmented-control"
 
 interface Props {
 	settings: SettingsState
@@ -30,7 +29,7 @@ const SettingsAppearanceComponent: FC<Props> = ({ settings, onChange }) => (
 			description="Светлая, тёмная или системная"
 			icon={SunIcon}
 			trailing={
-				<SettingsSegmentedControl
+				<SegmentedControl
 					label="Тема интерфейса"
 					value={settings.theme}
 					options={THEME_OPTIONS}
@@ -44,7 +43,7 @@ const SettingsAppearanceComponent: FC<Props> = ({ settings, onChange }) => (
 			description="Основной цвет интерфейса"
 			icon={PaletteIcon}
 			trailing={
-				<SettingsSegmentedControl
+				<SegmentedControl
 					label="Акцентный цвет"
 					value={settings.accent}
 					options={ACCENT_OPTIONS}
@@ -58,7 +57,7 @@ const SettingsAppearanceComponent: FC<Props> = ({ settings, onChange }) => (
 			description="Размер текста в интерфейсе"
 			icon={TypeIcon}
 			trailing={
-				<SettingsSegmentedControl
+				<SegmentedControl
 					label="Размер текста"
 					value={settings.textSize}
 					options={TEXT_SIZE_OPTIONS}
@@ -72,7 +71,7 @@ const SettingsAppearanceComponent: FC<Props> = ({ settings, onChange }) => (
 			description="Компактный режим уменьшает расстояния между элементами."
 			icon={MonitorIcon}
 			trailing={
-				<SettingsSegmentedControl
+				<SegmentedControl
 					label="Плотность интерфейса"
 					value={settings.density}
 					options={DENSITY_OPTIONS}
