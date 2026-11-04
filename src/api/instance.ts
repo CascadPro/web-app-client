@@ -85,6 +85,7 @@ const clearAuthenticatedCache = (): void => {
 
 const expireClientSession = (): void => {
 	useAuthStore.getState().setUnauthenticated()
+
 	clearAuthenticatedCache()
 }
 
@@ -158,4 +159,4 @@ instance.interceptors.response.use(
 	}
 )
 
-export { instance, service }
+export { expireClientSession, instance, refreshAccessToken, service }
