@@ -2,13 +2,19 @@ import type { FactoryArg } from "imask"
 import type InputMask from "imask/esm/controls/input"
 import type { InputHTMLAttributes, TextareaHTMLAttributes } from "react"
 
-import type { LoginFormFields, RegisterFormFields } from "@/libs/schemes"
+import type {
+	CreateRequestFormFields,
+	LoginFormFields,
+	RegisterFormFields
+} from "@/libs/schemes"
 import type { ReactStateHook } from "@/types/base"
 
 type FormInputSetMask = ReactStateHook<InputMask<FactoryArg> | undefined>
 
 export type FormInputFieldNames =
-	keyof LoginFormFields | keyof RegisterFormFields
+	| keyof LoginFormFields
+	| keyof RegisterFormFields
+	| keyof CreateRequestFormFields
 
 export type FormInputType = "default" | "textarea"
 
