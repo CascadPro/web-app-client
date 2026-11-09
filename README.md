@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<div align="center">
 
-## Getting Started
+# Cascade Pro — Web App Client
 
-First, run the development server:
+**The frontend application for Cascade Pro.**
+
+Built with Next.js, React, TypeScript, and Tailwind CSS.
+
+[Repository](https://github.com/CascadPro/web-app-client) · [Backend API](https://github.com/CascadPro/api-golang-server)
+
+</div>
+
+---
+
+## Overview
+
+`web-app-client` is the web client for **Cascade Pro**, built with the Next.js App Router and designed to work with the Cascade Pro Go API.
+
+The application includes authentication flows, protected sections, user profile and settings interfaces, requests and sessions, and a responsive UI. It also uses client-side caching and persistence for supported query data.
+
+## Tech stack
+
+| Technology | Purpose |
+| --- | --- |
+| [Next.js](https://nextjs.org/) | React framework and App Router |
+| [React](https://react.dev/) | UI |
+| [TypeScript](https://www.typescriptlang.org/) | Static typing |
+| [Tailwind CSS v4](https://tailwindcss.com/) | Styling |
+| [TanStack Query](https://tanstack.com/query/latest) | Server-state management and caching |
+| [Zustand](https://zustand.docs.pmnd.rs/) | Client-side state |
+| [Axios](https://axios-http.com/) | HTTP requests |
+| [Orval](https://orval.dev/) | API client/type generation |
+| [Motion](https://motion.dev/) | UI animations |
+| [next-themes](https://github.com/pacocoursey/next-themes) | Theme management |
+| [Zod](https://zod.dev/) | Schema validation |
+| [React Hook Form](https://react-hook-form.com/) | Form state management |
+| [Bun](https://bun.sh/) | Package manager and scripts |
+
+## Features
+
+- **Authentication** — frontend authentication flows integrated with the backend API.
+- **Protected pages** — authenticated sections for the main application.
+- **Requests and sessions** — dedicated application areas for working with requests and sessions.
+- **Profile and settings** — user-facing profile and preferences.
+- **API integration** — Axios-based requests and generated API types/client code.
+- **Server-state management** — TanStack Query for fetching, caching, and updating server data.
+- **Persistent query cache** — persistence for supported query data.
+- **Responsive interface** — layouts and interactive components designed for desktop and mobile.
+- **Themes and motion** — theme support, transitions, and reduced-motion considerations.
+- **Progressive Web App groundwork** — web app manifest and service-worker support.
+
+## Requirements
+
+- [Bun](https://bun.sh/) **1.4.0**
+- A running instance of the [Cascade Pro API](https://github.com/CascadPro/api-golang-server)
+
+Check your Bun version:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+bun --version
