@@ -23,7 +23,7 @@ export const API_ERROR_MESSAGES: Record<ApiErrorCode, string> = {
 	file_not_found: "Файл не найден",
 	file_already_exists: "Файл уже существует",
 	file_access_denied: "Нет доступа к файлу",
-	unsupported_file: "Неподдерживаемый тип файла",
+	unsupported_format: "Неподдерживаемый формат файла",
 	file_too_large: "Файл слишком большой",
 
 	request_not_found: "Запрос не найден",

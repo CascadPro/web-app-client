@@ -27,7 +27,7 @@ interface UseRegisterPageReturn {
 export const useRegisterPage = (): UseRegisterPageReturn => {
 	const form = useForm({
 		resolver: zodResolver(registerScheme),
-		defaultValues: { email: "", password: "", token: "" },
+		defaultValues: { email: "", phone: "", password: "", token: "" },
 		mode: "onBlur"
 	})
 
@@ -49,10 +49,10 @@ export const useRegisterPage = (): UseRegisterPageReturn => {
 				dismissible: false
 			})
 
-			const { email, password, token } = data
+			const { email, phone, password, token } = data
 
 			try {
-				await register({ email, password, token })
+				await register({ email, phone, password, token })
 
 				stateLogin()
 

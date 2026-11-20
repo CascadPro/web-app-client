@@ -14,20 +14,26 @@ import { useHaptic } from "@/libs/haptics"
 import { useNavigation } from "@/libs/hooks"
 import { type LoginFormFields, loginScheme } from "@/libs/schemes"
 import { errorCatch } from "@/libs/utils"
+import { normalizeEmail } from "@/libs/utils/phone"
 import { useAuthStore } from "@/store/auth"
 
 type Status = "default" | "loading" | "success" | "error"
+
+type LoginMethod = "email" | "phone"
 
 interface UseLoginPageReturn {
 	form: UseFormReturn<LoginFormFields>
 	handleSubmit: () => void
 	status: Status
+	method: LoginMethod
+	handleMethodChange: (method: LoginMethod) => void
+	handleEmailChange: (value: string) => void
 }
 
 export const useLoginPage = (): UseLoginPageReturn => {
 	const form = useForm({
 		resolver: zodResolver(loginScheme),
-		defaultValues: { email: "", password: "" },
+		defaultValues: { email: "", phone: "", password: "" },
 		mode: "onBlur"
 	})
 
@@ -36,6 +42,8 @@ export const useLoginPage = (): UseLoginPageReturn => {
 	const { haptic } = useHaptic()
 
 	const [status, setStatus] = useState<Status>("default")
+
+	const [method, setMethod] = useState<LoginMethod>("email")
 
 	const stateLogin = useAuthStore(state => state.setAuthenticated)
 
@@ -47,10 +55,10 @@ export const useLoginPage = (): UseLoginPageReturn => {
 
 			const id = toast.loading("Входим в систему...", { dismissible: false })
 
-			const { email, password } = data
+			const { email, phone, password } = data
 
 			try {
-				await login({ email, password })
+				await login({ email, phone, password })
 
 				stateLogin()
 
@@ -79,6 +87,19 @@ export const useLoginPage = (): UseLoginPageReturn => {
 		[status]
 	)
 
+	const handleMethodChange = (method: LoginMethod) => {
+		setMethod(method)
+		if (method === "email") {
+			form.setValue("phone", "")
+		} else {
+			form.setValue("email", "")
+		}
+	}
+
+	const handleEmailChange = (value: string) => {
+		form.setValue("email", normalizeEmail(value))
+	}
+
 	useEffect(() => {
 		if (status === "success") {
 			setTimeout(() => replace(AppRoutes.MENU), 2000)
@@ -92,6 +113,9 @@ export const useLoginPage = (): UseLoginPageReturn => {
 	return {
 		form,
 		handleSubmit,
-		status
+		status,
+		method,
+		handleMethodChange,
+		handleEmailChange
 	}
 }

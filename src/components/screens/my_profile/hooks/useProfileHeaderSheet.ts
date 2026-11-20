@@ -63,7 +63,7 @@ export const useProfileHeaderSheet = (
 
 		try {
 			await uploadAvatar({
-				body: { file, tag: "avatars" },
+				file,
 				idempotencyKey
 			})
 

@@ -16,7 +16,7 @@ export type ApiErrorCode =
 	| "file_not_found"
 	| "file_already_exists"
 	| "file_access_denied"
-	| "unsupported_file"
+	| "unsupported_format"
 	| "file_too_large"
 	| "request_not_found"
 	| "request_already_exists"
