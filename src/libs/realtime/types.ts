@@ -94,6 +94,63 @@ export interface UserUpdatedEvent extends WsEvent<UserUpdatedEventData> {
 	type: typeof WS_EVENTS.USER_UPDATED
 }
 
+export interface RequestCreatedEventData {
+	id: string
+	title: string
+	status: string
+	client_id?: string | null
+	created_at: string
+}
+
+export interface RequestCreatedEvent extends WsEvent<RequestCreatedEventData> {
+	type: typeof WS_EVENTS.REQUEST_CREATED
+}
+
+export interface RequestUpdatedEventData {
+	id: string
+	title?: string | null
+	status?: string | null
+	client_id?: string | null
+	deadline?: string | null
+	work_types?: string[]
+	geography?: string[]
+	origin?: unknown[]
+	updated_at: string
+}
+
+export interface RequestUpdatedEvent extends WsEvent<RequestUpdatedEventData> {
+	type: typeof WS_EVENTS.REQUEST_UPDATED
+}
+
+export interface RequestStatusChangedEventData {
+	id: string
+	status: string
+	status_by: string
+	updated_at: string
+}
+
+export interface RequestStatusChangedEvent extends WsEvent<RequestStatusChangedEventData> {
+	type: typeof WS_EVENTS.REQUEST_STATUS_CHANGED
+}
+
+export interface RequestFileEventData {
+	id: string
+	request_id: string
+	slot: number
+	filename: string
+	size: number
+	mime_type: string
+	created_at: string
+}
+
+export interface RequestFileUploadedEvent extends WsEvent<RequestFileEventData> {
+	type: typeof WS_EVENTS.REQUEST_FILE_UPLOADED
+}
+
+export interface RequestFileDeletedEvent extends WsEvent<RequestFileEventData> {
+	type: typeof WS_EVENTS.REQUEST_FILE_DELETED
+}
+
 export type WsServerEvent =
 	| PresenceOnlineEvent
 	| PresenceOfflineEvent
@@ -104,15 +161,14 @@ export type WsServerEvent =
 	| SettingsUpdatedEvent
 	| UserAvatarUpdatedEvent
 	| UserUpdatedEvent
+	| RequestCreatedEvent
+	| RequestUpdatedEvent
+	| RequestStatusChangedEvent
+	| RequestFileUploadedEvent
+	| RequestFileDeletedEvent
 
 export type WsMessage = WsAuthSuccess | WsAuthError | WsServerEvent
 
-/**
- * Тип события по его имени.
- *
- * WsEventByType<"presence.online"> -> PresenceOnlineEvent
- * WsEventByType<"session.created"> -> SessionCreatedEvent
- */
 export type WsEventByType<T extends WsEventType> = Extract<
 	WsServerEvent,
 	{ type: T }

@@ -21,7 +21,13 @@ export const WS_EVENTS = {
 	SETTINGS_UPDATED: "settings.updated",
 
 	USER_UPDATED: "user.updated",
-	USER_AVATAR_UPDATED: "user.avatar.updated"
+	USER_AVATAR_UPDATED: "user.avatar.updated",
+
+	REQUEST_CREATED: "request.created",
+	REQUEST_UPDATED: "request.updated",
+	REQUEST_STATUS_CHANGED: "request.status_changed",
+	REQUEST_FILE_UPLOADED: "request.file_uploaded",
+	REQUEST_FILE_DELETED: "request.file_deleted"
 } as const
 
 export type WsAuthEventType =
