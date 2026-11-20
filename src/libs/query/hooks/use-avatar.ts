@@ -3,6 +3,7 @@ import type { AxiosRequestConfig } from "axios"
 
 import type { PatchUsersAvatarBody } from "@/api/generated"
 import { service } from "@/api/instance"
+import { uploadAvatar, type StreamingUploadOptions } from "@/libs/upload"
 
 import { QueryKeys } from "../keys"
 
@@ -11,7 +12,8 @@ export interface IdempotentMutation {
 }
 
 export interface UploadAvatarVariables extends IdempotentMutation {
-	body?: PatchUsersAvatarBody
+	file: File
+	onProgress?: StreamingUploadOptions["onProgress"]
 }
 
 const idempotencyConfig = (key: string): AxiosRequestConfig => ({
@@ -34,13 +36,16 @@ export const useUploadAvatar = () => {
 
 	return useMutation({
 		mutationKey: QueryKeys.avatar.upload(),
-		mutationFn: async ({ body, idempotencyKey }: UploadAvatarVariables) =>
-			await service.patchUsersAvatar(body, {
-				headers: {
-					"Idempotency-Key": idempotencyKey,
-					"Content-Type": "multipart/form-data"
-				}
-			}),
+		mutationFn: async ({ file, idempotencyKey, onProgress }: UploadAvatarVariables) => {
+			const result = await uploadAvatar({
+				file,
+				headers: { "Idempotency-Key": idempotencyKey },
+				onProgress,
+			})
+			if (!result.success) {
+				throw result.error ?? new Error(`Upload failed: ${result.status} ${result.statusText}`)
+			}
+		},
 		onSuccess: () => client.invalidateQueries({ queryKey: QueryKeys.users.all })
 	})
 }
