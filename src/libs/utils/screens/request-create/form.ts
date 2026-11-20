@@ -1,22 +1,90 @@
-import type { RequestHttpDtoCreateRequestRequest } from "@/api/generated"
+import type {
+	RequestHttpDtoCreateRequestRequest,
+	RequestHttpDtoCreateRequestRequestOrigin
+} from "@/api/generated"
 import {
 	REQUEST_FORM_LIMITS,
 	REQUEST_TAG_HINTS
-} from "@/libs/constants/screens/request-form"
+} from "@/libs/constants/screens/requests/request-form"
 import type { CreateRequestFormFields } from "@/libs/schemes"
+
+import { normalizeOriginValue } from "../../phone"
 
 import { toDeadlineISO } from "./date"
 
-/** Форма → тело запроса: пустые значения не отправляем */
+type OriginItemWithEmail = RequestHttpDtoCreateRequestRequestOrigin & {
+	type: "email"
+	email: string
+}
+type OriginItemWithPhone = RequestHttpDtoCreateRequestRequestOrigin & {
+	type: "phone"
+	phone: string
+}
+type OriginItemWithOther = RequestHttpDtoCreateRequestRequestOrigin & {
+	type: "other"
+	other: string
+}
+
+function isOriginItemWithEmail(
+	item: RequestHttpDtoCreateRequestRequestOrigin
+): item is OriginItemWithEmail {
+	return item.type === "email" && !!item.email
+}
+
+function isOriginItemWithPhone(
+	item: RequestHttpDtoCreateRequestRequestOrigin
+): item is OriginItemWithPhone {
+	return item.type === "phone" && !!item.phone
+}
+
+function isOriginItemWithOther(
+	item: RequestHttpDtoCreateRequestRequestOrigin
+): item is OriginItemWithOther {
+	return item.type === "other" && !!item.other
+}
+
 export const toCreateRequestPayload = (
 	values: CreateRequestFormFields
 ): RequestHttpDtoCreateRequestRequest => {
 	const origin = values.origin
-		.map(item => ({ type: item.type, value: item.value.trim() }))
-		.filter(item => item.value.length > 0)
+		.map(item => {
+			const base = { type: item.type }
+			switch (item.type) {
+				case "email":
+					return {
+						...base,
+						email: item.email
+							? normalizeOriginValue(item.type, item.email)
+							: undefined
+					}
+				case "phone":
+					return {
+						...base,
+						phone: item.phone
+							? normalizeOriginValue(item.type, item.phone)
+							: undefined
+					}
+				case "other":
+					return { ...base, other: item.other }
+				default:
+					return base
+			}
+		})
+		.filter(
+			(
+				item
+			): item is
+				OriginItemWithEmail | OriginItemWithPhone | OriginItemWithOther => {
+				if (item.type === "email") return isOriginItemWithEmail(item)
+				if (item.type === "phone") return isOriginItemWithPhone(item)
+				if (item.type === "other") return isOriginItemWithOther(item)
+				return false
+			}
+		)
 
 	return {
 		title: values.title.trim(),
+		...(values.client_id ? { client_id: values.client_id } : {}),
 		...(values.deadline ? { deadline: toDeadlineISO(values.deadline) } : {}),
 		...(origin.length > 0 ? { origin } : {}),
 		...(values.work_types.length > 0 ? { work_types: values.work_types } : {}),
@@ -36,7 +104,6 @@ export interface MergeTagsResult {
 	skipped: TagSkipReason | null
 }
 
-/** Добавляет теги без дублей (без учёта регистра) с учётом лимитов */
 export const mergeTags = (
 	current: string[],
 	incoming: string[]
