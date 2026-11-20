@@ -6,7 +6,7 @@ import { type ButtonHTMLAttributes, forwardRef } from "react"
 import { cn } from "@/libs/utils"
 
 const buttonVariants = cva(
-	"relative inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm motion-reduce:transition-none transition-ui will-change-auto active:scale-[.97] [&_svg]:pointer-events-none [&_svg]:select-none disabled:opacity-50! disabled:cursor-not-allowed disabled:pointer-events-none",
+	"relative inline-flex items-center justify-center whitespace-nowrap rounded-lg text-sm motion-reduce:transition-none transition-ui will-change-auto active:scale-[.97] [&_svg]:pointer-events-none [&_svg]:select-none disabled:opacity-50! disabled:cursor-not-allowed disabled:pointer-events-none",
 	{
 		variants: {
 			variant: {
@@ -22,7 +22,7 @@ const buttonVariants = cva(
 				destructive:
 					"bg-error-container text-on-error-container hover:bg-error hover:text-on-error active:bg-error active:text-on-error",
 				"destructive-outline":
-					"text-error bg-error/20 ring-error rounded-xl ring shadow-md active:shadow-none hover:bg-error-container/40 active:bg-error-container/40 active:scale-[.99]"
+					"text-error bg-error/20 border-error border rounded-xl shadow-md active:shadow-none hover:bg-error-container/40 active:bg-error-container/40 active:scale-[0.97]"
 			}
 		},
 		defaultVariants: {
@@ -62,7 +62,6 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 			>
 				{isLoading ? (
 					<>
-						{/* Контент остаётся в потоке, поэтому ширина кнопки не «прыгает» */}
 						<span
 							aria-hidden="true"
 							className="invisible inline-flex items-center justify-center"

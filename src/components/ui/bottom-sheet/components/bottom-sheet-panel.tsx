@@ -169,7 +169,7 @@ export const BottomSheetPanel: FC<BottomSheetPanelProps> = ({
 			{footer && (
 				<div
 					className={cn(
-						"border-outline/20 mx-auto w-full max-w-3xl shrink-0 border-t px-4 pt-3 pb-2",
+						"border-outline/20 mx-auto w-full max-w-3xl shrink-0 border-t px-(--row-padding-x) pt-(--row-padding-y) pb-(--mini-row-padding-y)",
 						footerCN
 					)}
 				>

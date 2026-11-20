@@ -9,6 +9,7 @@ import type { MarqueeTextProps } from "./types"
 export const MarqueeText: FC<MarqueeTextProps> = ({
 	children,
 	className,
+	shadow = true,
 	options = {},
 	tag = "p"
 }) => {
@@ -27,8 +28,9 @@ export const MarqueeText: FC<MarqueeTextProps> = ({
 			ref={containerRef}
 			className={cn(
 				"relative min-w-0 overflow-hidden",
-				"after:absolute after:top-0 after:right-0 after:h-full after:w-4 after:content-['']",
-				"after:bg-[linear-gradient(90deg,transparent,var(--surface))]"
+				shadow &&
+					"after:absolute after:top-0 after:right-0 after:h-full after:w-4 after:content-['']",
+				shadow && "after:bg-[linear-gradient(90deg,transparent,var(--surface))]"
 			)}
 			onMouseEnter={handleMouseEnter}
 			onMouseLeave={handleMouseLeave}
@@ -36,7 +38,7 @@ export const MarqueeText: FC<MarqueeTextProps> = ({
 			<Comp
 				ref={textRef}
 				animate={controls}
-				className={cn("w-max max-w-none pr-5 whitespace-nowrap", className)}
+				className={cn("zmax-w-none w-max pr-5 whitespace-nowrap", className)}
 			>
 				{children}
 			</Comp>

@@ -16,7 +16,7 @@
 
 .required {
 	position: absolute;
-	top: calc(var(--spacing) * -3);
+	top: calc(var(--spacing) * -4);
 	right: calc(var(--spacing) * -1);
 	font-size: var(--text-lg);
 	line-height: var(--tw-leading, var(--text-lg--line-height));
@@ -25,7 +25,7 @@
 
 .label {
 	position: absolute;
-	top: calc(var(--spacing) * -5);
+	top: calc(var(--spacing) * -5.5);
 	left: calc(var(--spacing) * 1);
 	color: color-mix(in oklab, var(--color-on-surface) 70%, transparent);
 	font-size: var(--text-sm);

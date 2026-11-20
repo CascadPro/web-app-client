@@ -10,7 +10,10 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
 			<input
 				type={type}
 				className={cn(
-					"bg-surface/60 placeholder:text-on-surface/70 transition-ui flex w-full rounded-md px-3 py-3 text-sm will-change-auto focus-visible:outline-none motion-reduce:transition-none",
+					"bg-surface/60 placeholder:text-on-surface/70 flex w-full rounded-xl px-3 py-3 text-sm",
+					"transition-ui will-change-auto motion-reduce:transition-none",
+					"caret-primary ring-outline/40 ring",
+					"focus-visible:ring-primary/70 focus-visible:outline-none",
 					{ "border-0 bg-transparent text-sm font-medium": type === "file" },
 					{ "cursor-not-allowed opacity-50": disabled },
 					className

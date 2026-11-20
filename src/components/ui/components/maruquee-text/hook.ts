@@ -1,5 +1,5 @@
 import { type Easing, useAnimationControls, useInView } from "motion/react"
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useLayoutEffect, useRef, useState } from "react"
 
 import { EASE_OUT, useReduceMotion } from "@/libs/motion"
 
@@ -34,7 +34,7 @@ export const useMarqueeText = ({
 		setDistance(Math.max(0, text.scrollWidth - container.clientWidth))
 	}, [])
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		const mediaQuery = window.matchMedia("(hover: none)")
 
 		const updateDevice = () => {
@@ -76,7 +76,7 @@ export const useMarqueeText = ({
 		})
 	}, [controls, distance, shouldReduceMotion])
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		controls.stop()
 		controls.set({ x: 0 })
 
