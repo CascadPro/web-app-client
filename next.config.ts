@@ -12,7 +12,10 @@ const nextConfig: NextConfig = {
 		],
 		unoptimized: true
 	},
-	allowedDevOrigins: ["192.168.3.6", "192.168.18.227", "0.0.0.0"]
+	allowedDevOrigins: ["192.168.3.6", "192.168.18.227", "0.0.0.0"],
+	experimental: {
+		agentUpgrade: "security"
+	}
 }
 
 export default nextConfig
