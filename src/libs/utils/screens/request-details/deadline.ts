@@ -4,10 +4,6 @@ const DATE_PART = /^(\d{4})-(\d{2})-(\d{2})/
 const pad = (value: number, length = 2): string =>
 	String(value).padStart(length, "0")
 
-/**
- * RFC3339 → YYYY-MM-DD по UTC. Срок хранится как полдень UTC (см. toDeadlineISO),
- * поэтому UTC-дата совпадает с тем, что выбрал пользователь, в любом часовом поясе.
- */
 export const deadlineToDateInput = (value?: string | null): string => {
 	if (!value) return ""
 
@@ -18,7 +14,6 @@ export const deadlineToDateInput = (value?: string | null): string => {
 	return `${pad(date.getUTCFullYear(), 4)}-${pad(date.getUTCMonth() + 1)}-${pad(date.getUTCDate())}`
 }
 
-/** Целых дней от `from` до `to` (обе даты в YYYY-MM-DD). Отрицательное — `to` раньше */
 export const daysBetween = (from: string, to: string): number => {
 	const a = DATE_PART.exec(from)
 	const b = DATE_PART.exec(to)
@@ -32,7 +27,6 @@ export const daysBetween = (from: string, to: string): number => {
 	)
 }
 
-/** Склонение: pluralize(2, ["день", "дня", "дней"]) → "дня" */
 export const pluralize = (
 	amount: number,
 	forms: [string, string, string]
@@ -57,7 +51,6 @@ export interface DeadlineInfo {
 
 const DAYS: [string, string, string] = ["день", "дня", "дней"]
 
-/** Сколько осталось до срока и насколько это срочно. `today` — YYYY-MM-DD */
 export const getDeadlineInfo = (
 	deadline: string | null | undefined,
 	today: string
@@ -82,10 +75,13 @@ export const getDeadlineInfo = (
 
 	if (days === 0) return { days, tone: "soon", label: "сегодня" }
 	if (days === 1) return { days, tone: "soon", label: "завтра" }
+	if (days === 7) return { days, tone: "soon", label: "через неделю" }
+	if (days === 14) return { days, tone: "soon", label: "через 2 недели" }
+	if (days === 30) return { days, tone: "normal", label: "через месяц" }
 
 	return {
 		days,
-		tone: days <= 3 ? "soon" : "normal",
+		tone: days <= 14 ? "soon" : "normal",
 		label: `через ${days} ${pluralize(days, DAYS)}`
 	}
 }

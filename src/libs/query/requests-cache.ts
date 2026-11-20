@@ -7,14 +7,14 @@ import type {
 	RequestsTransportHttpGetRequestsRequest as GetRequestsParams,
 	RequestsTransportHttpPatchRequestRequest as PatchBody,
 	RequestsTransportHttpGetRequestsResponse as RequestsResponse,
-	RequestsTransportHttpGetRequestStatsResponse as StatsResponse
+	RequestsTransportHttpGetRequestStatsResponse as StatsResponse,
+	RequestHttpDtoGetRequestsResponseOrigin
 } from "@/api/generated"
-import type { RequestDocKey } from "@/libs/constants/screens/request-docs"
 import { DEFAULT_REQUESTS_LIMIT } from "@/libs/constants/screens/requests"
+import type { RequestDocKey } from "@/libs/constants/screens/requests/request-docs"
 
 import { QueryKeys } from "./keys"
 
-/** Индекс параметров в ключе: ["requests", "list", params] */
 const PARAMS_INDEX = 2
 
 const matchesStatuses = (
@@ -22,21 +22,12 @@ const matchesStatuses = (
 	status: DomainRequestStatus
 ): boolean => !params?.statuses?.length || params.statuses.includes(status)
 
-/** Новая заявка встаёт в начало только там, где список «сначала новые» и это первая страница */
 const canPrepend = (params: GetRequestsParams | undefined): boolean => {
 	const sort = params?.sort
 
 	return (!sort || sort === "newest") && (params?.page ?? 1) === 1
 }
 
-/**
- * Вносит созданную заявку в кэш без лишних запросов:
- *  - в подходящие списки — вставляет в начало (мгновенно, без мигания скелетона);
- *  - в остальные подходящие — помечает устаревшими и перезагружает;
- *  - в статистику — прибавляет счётчики.
- * Обновлённые вручную записи помечаются устаревшими без перезапроса,
- * поэтому при следующем монтировании подтянется серверная версия.
- */
 export const addRequestToCache = (
 	client: QueryClient,
 	created: CreatedRequest
@@ -96,21 +87,22 @@ export const addRequestToCache = (
 	})
 }
 
-/**
- * Вносит правки заявки в кэш сразу после сохранения: карточка и «Подробнее»
- * обновляются мгновенно, без мигания. Затем данные сверяются с сервером
- * (он пересчитывает заполненность и дату обновления).
- */
 export const patchRequestInCache = (
 	client: QueryClient,
 	id: string,
 	body: PatchBody
 ): void => {
+	const title = body.title as string | undefined
+	const deadline = body.deadline as string | undefined
+	const geography = body.geography as string[] | undefined
+	const workTypes = body.work_types as string[] | undefined
+	const origin = body.origin as RequestHttpDtoGetRequestsResponseOrigin[] | undefined
+
 	const fields = {
-		...(body.title !== undefined && { title: body.title }),
-		...(body.deadline !== undefined && { deadline: body.deadline }),
-		...(body.origin !== undefined && { origin: body.origin }),
-		...(body.work_types !== undefined && { work_types: body.work_types })
+		...(title !== undefined && { title }),
+		...(deadline !== undefined && { deadline }),
+		...(origin !== undefined && { origin }),
+		...(workTypes !== undefined && { work_types: workTypes })
 	}
 
 	client.setQueryData<DetailResponse>(
@@ -120,9 +112,8 @@ export const patchRequestInCache = (
 				? {
 						...previous,
 						...fields,
-						// В ответе география называется geography_description
-						...(body.geography !== undefined && {
-							geography_description: body.geography
+						...(geography !== undefined && {
+							geography_description: geography
 						})
 					}
 				: previous
@@ -150,11 +141,6 @@ export const patchRequestInCache = (
 	})
 }
 
-/**
- * После загрузки или удаления файла сервер пересчитывает заполненность заявки,
- * поэтому перезапрашиваем деталь и списки. Промис завершается, когда деталь
- * обновилась, — до этого момента строка файла показывает «в процессе» и не мигает.
- */
 export const refreshRequestFiles = async (
 	client: QueryClient,
 	id: string
@@ -167,7 +153,6 @@ export const refreshRequestFiles = async (
 	})
 }
 
-/** Убирает файл из слота сразу, не дожидаясь ответа сервера */
 export const removeRequestDocFromCache = (
 	client: QueryClient,
 	id: string,

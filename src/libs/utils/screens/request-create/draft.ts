@@ -3,7 +3,7 @@ import { del, get, set } from "idb-keyval"
 import {
 	REQUEST_DRAFT_KEY,
 	REQUEST_DRAFT_TTL
-} from "@/libs/constants/screens/request-form"
+} from "@/libs/constants/screens/requests/request-form"
 import {
 	createRequestDefaults,
 	type CreateRequestFormFields,
@@ -18,7 +18,12 @@ interface StoredDraft {
 const isEmptyDraft = (values: CreateRequestFormFields): boolean =>
 	!values.title.trim() &&
 	!values.deadline &&
-	values.origin.every(item => !item.value.trim()) &&
+	values.origin.every(item => {
+		if (item.type === "email") return !item.email?.trim()
+		if (item.type === "phone") return !item.phone?.trim()
+		if (item.type === "other") return !item.other?.trim()
+		return true
+	}) &&
 	values.work_types.length === 0 &&
 	values.geography.length === 0
 
@@ -26,7 +31,6 @@ export const clearRequestDraft = async (): Promise<void> => {
 	try {
 		await del(REQUEST_DRAFT_KEY)
 	} catch {
-		// IndexedDB может быть недоступен (приватный режим) — черновик не критичен
 	}
 }
 
@@ -43,7 +47,6 @@ export const saveRequestDraft = async (
 
 		await set(REQUEST_DRAFT_KEY, draft)
 	} catch {
-		// см. выше
 	}
 }
 

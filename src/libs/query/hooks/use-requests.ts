@@ -16,8 +16,9 @@ import type {
 	RequestHttpDtoCreateRequestRequest
 } from "@/api/generated"
 import { service } from "@/api/instance"
-import type { RequestDocKey } from "@/libs/constants/screens/request-docs"
+import type { RequestDocKey } from "@/libs/constants/screens/requests/request-docs"
 import { ms } from "@/libs/utils"
+import { uploadDocument, type UploadProgressEvent } from "@/libs/upload"
 
 import { idempotencyHeaders } from "../idempotency"
 import { QueryKeys } from "../keys"
@@ -71,7 +72,6 @@ export const useRequestStats = () => {
 	return { statistics: data ?? null, ...other }
 }
 
-/** Общие настройки запроса детальной заявки: хук и предзагрузка работают с одним кэшем */
 const requestDetailQuery = (id: string) => ({
 	queryKey: QueryKeys.requests.detail(id),
 	queryFn: async () => (await service.getRequestsId(id)).data,
@@ -88,7 +88,6 @@ export const useRequestDetail = (id: string, enabled = true) => {
 	return { request: data ?? null, ...other }
 }
 
-/** Заранее подгружает детали: к нажатию «Подробнее» или «Изменить» они уже в кэше */
 export const prefetchRequestDetail = (client: QueryClient, id: string) =>
 	id ? client.query(requestDetailQuery(id)) : Promise.resolve()
 
@@ -115,7 +114,6 @@ export const useRequestPatchStatus = (id: string) => {
 	return {
 		patchStatus: patchMutation.mutateAsync,
 		isPending: patchMutation.isPending,
-		/** Какое именно действие сейчас выполняется (для спиннера на нужной кнопке) */
 		pendingStatus: patchMutation.isPending
 			? (patchMutation.variables ?? null)
 			: null
@@ -124,7 +122,6 @@ export const useRequestPatchStatus = (id: string) => {
 
 export interface CreateRequestVariables {
 	body: RequestHttpDtoCreateRequestRequest
-	/** Один и тот же ключ при повторе — сервер не создаст дубль */
 	idempotencyKey: string
 }
 
@@ -172,23 +169,19 @@ export const useUploadRequestFile = (id: string, index: number) => {
 			file,
 			idempotencyKey,
 			onProgress
-		}: UploadRequestFileVariables) =>
-			await service.postRequestsIdFileIndex(
-				id,
-				index,
-				{ file, tag: "docs" },
-				{
-					headers: {
-						...idempotencyHeaders(idempotencyKey),
-						"Content-Type": "multipart/form-data"
-					},
-					onUploadProgress: (event: AxiosProgressEvent) => {
-						if (event.total) {
-							onProgress?.(Math.round((event.loaded / event.total) * 100))
-						}
-					}
-				}
-			),
+		}: UploadRequestFileVariables) => {
+			const result = await uploadDocument({
+				file,
+				url: `/requests/${id}/file/${index}`,
+				headers: idempotencyHeaders(idempotencyKey),
+				onProgress: (event: UploadProgressEvent) => {
+					onProgress?.(event.percent)
+				},
+			})
+			if (!result.success) {
+				throw result.error ?? new Error(`Upload failed: ${result.status} ${result.statusText}`)
+			}
+		},
 		onSuccess: () => refreshRequestFiles(client, id)
 	})
 }
@@ -215,10 +208,6 @@ export const useDeleteRequestFile = (id: string, index: number) => {
 	})
 }
 
-/**
- * Идёт ли сейчас загрузка/удаление файла в слоте. Состояние хранится в кэше мутаций,
- * поэтому не теряется, если шторку закрыли и открыли снова посреди загрузки.
- */
 export const useRequestFileBusy = (id: string, index: number) => {
 	const uploading = useIsMutating({
 		mutationKey: QueryKeys.requests.fileUpload(id, index)
