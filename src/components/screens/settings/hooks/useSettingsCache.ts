@@ -2,6 +2,7 @@
 
 import { useCallback, useState } from "react"
 
+import { toast } from "@/components/ui/toast"
 import { SETTINGS_CACHE_PREFIX } from "@/libs/constants/screens/settings"
 import { useCacheStats } from "@/libs/hooks"
 import { queryClient } from "@/libs/query/client"
@@ -9,17 +10,17 @@ import { queryClient } from "@/libs/query/client"
 interface UseSettingsCacheReturn {
 	totalCacheSize: string | undefined
 	isCacheMeasuring: boolean
-	clearing: boolean
+	isClearing: boolean
 	clearCache: () => Promise<void>
 }
 
 export const useSettingsCache = (): UseSettingsCacheReturn => {
 	const { isMeasuring, querySize } = useCacheStats()
 
-	const [clearing, setClearing] = useState(false)
+	const [isClearing, setClearing] = useState(false)
 
 	const clearCache = useCallback(async () => {
-		if (clearing) return
+		if (isClearing) return
 
 		setClearing(true)
 
@@ -34,15 +35,19 @@ export const useSettingsCache = (): UseSettingsCacheReturn => {
 			}
 
 			queryClient.clear()
+
+			toast.success("Локальные данные очищены")
+		} catch {
+			toast.error("Не удалось очистить локальные данные")
 		} finally {
 			setClearing(false)
 		}
-	}, [clearing])
+	}, [isClearing])
 
 	return {
 		totalCacheSize: querySize?.formatted,
 		isCacheMeasuring: isMeasuring,
-		clearing,
+		isClearing,
 		clearCache
 	}
 }
