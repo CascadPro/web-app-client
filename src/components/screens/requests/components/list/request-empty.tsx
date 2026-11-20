@@ -1,11 +1,15 @@
 import { InboxIcon } from "lucide-react"
 import { m } from "motion/react"
+import { DURATION, EASE_OUT, INSTANT, useReduceMotion } from "@/libs/motion"
 
 export const RequestEmpty = () => {
+	const reduceMotion = useReduceMotion()
+
 	return (
 		<m.div
-			initial={{ opacity: 0 }}
+			initial={reduceMotion ? undefined : { opacity: 0 }}
 			animate={{ opacity: 1 }}
+			transition={reduceMotion ? INSTANT : { duration: DURATION.base, ease: EASE_OUT }}
 			className="border-outline/20 flex flex-col items-center gap-3 rounded-2xl border border-dashed px-6 py-8 text-center"
 		>
 			<div className="bg-surface rounded-2xl p-4">

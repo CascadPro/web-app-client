@@ -34,4 +34,11 @@ export interface RequestContextState {
 	setStatuses: ReactStateHook<DomainRequestStatus[]>
 	setSortType: ReactStateHook<DomainSortType>
 	clearFilters: () => void
+
+	highlightId: string | null
+	highlight: (id: string) => void
+	clearHighlight: () => void
 }
+
+export type RequestCreateStatus =
+	"default" | "loading" | "success" | "queued" | "error"

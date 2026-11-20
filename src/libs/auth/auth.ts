@@ -7,6 +7,7 @@ import { ApiError, type ApiErrorCode } from "@/libs/errors/api"
 import { API_ERROR_MESSAGES } from "@/libs/errors/messages"
 import { QueryKeys } from "@/libs/query/keys"
 import { useAuthStore } from "@/store/auth"
+import { useOfflineFilesStore } from "@/store/offline-files"
 
 import { queryClient } from "../query/client"
 import { queryPersister } from "../query/persister"
@@ -60,9 +61,10 @@ const throwResponseError = async (response: Response): Promise<never> => {
 	})
 }
 
-export const login = async ({ email, password }: LoginRequestDTO) => {
+export const login = async ({ email, phone, password }: LoginRequestDTO) => {
 	const request = JSON.stringify({
 		email,
+		phone,
 		password
 	})
 
@@ -91,11 +93,13 @@ export const login = async ({ email, password }: LoginRequestDTO) => {
 
 export const register = async ({
 	email,
+	phone,
 	password,
 	token
 }: RegisterRequestDTO) => {
 	await service.postAuthRegister({
 		email,
+		phone,
 		password,
 		token
 	})
@@ -138,5 +142,7 @@ export const logout = async () => {
 		queryClient.clear()
 
 		await queryPersister.removeClient()
+
+		await useOfflineFilesStore.getState().clear()
 	}
 }

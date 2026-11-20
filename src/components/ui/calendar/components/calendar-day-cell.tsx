@@ -49,7 +49,9 @@ const CalendarDayCellComponent: FC<Props> = ({
 				selected
 					? "text-on-primary font-semibold"
 					: "text-on-surface hover:bg-primary/10 active:bg-primary/15",
-				today && !selected && "text-primary ring-primary/40 font-semibold ring-1"
+				today &&
+					!selected &&
+					"text-primary ring-primary/40 font-semibold ring-1"
 			)}
 		>
 			{selected && (

@@ -14,11 +14,32 @@ export async function POST(request: Request) {
 	try {
 		const body = (await request.json()) as AuthTransportHttpLoginRequest
 
+		const hasEmail = !!body.email
+		const hasPhone = !!body.phone
+		if (!hasEmail && !hasPhone) {
+			return NextResponse.json(
+				{ code: "validation_error", message: "Either email or phone must be provided", fields: { email: "Required" } },
+				{ status: 400 }
+			)
+		}
+		if (hasEmail && hasPhone) {
+			return NextResponse.json(
+				{ code: "validation_error", message: "Cannot provide both email and phone", fields: { email: "Provide only one" } },
+				{ status: 400 }
+			)
+		}
+
+		const loginRequest: AuthTransportHttpLoginRequest = {
+			password: body.password
+		}
+		if (hasEmail) {
+			loginRequest.email = body.email
+		} else {
+			loginRequest.phone = body.phone
+		}
+
 		const response = await serverService.postAuthLogin(
-			{
-				email: body.email,
-				password: body.password
-			},
+			loginRequest,
 			{
 				headers: {
 					"User-Agent": (await headers()).get("user-agent") ?? ""

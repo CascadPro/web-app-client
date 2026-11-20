@@ -37,12 +37,31 @@ export const QueryKeys = {
 		lists: () => [...QueryKeys.requests.all, "list"] as const,
 
 		list: (params?: GetRequestsParams) =>
-			[...QueryKeys.requests.lists(), params] as const,
+			[...QueryKeys.requests.lists(), ...(params ? [params] : [])] as const,
 
 		stats: () => [...QueryKeys.requests.all, "stats"] as const,
+
+		create: () => [...QueryKeys.requests.all, "create"] as const,
+
+		update: (id: string) => [...QueryKeys.requests.all, "update", id] as const,
+
+		fileUpload: (id: string, index: number) =>
+			[...QueryKeys.requests.all, "file-upload", id, index] as const,
+
+		fileDelete: (id: string, index: number) =>
+			[...QueryKeys.requests.all, "file-delete", id, index] as const,
 
 		details: () => [...QueryKeys.requests.all, "detail"] as const,
 
 		detail: (id: string) => [...QueryKeys.requests.details(), id] as const
+	},
+
+	clients: {
+		all: ["clients"] as const,
+
+		list: (params?: Record<any, any>) =>
+			[...QueryKeys.clients.all, ...(params ? [params] : [])] as const,
+
+		detail: (id: string) => [...QueryKeys.clients.all, "detail", id] as const
 	}
 }

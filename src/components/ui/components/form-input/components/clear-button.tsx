@@ -15,7 +15,7 @@ const ClearButton: FC<IProps> = ({ value, onClick, className }) => {
 			type="button"
 			title="Очистить"
 			className={cn(
-				"clear-btn absolute top-1/2 right-1.5 z-20 translate-y-[-25%] scale-100 p-px opacity-100 transition-ui will-change-auto motion-reduce:transition-none [&:hover>svg]:opacity-100 [&>svg]:opacity-70 [&>svg]:transition-opacity [&>svg]:duration-200 [&>svg]:will-change-auto [&>svg]:motion-reduce:transition-none",
+				"clear-btn transition-ui absolute top-1/2 right-2.5 z-20 translate-y-[-25%] scale-100 p-px opacity-100 will-change-auto motion-reduce:transition-none [&:hover>svg]:opacity-100 [&>svg]:opacity-70 [&>svg]:transition-opacity [&>svg]:duration-200 [&>svg]:will-change-auto [&>svg]:motion-reduce:transition-none",
 				{
 					"pointer-events-none! scale-95! opacity-0!": !value
 				},
@@ -23,7 +23,7 @@ const ClearButton: FC<IProps> = ({ value, onClick, className }) => {
 			)}
 			onClick={onClick}
 		>
-			<XIcon size={24} />
+			<XIcon size={20} />
 		</button>
 	)
 }

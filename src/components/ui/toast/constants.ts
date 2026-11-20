@@ -1,4 +1,10 @@
-import { AlertCircle, Check, Info, LoaderCircle, TriangleAlert } from "lucide-react"
+import {
+	AlertCircle,
+	Check,
+	Info,
+	LoaderCircle,
+	TriangleAlert
+} from "lucide-react"
 
 import type { ToastPosition } from "./types"
 

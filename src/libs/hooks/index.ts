@@ -1,5 +1,6 @@
 export * from "./use-cache-stats"
 export * from "./use-clipboard-copy"
+export * from "./use-debounced-value"
 export * from "./use-hash"
 export * from "./use-is-ios"
 export * from "./use-logout"

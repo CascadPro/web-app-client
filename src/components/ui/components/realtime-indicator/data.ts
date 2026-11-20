@@ -1,4 +1,10 @@
-import { AlertCircleIcon, RefreshCwIcon, ShieldCheckIcon, WifiIcon, WifiOffIcon } from "lucide-react"
+import {
+	AlertCircleIcon,
+	RefreshCwIcon,
+	ShieldCheckIcon,
+	WifiIcon,
+	WifiOffIcon
+} from "lucide-react"
 
 export const STATUS_CONFIG = {
 	idle: {

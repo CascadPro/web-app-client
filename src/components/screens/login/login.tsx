@@ -2,14 +2,30 @@
 
 import { FormProvider } from "react-hook-form"
 
-import { Button, Stagger, StaggerItem, Title } from "@/components/ui"
+import {
+	Button,
+	SegmentedControl,
+	Stagger,
+	StaggerItem,
+	Title
+} from "@/components/ui"
 import { FormInput } from "@/components/ui/components/form-input"
+import { PhoneInputWithLabel } from "@/components/ui/phone-input"
 import { VALUES } from "@/libs/constants"
 
 import { useLoginPage } from "./hooks/useLogin"
 
 export const LoginScreen = () => {
-	const { form, handleSubmit, status } = useLoginPage()
+	const {
+		form,
+		handleSubmit,
+		status,
+		method,
+		handleEmailChange,
+		handleMethodChange
+	} = useLoginPage()
+
+	const phoneValue = form.watch("phone")
 
 	const isLoading = status === "loading"
 	const disabled = status === "error" || status === "success" || isLoading
@@ -24,20 +40,53 @@ export const LoginScreen = () => {
 					stagger={0.07}
 					delay={0.05}
 				>
-					<StaggerItem className="w-full">
-						<FormInput
-							type="text"
-							name="email"
-							label={"Эл. почта"}
-							placeholder="Введите эл.почту"
-							containerClassName="w-full mb-12"
-							required
+					<StaggerItem className="mb-10 w-full">
+						<SegmentedControl<typeof method>
+							value={method}
+							options={[
+								{ value: "email", label: "Email" },
+								{ value: "phone", label: "Телефон" }
+							]}
+							label="Способ входа"
+							onChange={handleMethodChange}
+							size="md"
 						/>
 					</StaggerItem>
+
+					{method === "email" && (
+						<StaggerItem className="w-full">
+							<FormInput
+								type="text"
+								inputMode="email"
+								name="email"
+								label={"Эл. почта"}
+								placeholder="Введите эл.почту"
+								containerClassName="w-full mb-12"
+								required
+								onChange={e => handleEmailChange(e.target.value)}
+							/>
+						</StaggerItem>
+					)}
+
+					{method === "phone" && (
+						<StaggerItem className="w-full">
+							<PhoneInputWithLabel
+								name="phone"
+								label={"Телефон"}
+								placeholder="+7 (900) 000-00-00"
+								containerClassName="w-full mb-12"
+								required
+								autoComplete="tel"
+								value={phoneValue ?? ""}
+								onValueChange={value => form.setValue("phone", value)}
+							/>
+						</StaggerItem>
+					)}
 
 					<StaggerItem className="w-full">
 						<FormInput
 							type="password"
+							inputMode="text"
 							name="password"
 							label={"Пароль"}
 							placeholder="Введите пароль"
@@ -51,7 +100,7 @@ export const LoginScreen = () => {
 						<Button
 							variant="default"
 							type="submit"
-							className="w-[85%] p-2"
+							className="w-[85%] p-3"
 							isLoading={isLoading}
 							disabled={disabled}
 						>

@@ -7,10 +7,13 @@ import { RequestFilters } from "./components/filters/request-filters"
 import { RequestsList } from "./components/list/request-list"
 import { RequestCreateButton } from "./components/request-create-btn"
 import { RequestsStats } from "./components/request-stats"
+import { useRequestOfflineSync } from "./hooks/useRequestOfflineSync"
 import { useRequestsScreen } from "./hooks/useRequestsScreen"
 
 export const RequestsScreen = () => {
 	const { requests, error, isLoading, isPending } = useRequestsScreen()
+
+	useRequestOfflineSync()
 
 	return (
 		<RefreshControl queryKey={QueryKeys.requests.all as any}>

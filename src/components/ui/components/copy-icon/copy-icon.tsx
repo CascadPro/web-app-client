@@ -16,6 +16,8 @@ import {
 
 interface ProfileCopyIconProps {
 	isCopied: boolean
+	className?: string
+	containerCN?: string
 	disabled?: boolean
 	notify?: boolean
 	onCopy: () => Promise<void>
@@ -24,6 +26,8 @@ interface ProfileCopyIconProps {
 
 const CopyIconComponent: FC<ProfileCopyIconProps> = ({
 	isCopied,
+	className,
+	containerCN,
 	disabled = false,
 	notify = true,
 	size = 24,
@@ -37,7 +41,10 @@ const CopyIconComponent: FC<ProfileCopyIconProps> = ({
 
 	return (
 		<span
-			className={`relative inline-flex size-${size / 2} shrink-0 items-center justify-center`}
+			className={cn(
+				`relative inline-flex size-${size / 2} shrink-0 items-center justify-center`,
+				containerCN
+			)}
 		>
 			<Button
 				variant="ghost"
@@ -46,11 +53,12 @@ const CopyIconComponent: FC<ProfileCopyIconProps> = ({
 				aria-label={isCopied ? "Данные скопированы" : "Скопировать данные"}
 				title={isCopied ? "Скопировано" : "Скопировать данные"}
 				className={cn(
-					"relative z-10 overflow-visible rounded-md p-0",
+					"relative overflow-visible rounded-md p-0",
 					`size-${size / 2} min-h-${size / 2} min-w-${size / 2}`,
 					"text-on-surface-variant transition-colors duration-150",
 					"active:bg-primary/15 hover:bg-primary/10 hover:text-primary",
-					{ "bg-primary/10 text-primary": isCopied }
+					{ "bg-primary/10 text-primary": isCopied },
+					className
 				)}
 			>
 				<AnimatePresence mode="wait" initial={false}>

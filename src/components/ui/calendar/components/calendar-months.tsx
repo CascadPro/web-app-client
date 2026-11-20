@@ -49,9 +49,7 @@ const CalendarMonthsComponent: FC<Props> = ({
 					selectedParts.year === year &&
 					selectedParts.month === month
 				const isCurrent =
-					!!todayParts &&
-					todayParts.year === year &&
-					todayParts.month === month
+					!!todayParts && todayParts.year === year && todayParts.month === month
 
 				return (
 					<button

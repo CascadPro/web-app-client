@@ -27,6 +27,7 @@ export const RegisterScreen = () => {
 					<StaggerItem className="w-full">
 						<FormInput
 							type="text"
+							inputMode="email"
 							name="email"
 							label={"Эл. почта"}
 							placeholder="Введите эл.почту"
@@ -37,7 +38,20 @@ export const RegisterScreen = () => {
 
 					<StaggerItem className="w-full">
 						<FormInput
+							type="tel"
+							inputMode="tel"
+							name="phone"
+							label={"Телефон (необязательно)"}
+							placeholder="+7 (900) 000-00-00"
+							containerClassName="w-full mb-12"
+							autoComplete="tel"
+						/>
+					</StaggerItem>
+
+					<StaggerItem className="w-full">
+						<FormInput
 							type="password"
+							inputMode="text"
 							name="password"
 							label={"Пароль"}
 							placeholder="Введите пароль"
@@ -50,6 +64,7 @@ export const RegisterScreen = () => {
 					<StaggerItem className="w-full">
 						<FormInput
 							type="text"
+							inputMode="text"
 							name="token"
 							label={"Ключ регистрации"}
 							placeholder="Вставьте ключ"
@@ -57,6 +72,7 @@ export const RegisterScreen = () => {
 							required
 						/>
 					</StaggerItem>
+
 					<StaggerItem className="flex w-full justify-center">
 						<Button
 							variant="default"

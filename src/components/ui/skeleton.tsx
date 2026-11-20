@@ -7,30 +7,14 @@ const Skeleton: FC<HTMLAttributes<HTMLDivElement>> = ({
 	className,
 	...props
 }) => {
-	return (
-		<div
-			className={cn(
-				"skeleton rounded-md",
-				className
-			)}
-			{...props}
-		/>
-	)
+	return <div className={cn("skeleton rounded-md", className)} {...props} />
 }
 
 const MotionSkeleton: FC<HTMLMotionProps<"div">> = ({
 	className,
 	...props
 }) => {
-	return (
-		<m.div
-			className={cn(
-				"skeleton rounded-md",
-				className
-			)}
-			{...props}
-		/>
-	)
+	return <m.div className={cn("skeleton rounded-md", className)} {...props} />
 }
 
 export { MotionSkeleton, Skeleton }

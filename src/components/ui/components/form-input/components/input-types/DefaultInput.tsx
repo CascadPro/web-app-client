@@ -47,7 +47,12 @@ const DefaultInput: FC<PropsWithChildren<FormDefaultInputProps>> = ({
 	return (
 		<div className={styles["input-wrapper"]}>
 			<Input
-				className={className}
+				className={cn(
+					{
+						"ring-error": error
+					},
+					className
+				)}
 				onInput={onInput}
 				spellCheck={false}
 				{...props}
@@ -71,7 +76,12 @@ const DefaultInput: FC<PropsWithChildren<FormDefaultInputProps>> = ({
 			{props.required && <span className={styles["required"]}>*</span>}
 
 			{label && (
-				<span id={labelId} className={styles["label"]}>
+				<span
+					id={labelId}
+					className={cn(styles["label"], {
+						"text-on-surface!": error
+					})}
+				>
 					{label}
 				</span>
 			)}
@@ -85,6 +95,7 @@ const DefaultInput: FC<PropsWithChildren<FormDefaultInputProps>> = ({
 					className="translate-y-[-45%]!"
 				/>
 			)}
+
 			<ClearButton
 				onClick={clear}
 				value={value}

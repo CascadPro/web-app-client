@@ -23,7 +23,7 @@ export const RequestCardBadge: FC<Props> = ({ status }) => {
 	return (
 		<span
 			className={cn(
-				"flex w-fit items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium",
+				"flex w-fit items-center gap-1 justify-self-end rounded-full px-2.5 py-1 text-xs font-medium",
 				styles[status || "default"]
 			)}
 		>

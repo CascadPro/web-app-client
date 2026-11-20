@@ -3,7 +3,12 @@
 import { type HTMLMotionProps, m } from "motion/react"
 import { type FC, useMemo } from "react"
 
-import { createStagger, fadeUp, useLowPerf, useReduceMotion } from "@/libs/motion"
+import {
+	createStagger,
+	fadeUp,
+	useLowPerf,
+	useReduceMotion
+} from "@/libs/motion"
 
 interface StaggerProps extends HTMLMotionProps<"div"> {
 	stagger?: number
