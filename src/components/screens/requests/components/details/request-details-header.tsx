@@ -1,11 +1,11 @@
 "use client"
 
-import { CalendarDaysIcon } from "lucide-react"
+import { CalendarDaysIcon, DotIcon } from "lucide-react"
 import { m } from "motion/react"
 import { type FC, useMemo } from "react"
 
 import type { RequestsTransportHttpGetRequestResponse } from "@/api/generated"
-import { DURATION, EASE_OUT } from "@/libs/motion"
+import { DURATION, EASE_OUT, INSTANT, useReduceMotion } from "@/libs/motion"
 import { cn } from "@/libs/utils"
 import { getTodayISO } from "@/libs/utils/screens/request-create"
 import { getDeadlineInfo } from "@/libs/utils/screens/request-details"
@@ -27,15 +27,21 @@ const TONE_STYLE = {
 } as const
 
 export const RequestDetailsHeader: FC<Props> = ({ request }) => {
+	const reduceMotion = useReduceMotion()
 	const today = useMemo(getTodayISO, [])
 	const deadline = getDeadlineInfo(request.deadline, today)
 
 	const progress = getRequestProgress(request.fields_remaining?.length ?? 0)
 
+	const progressTransition = useMemo(
+		() => (reduceMotion ? INSTANT : { duration: DURATION.slow, ease: EASE_OUT }),
+		[reduceMotion]
+	)
+
 	return (
 		<header className="flex flex-col gap-3">
 			<div className="flex items-start justify-between gap-3">
-				<h2 className="min-w-0 text-xl leading-snug font-semibold break-words">
+				<h2 className="min-w-0 text-xl leading-snug font-semibold wrap-break-word">
 					{request.title}
 				</h2>
 
@@ -53,7 +59,7 @@ export const RequestDetailsHeader: FC<Props> = ({ request }) => {
 
 			<div
 				className={cn(
-					"flex items-center gap-2 rounded-xl px-3 py-2 text-sm",
+					"mb-1 flex items-center gap-2 rounded-xl px-(--mini-row-padding-x) py-(--mini-row-padding-y) text-sm",
 					deadline
 						? TONE_STYLE[deadline.tone]
 						: "bg-outline/20 text-on-surface-variant"
@@ -66,7 +72,10 @@ export const RequestDetailsHeader: FC<Props> = ({ request }) => {
 						<>
 							Срок сдачи {formatRequestDate(request.deadline)}
 							{deadline && (
-								<span className="font-medium"> · {deadline.label}</span>
+								<span className="font-medium">
+									<DotIcon size={20} className="inline" />
+									{deadline.label}
+								</span>
 							)}
 						</>
 					) : (
@@ -90,9 +99,9 @@ export const RequestDetailsHeader: FC<Props> = ({ request }) => {
 					className="bg-outline/30 h-1.5 overflow-hidden rounded-full"
 				>
 					<m.div
-						initial={{ scaleX: 0 }}
+						initial={reduceMotion ? undefined : { scaleX: 0 }}
 						animate={{ scaleX: progress / 100 }}
-						transition={{ duration: DURATION.slow, ease: EASE_OUT }}
+						transition={progressTransition}
 						className="bg-primary h-full origin-left rounded-full"
 					/>
 				</div>

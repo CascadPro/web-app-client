@@ -16,7 +16,6 @@ interface Props {
 	submitLabels: Record<RequestCreateStatus, string>
 	submitIcon?: LucideIcon
 	submitDisabled?: boolean
-	/** Кнопка сброса вообще не рендерится, пока сбрасывать нечего */
 	canReset: boolean
 	resetLabel: string
 	resetIcon: LucideIcon
@@ -46,7 +45,7 @@ export const RequestFormFooter: FC<Props> = ({
 					className="shrink-0 overflow-hidden"
 				>
 					<Button
-						variant="destructive"
+						variant="destructive-outline"
 						className="p-3"
 						title={resetLabel}
 						aria-label={resetLabel}

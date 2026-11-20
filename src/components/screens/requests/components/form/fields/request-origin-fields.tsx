@@ -6,7 +6,7 @@ import { type FC, memo, useCallback } from "react"
 import { useFieldArray, useFormContext } from "react-hook-form"
 
 import { Button } from "@/components/ui"
-import { REQUEST_FORM_LIMITS } from "@/libs/constants/screens/request-form"
+import { REQUEST_FORM_LIMITS } from "@/libs/constants/screens/requests/request-form"
 import { DURATION, EASE_OUT } from "@/libs/motion"
 import type { CreateRequestFormFields } from "@/libs/schemes"
 
@@ -20,9 +20,8 @@ const RequestOriginFieldsComponent: FC = () => {
 
 	const isFull = fields.length >= REQUEST_FORM_LIMITS.ORIGIN_MAX_ITEMS
 
-	// Фокус не переводим: на iOS клавиатура всё равно не откроется, а страница дёрнется
 	const handleAdd = useCallback(
-		() => append({ type: "email", value: "" }, { shouldFocus: false }),
+		() => append({ type: "email", email: "" }, { shouldFocus: false }),
 		[append]
 	)
 
@@ -37,15 +36,13 @@ const RequestOriginFieldsComponent: FC = () => {
 			<div className="mb-2 flex items-center justify-between px-1 text-sm">
 				<span className="text-on-surface/70">Контакты</span>
 
-				<span className="text-on-surface-variant text-xs tabular-nums">
-					{fields.length}/{REQUEST_FORM_LIMITS.ORIGIN_MAX_ITEMS}
-				</span>
+				{fields.length > 0 && (
+					<span className="animate-fade-up text-on-surface-variant text-xs tabular-nums">
+						{fields.length} / {REQUEST_FORM_LIMITS.ORIGIN_MAX_ITEMS}
+					</span>
+				)}
 			</div>
 
-			{/*
-				Каждая строка сама раскрывается/сворачивается по высоте (вместе со своим
-				нижним отступом), поэтому всё, что ниже, сдвигается плавно, без рывка.
-			*/}
 			<AnimatePresence initial={false}>
 				{fields.map((field, index) => (
 					<m.div

@@ -2,7 +2,7 @@
 
 import type { BaseSyntheticEvent, FC } from "react"
 
-import { REQUEST_EDIT_FORM_ID } from "@/libs/constants/screens/request-form"
+import { REQUEST_EDIT_FORM_ID } from "@/libs/constants/screens/requests/request-form"
 
 import { RequestFormFields } from "../form/request-form-fields"
 
@@ -10,12 +10,14 @@ interface Props {
 	onSubmit: (event?: BaseSyntheticEvent) => Promise<void>
 	deadlineMin?: string
 	deadlineClearable: boolean
+	clientClearable: boolean
 }
 
 export const RequestEditForm: FC<Props> = ({
 	onSubmit,
 	deadlineMin,
-	deadlineClearable
+	deadlineClearable,
+	clientClearable
 }) => (
 	<form
 		id={REQUEST_EDIT_FORM_ID}
@@ -26,6 +28,7 @@ export const RequestEditForm: FC<Props> = ({
 		<RequestFormFields
 			deadlineMin={deadlineMin}
 			deadlineClearable={deadlineClearable}
+			clientClearable={clientClearable}
 		/>
 	</form>
 )

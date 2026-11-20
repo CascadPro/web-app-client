@@ -5,7 +5,6 @@ import type { FC, PropsWithChildren } from "react"
 import { cn } from "@/libs/utils"
 
 interface Props extends PropsWithChildren {
-	/** 0–100. null — размер неизвестен: кольцо вращается */
 	value: number | null
 	label: string
 	className?: string
@@ -59,7 +58,6 @@ export const RequestDetailsFileProgress: FC<Props> = ({
 				strokeLinecap="round"
 				stroke="currentColor"
 				strokeDasharray={CIRCUMFERENCE}
-				// Дуга растёт плавно; для неизвестного размера — постоянная «четверть»
 				strokeDashoffset={CIRCUMFERENCE * (1 - (value ?? 25) / 100)}
 				style={{ transition: "stroke-dashoffset 120ms linear" }}
 				className="text-primary motion-reduce:transition-none"

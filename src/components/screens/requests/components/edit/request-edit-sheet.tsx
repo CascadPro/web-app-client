@@ -8,7 +8,7 @@ import { BottomSheet } from "@/components/ui"
 import {
 	REQUEST_EDIT_FORM_ID,
 	REQUEST_EDIT_SUBMIT_LABELS
-} from "@/libs/constants/screens/request-form"
+} from "@/libs/constants/screens/requests/request-form"
 
 import { useRequestEdit } from "../../hooks/useRequestEdit"
 import { RequestFormFooter } from "../form/request-form-footer"
@@ -48,7 +48,6 @@ const RequestEditSheetComponent: FC<Props> = ({ id, open, onOpenChange }) => {
 						formId={REQUEST_EDIT_FORM_ID}
 						submitLabels={REQUEST_EDIT_SUBMIT_LABELS}
 						submitIcon={SaveIcon}
-						// Нечего сохранять, пока ничего не изменено
 						submitDisabled={!isDirty}
 						canReset={isDirty && !isBusy}
 						resetLabel="Отменить изменения"
@@ -57,7 +56,6 @@ const RequestEditSheetComponent: FC<Props> = ({ id, open, onOpenChange }) => {
 					/>
 				) : null
 			}
-			// Закрываем только за «ручку» и по фону: жесты в полях не сворачивают шторку
 			dragAnywhere={false}
 			closeOnBackdropClick={status !== "loading"}
 		>
@@ -74,6 +72,7 @@ const RequestEditSheetComponent: FC<Props> = ({ id, open, onOpenChange }) => {
 						onSubmit={edit.handleSubmit}
 						deadlineMin={edit.deadlineMin}
 						deadlineClearable={edit.deadlineClearable}
+						clientClearable={edit.clientClearable}
 					/>
 				</FormProvider>
 			)}

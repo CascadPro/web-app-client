@@ -1,17 +1,15 @@
 "use client"
 
 import { AnimatePresence, m } from "motion/react"
-import { type ChangeEvent, type FC, useRef } from "react"
+import type { FC } from "react"
+import { useMemo } from "react"
 
 import type { RequestHttpDtoGetRequestResponseDocsFile } from "@/api/generated"
-import { MEDIA_URL } from "@/libs/constants"
-import type { RequestDocSlot } from "@/libs/constants/screens/request-docs"
-import { DURATION, EASE_OUT } from "@/libs/motion"
+import type { RequestDocSlot } from "@/libs/constants/screens/requests/request-docs"
+import { DURATION, EASE_OUT, INSTANT, useReduceMotion } from "@/libs/motion"
 import { cn } from "@/libs/utils"
-import { getRequestFileUrl } from "@/libs/utils/screens/request-details"
 
-import { useFileDownload } from "../../hooks/useFileDownload"
-import { useRequestFile } from "../../hooks/useRequestFile"
+import { useRequestFileRow } from "../../../hooks/useRequestFileRow"
 
 import { RequestDetailsFileEmpty } from "./request-details-file-empty"
 import { RequestDetailsFileItem } from "./request-details-file-item"
@@ -22,39 +20,38 @@ interface Props {
 	file?: RequestHttpDtoGetRequestResponseDocsFile
 }
 
-/** Один слот документов: пустой (можно прикрепить) или с файлом (открыть, заменить, удалить) */
 export const RequestDetailsFileRow: FC<Props> = ({ requestId, slot, file }) => {
-	const { isUploading, isDeleting, progress, upload, remove } = useRequestFile(
-		requestId,
-		slot
+	const reduceMotion = useReduceMotion()
+	const {
+		inputRef,
+		url,
+		total,
+		loaded,
+		percent,
+		progress,
+		hasFile,
+		isDeleting,
+		isUploading,
+		isDownloading,
+		isSavedOffline,
+		pick,
+		open,
+		remove,
+		cancel,
+		handleChange
+	} = useRequestFileRow(requestId, slot, file)
+
+	const progressTransition = useMemo(
+		() => (reduceMotion ? INSTANT : { duration: DURATION.fast, ease: EASE_OUT }),
+		[reduceMotion]
 	)
 
-	const { isDownloading, percent, loaded, total, download, cancel } =
-		useFileDownload()
-
-	const inputRef = useRef<HTMLInputElement>(null)
-
-	const hasFile = Boolean(file?.id || file?.filename)
-
-	const url = file ? getRequestFileUrl(file, MEDIA_URL) : null
-
-	const open = () => {
-		if (url) void download(url, file?.filename || "file")
-	}
-
-	const pick = () => inputRef.current?.click()
-
-	const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-		const selected = event.target.files?.[0]
-
-		// Сброс значения: повторный выбор того же файла тоже вызовет onChange
-		event.target.value = ""
-
-		if (selected) void upload(selected)
-	}
+	const initial = reduceMotion ? undefined : { opacity: 0 }
+	const exit = reduceMotion ? undefined : { opacity: 0 }
+	const transition = reduceMotion ? INSTANT : { duration: DURATION.fast }
 
 	return (
-		<div className="relative">
+		<div className="relative overflow-hidden">
 			<input
 				ref={inputRef}
 				type="file"
@@ -72,6 +69,7 @@ export const RequestDetailsFileRow: FC<Props> = ({ requestId, slot, file }) => {
 					isDeleting={isDeleting}
 					progress={progress}
 					download={{ isDownloading, percent, loaded, total }}
+					isSavedOffline={isSavedOffline}
 					canOpen={Boolean(url)}
 					onOpen={open}
 					onCancelDownload={cancel}
@@ -91,10 +89,10 @@ export const RequestDetailsFileRow: FC<Props> = ({ requestId, slot, file }) => {
 				{isUploading && (
 					<m.div
 						key="progress"
-						initial={{ opacity: 0 }}
+						initial={initial}
 						animate={{ opacity: 1 }}
-						exit={{ opacity: 0 }}
-						transition={{ duration: DURATION.fast }}
+						exit={exit}
+						transition={transition}
 						role="progressbar"
 						aria-label={`Загрузка файла: ${slot.label}`}
 						aria-valuemin={0}
@@ -102,11 +100,10 @@ export const RequestDetailsFileRow: FC<Props> = ({ requestId, slot, file }) => {
 						aria-valuenow={progress}
 						className="bg-outline/20 absolute inset-x-0 bottom-0 h-0.5"
 					>
-						{/* scaleX вместо width: прогресс не вызывает layout; при неизвестном прогрессе — пульсация */}
 						<m.div
 							initial={false}
 							animate={{ scaleX: Math.max(progress, 8) / 100 }}
-							transition={{ duration: DURATION.fast, ease: EASE_OUT }}
+							transition={progressTransition}
 							className={cn(
 								"bg-primary h-full origin-left",
 								progress === 0 && "animate-pulse"

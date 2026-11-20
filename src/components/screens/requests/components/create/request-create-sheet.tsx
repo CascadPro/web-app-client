@@ -8,7 +8,7 @@ import { BottomSheet } from "@/components/ui"
 import {
 	REQUEST_CREATE_FORM_ID,
 	REQUEST_CREATE_SUBMIT_LABELS
-} from "@/libs/constants/screens/request-form"
+} from "@/libs/constants/screens/requests/request-form"
 
 import { useRequestCreate } from "../../hooks/useRequestCreate"
 import { RequestFormFooter } from "../form/request-form-footer"
@@ -41,8 +41,6 @@ const RequestCreateSheetComponent: FC<Props> = ({ open, onOpenChange }) => {
 			zIndex={8890}
 			title="Новая заявка"
 			titleCN="px-1"
-			// Высота шторки не зависит от количества полей: ничего не «подпрыгивает»,
-			// а лишнее содержимое прокручивается
 			panelCN="min-h-[85dvh]"
 			className="flex-1 overflow-x-hidden pb-4"
 			footer={
@@ -56,8 +54,6 @@ const RequestCreateSheetComponent: FC<Props> = ({ open, onOpenChange }) => {
 					onReset={handleReset}
 				/>
 			}
-			// Закрываем только за «ручку» и по фону: жесты в полях не сворачивают шторку
-			dragAnywhere={false}
 			closeOnBackdropClick={status !== "loading"}
 		>
 			<FormProvider {...form}>

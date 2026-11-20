@@ -1,42 +1,34 @@
 "use client"
 
-import {
-	ArrowUpRightIcon,
-	CheckIcon,
-	CopyIcon,
-	type LucideIcon
-} from "lucide-react"
+import { ArrowUpRightIcon } from "lucide-react"
 import type { FC } from "react"
 
-import { useClipboardCopy } from "@/libs/hooks"
+import { Skeleton } from "@/components/ui"
+import { CopyIcon } from "@/components/ui/components/copy-icon"
+import { MarqueeText } from "@/components/ui/components/maruquee-text"
+import { cn } from "@/libs/utils"
+
+import { useRequestCopyRow } from "../../hooks/useRequestCopyRow"
 
 interface Props {
-	icon: LucideIcon
 	value: string
-	label?: string
-	/** Дополнительное действие: mailto:, tel: */
+	type?: string
 	href?: string
 	hrefLabel?: string
 }
 
-/** Строка со значением: нажатие копирует, справа — быстрый переход (почта, звонок) */
 export const RequestDetailsCopyRow: FC<Props> = ({
-	icon: Icon,
-	value,
-	label,
+	value: propsValue,
+	type,
 	href,
 	hrefLabel
 }) => {
-	const [isCopied, copy] = useClipboardCopy()
+	const { Icon, label, value, isLoading, isCopied, handleCopy } =
+		useRequestCopyRow(propsValue, type)
 
 	return (
 		<div className="flex items-center">
-			<button
-				type="button"
-				onClick={() => void copy(value)}
-				aria-label={`Скопировать: ${value}`}
-				className="active:bg-primary/10 focus-visible:bg-primary/10 flex min-h-12 min-w-0 flex-1 items-center gap-3 px-3 py-2 text-left transition-colors outline-none motion-reduce:transition-none"
-			>
+			<div className="py-(--mini-row-padding-y flex min-h-14 min-w-0 flex-1 items-center gap-3 px-(--mini-row-padding-x)">
 				<span className="bg-primary/10 text-primary grid size-8 shrink-0 place-items-center rounded-lg">
 					<Icon size={16} aria-hidden />
 				</span>
@@ -48,27 +40,41 @@ export const RequestDetailsCopyRow: FC<Props> = ({
 						</span>
 					)}
 
-					<span className="block text-sm break-words">{value}</span>
-				</span>
-
-				<span aria-hidden className="text-on-surface-variant shrink-0">
-					{isCopied ? (
-						<CheckIcon size={16} className="text-success animate-pop" />
+					{isLoading ? (
+						<Skeleton className="mt-1 h-4 w-32" />
 					) : (
-						<CopyIcon size={16} />
+						<MarqueeText
+							className="text-sm"
+							tag="div"
+							shadow={false}
+							options={{ speed: 0.4 }}
+						>
+							{value}
+						</MarqueeText>
 					)}
 				</span>
+
+				<CopyIcon
+					size={18}
+					containerCN={cn("size-5", {
+						"mr-2": !href
+					})}
+					className="p-2"
+					isCopied={isCopied}
+					onCopy={handleCopy}
+				/>
 
 				<span role="status" className="sr-only">
 					{isCopied ? "Скопировано" : ""}
 				</span>
-			</button>
+			</div>
 
 			{href && (
 				<a
 					href={href}
 					aria-label={hrefLabel}
-					className="text-primary active:bg-primary/10 focus-visible:bg-primary/10 grid min-h-12 shrink-0 place-items-center px-3 transition-colors outline-none motion-reduce:transition-none"
+					target={type === "url" ? "_blank" : "_self"}
+					className="text-primary active:bg-primary/10 focus-visible:bg-primary/10 grid min-h-14 shrink-0 place-items-center px-(--mini-row-padding-y) transition-colors outline-none motion-reduce:transition-none"
 				>
 					<ArrowUpRightIcon size={18} aria-hidden />
 				</a>

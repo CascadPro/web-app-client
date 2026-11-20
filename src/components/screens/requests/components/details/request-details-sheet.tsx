@@ -15,7 +15,6 @@ interface Props {
 	id: string
 	open: boolean
 	onOpenChange: (open: boolean) => void
-	/** «Изменить» из подробностей: родитель закрывает эту шторку и открывает редактирование */
 	onEdit: () => void
 }
 
@@ -35,10 +34,10 @@ const RequestDetailsSheetComponent: FC<Props> = ({
 			open={open}
 			onChange={onOpenChange}
 			zIndex={8890}
-			title="Подробнее"
-			titleCN="px-1"
+			title="Подробнее о заявке"
+			titleCN="sr-only"
 			panelCN="min-h-[60dvh]"
-			className="flex-1 overflow-x-hidden pb-4"
+			className="flex-1 overflow-x-hidden pb-6"
 			footer={
 				<Button
 					className="w-full gap-2 p-3"

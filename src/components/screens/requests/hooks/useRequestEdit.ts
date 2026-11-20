@@ -1,6 +1,7 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useQueryClient } from "@tanstack/react-query"
 import {
 	type BaseSyntheticEvent,
 	useCallback,
@@ -19,12 +20,13 @@ import {
 import {
 	REQUEST_CREATE_ERROR_RESET_DELAY,
 	REQUEST_CREATE_SUCCESS_DELAY
-} from "@/libs/constants/screens/request-form"
+} from "@/libs/constants/screens/requests/request-form"
 import { useHaptic } from "@/libs/haptics"
 import {
 	useRequestDetail,
 	useUpdateRequest
 } from "@/libs/query/hooks/use-requests"
+import { QueryKeys } from "@/libs/query/keys"
 import {
 	createRequestDefaults,
 	type CreateRequestFormFields,
@@ -54,13 +56,13 @@ export const useRequestEdit = (
 	const { mutateAsync } = useUpdateRequest(id)
 	const { haptic } = useHaptic()
 	const later = useLater()
+	const queryClient = useQueryClient()
 
 	const initial = useMemo(
 		() => (request ? requestToFormValues(request) : null),
 		[request]
 	)
 
-	// Сохранённый срок можно оставить как есть, даже если он уже в прошлом
 	const scheme = useMemo(
 		() => makeRequestScheme(initial?.deadline),
 		[initial?.deadline]
@@ -76,9 +78,19 @@ export const useRequestEdit = (
 	const busyRef = useRef(false)
 	const wasOpenRef = useRef(false)
 
-	// Каждое открытие начинается с актуальных данных заявки (несохранённое прошлое
-	// редактирование отбрасывается). Пока шторка открыта, фоновое обновление с сервера
-	// не затирает то, что пользователь уже ввёл.
+	const requestClient = request?.client
+
+	useEffect(() => {
+		const clientId = requestClient?.id
+
+		if (!clientId || !requestClient) return
+
+		const key = QueryKeys.clients.detail(clientId)
+
+		if (!queryClient.getQueryData(key))
+			queryClient.setQueryData(key, requestClient)
+	}, [requestClient, queryClient])
+
 	useEffect(() => {
 		if (!initial) return
 
@@ -97,7 +109,6 @@ export const useRequestEdit = (
 
 			const body = buildPatchPayload(initial, values)
 
-			// Ничего не изменилось — просто закрываем
 			if (!hasPatchChanges(body)) {
 				onOpenChange(false)
 				return
@@ -163,7 +174,6 @@ export const useRequestEdit = (
 
 	const handleOpenChange = useCallback(
 		(next: boolean) => {
-			// Пока изменения отправляются, шторку не закрываем
 			if (!next && status === "loading") return
 
 			onOpenChange(next)
@@ -181,13 +191,12 @@ export const useRequestEdit = (
 		isError: isError && !request,
 		isRefetching: isFetching,
 		refetch,
-		/** Просроченный срок остаётся доступным для выбора, пока его не поменяли */
 		deadlineMin:
 			initial?.deadline && initial.deadline < today
 				? initial.deadline
 				: undefined,
-		/** Уже сохранённый срок стереть нельзя — API не умеет «обнулять» его */
 		deadlineClearable: !initial?.deadline,
+		clientClearable: !initial?.client_id,
 		handleSubmit: form.handleSubmit(submit) as (
 			event?: BaseSyntheticEvent
 		) => Promise<void>,

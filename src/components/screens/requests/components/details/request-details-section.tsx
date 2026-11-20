@@ -3,18 +3,16 @@
 import type { LucideIcon } from "lucide-react"
 import { type FC, type PropsWithChildren, useId } from "react"
 
+import { Title } from "@/components/ui"
 import { cn } from "@/libs/utils"
 
 interface Props extends PropsWithChildren {
 	icon: LucideIcon
 	title: string
-	/** Короткая сводка справа от заголовка, например «2/4» */
 	count?: string
-	/** Строки отделяются тонкой линией (для списков) */
 	divided?: boolean
 }
 
-/** Заголовок + «сгруппированный список» — единый вид всех блоков «Подробнее» */
 export const RequestDetailsSection: FC<Props> = ({
 	icon: Icon,
 	title,
@@ -26,20 +24,21 @@ export const RequestDetailsSection: FC<Props> = ({
 
 	return (
 		<section aria-labelledby={id}>
-			<h3
+			<Title
 				id={id}
-				className="text-on-surface-variant mb-2 flex items-center gap-1.5 px-1 text-sm font-medium"
+				size="md"
+				className="text-on-surface-variant mb-2 flex items-center gap-1.5 px-1 text-sm leading-5"
 			>
 				<Icon size={16} aria-hidden />
 
 				{title}
 
 				{count && (
-					<span className="ml-auto text-xs font-normal tabular-nums">
+					<span className="animate-fade-up ml-auto text-xs font-normal tabular-nums">
 						{count}
 					</span>
 				)}
-			</h3>
+			</Title>
 
 			<div
 				className={cn(

@@ -11,7 +11,7 @@ import { useController, useFormContext } from "react-hook-form"
 import {
 	REQUEST_FORM_LIMITS,
 	REQUEST_TAG_HINTS
-} from "@/libs/constants/screens/request-form"
+} from "@/libs/constants/screens/requests/request-form"
 import type { CreateRequestFormFields } from "@/libs/schemes"
 import { mergeTags, splitTags } from "@/libs/utils/screens/request-create"
 
@@ -45,7 +45,6 @@ export const useTagsField = (name: TagsFieldName) => {
 
 			setHint(skipped ? REQUEST_TAG_HINTS[skipped] : null)
 
-			// При ошибке оставляем текст, чтобы пользователь мог его поправить
 			setDraft(skipped === "length" || skipped === "limit" ? raw : "")
 		},
 		[field, tags]
@@ -76,7 +75,6 @@ export const useTagsField = (name: TagsFieldName) => {
 		if (event.nativeEvent.isComposing) return
 
 		if (event.key === "Enter") {
-			// Enter внутри поля тегов не должен отправлять всю форму
 			event.preventDefault()
 			commit(draft)
 			return

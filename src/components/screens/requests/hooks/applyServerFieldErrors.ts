@@ -5,12 +5,12 @@ import type { CreateRequestFormFields } from "@/libs/schemes"
 const FORM_FIELDS = [
 	"title",
 	"deadline",
+	"client_id",
 	"origin",
 	"work_types",
 	"geography"
 ] as const
 
-/** Ошибки валидации с бэкенда → под соответствующие поля формы */
 export const applyServerFieldErrors = (
 	form: UseFormReturn<CreateRequestFormFields>,
 	fields: Record<string, string>

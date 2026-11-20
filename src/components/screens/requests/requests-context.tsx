@@ -18,7 +18,11 @@ const RequestContext = createContext<RequestContextState>({
 
 	setStatuses: () => {},
 	setSortType: () => {},
-	clearFilters: () => {}
+	clearFilters: () => {},
+
+	highlightId: null,
+	highlight: () => {},
+	clearHighlight: () => {}
 })
 
 export const RequestContextProvider: FC<PropsWithChildren> = ({ children }) => {

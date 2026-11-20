@@ -2,7 +2,7 @@
 
 import type { BaseSyntheticEvent, FC } from "react"
 
-import { REQUEST_CREATE_FORM_ID } from "@/libs/constants/screens/request-form"
+import { REQUEST_CREATE_FORM_ID } from "@/libs/constants/screens/requests/request-form"
 
 import { RequestFormFields } from "../form/request-form-fields"
 
@@ -14,7 +14,6 @@ interface Props {
 	onDismissDraftNotice: () => void
 }
 
-/** Только поля. Кнопки действий вынесены в закреплённый footer шторки */
 export const RequestCreateForm: FC<Props> = ({
 	isDraftRestored,
 	onSubmit,

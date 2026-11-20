@@ -1,36 +1,42 @@
 "use client"
 
 import { AnimatePresence, m, type Variants } from "motion/react"
-import { type FC, Fragment } from "react"
+import { type FC, Fragment, useMemo } from "react"
 
 import type { DomainRequestStatus } from "@/api/generated"
-import { DURATION, EASE_OUT, SPRING } from "@/libs/motion"
+import { DURATION, EASE_OUT, INSTANT, SPRING, useReduceMotion } from "@/libs/motion"
 
 import { useRequestCardActions } from "../../hooks/useRequestCardActions"
 
-import {
-	actionItemVariants,
-	RequestCardActionItem
-} from "./request-card-action"
+import { actionItemVariants, RequestCardActionItem } from "./request-card-action"
 
-/** Меню «вырастает» из правого верхнего угла — оттуда, где палец держал карточку */
-const menuVariants: Variants = {
-	hidden: { opacity: 0, scale: 0.92, y: -8 },
-	visible: {
-		opacity: 1,
-		scale: 1,
-		y: 0,
-		transition: {
-			...SPRING.snappy,
-			staggerChildren: 0.04,
-			delayChildren: 0.06
+const createMenuVariants = (reduceMotion: boolean): Variants => {
+	if (reduceMotion) {
+		return {
+			hidden: { opacity: 0 },
+			visible: { opacity: 1, transition: INSTANT },
+			exit: { opacity: 0, transition: INSTANT }
 		}
-	},
-	exit: {
-		opacity: 0,
-		scale: 0.96,
-		y: -4,
-		transition: { duration: DURATION.fast, ease: EASE_OUT }
+	}
+
+	return {
+		hidden: { opacity: 0, scale: 0.92, y: -8 },
+		visible: {
+			opacity: 1,
+			scale: 1,
+			y: 0,
+			transition: {
+				...SPRING.snappy,
+				staggerChildren: 0.04,
+				delayChildren: 0.06
+			}
+		},
+		exit: {
+			opacity: 0,
+			scale: 0.96,
+			y: -4,
+			transition: { duration: DURATION.fast, ease: EASE_OUT }
+		}
 	}
 }
 
@@ -56,6 +62,8 @@ const RequestCardActionsContent: FC<Omit<Props, "selected">> = ({
 	onEdit,
 	onDone
 }) => {
+	const reduceMotion = useReduceMotion()
+	const menuVariants = useMemo(() => createMenuVariants(reduceMotion), [reduceMotion])
 	const groups = useRequestCardActions(id, {
 		status,
 		onDetails,

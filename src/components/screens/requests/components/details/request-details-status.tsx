@@ -7,7 +7,7 @@ import { UserAvatar } from "@/components/ui/components/user-avatar"
 import {
 	STATUS_BY_LABEL,
 	USER_ROLE_LABEL
-} from "@/libs/constants/screens/request-details"
+} from "@/libs/constants/screens/requests/request-details"
 import { getFullName } from "@/libs/utils/screens/request-details"
 
 interface Props {
@@ -22,7 +22,7 @@ export const RequestDetailsStatus: FC<Props> = ({ user, status }) => {
 
 	return (
 		<section aria-label="Кто изменил статус">
-			<div className="bg-surface-variant/40 border-outline/20 flex items-center gap-3 rounded-2xl border p-3">
+			<div className="bg-surface-variant/40 border-outline/20 flex items-center gap-3 rounded-2xl border p-(--row-padding-y)">
 				<UserAvatar user={user} size="md" />
 
 				<div className="min-w-0">

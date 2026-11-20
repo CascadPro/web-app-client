@@ -10,7 +10,6 @@ interface Props {
 	onPick: () => void
 }
 
-/** Пустой слот: вся строка — кнопка «Прикрепить» */
 export const RequestDetailsFileEmpty: FC<Props> = ({
 	label,
 	isUploading,
@@ -23,7 +22,7 @@ export const RequestDetailsFileEmpty: FC<Props> = ({
 		disabled={isUploading}
 		aria-label={`Прикрепить файл: ${label}`}
 		aria-busy={isUploading || undefined}
-		className="active:bg-primary/10 focus-visible:bg-primary/10 flex min-h-14 w-full items-center gap-3 px-3 py-2 text-left transition-colors outline-none disabled:pointer-events-none motion-reduce:transition-none"
+		className="active:bg-primary/20 hover:bg-primary/10 focus-visible:bg-primary/10 flex min-h-14 w-full items-center gap-3 p-3 text-left transition-colors will-change-auto motion-reduce:transition-none"
 	>
 		<span className="border-outline/40 text-on-surface-variant grid size-9 shrink-0 place-items-center rounded-lg border border-dashed">
 			{isUploading ? (
@@ -40,7 +39,7 @@ export const RequestDetailsFileEmpty: FC<Props> = ({
 				{isUploading
 					? progress > 0
 						? `Загрузка ${progress}%`
-						: "Загрузка…"
+						: "Загрузка..."
 					: "Не прикреплён"}
 			</span>
 		</span>

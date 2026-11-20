@@ -5,10 +5,10 @@ import { m } from "motion/react"
 import type { FC } from "react"
 
 import type { RequestsTransportHttpGetRequestResponse } from "@/api/generated"
-import { DURATION, EASE_OUT } from "@/libs/motion"
+import { DURATION, EASE_OUT, INSTANT, useReduceMotion } from "@/libs/motion"
 
+import { RequestDetailsFiles } from "./file/request-details-files"
 import { RequestDetailsClient } from "./request-details-client"
-import { RequestDetailsFiles } from "./request-details-files"
 import { RequestDetailsHeader } from "./request-details-header"
 import { RequestDetailsMissing } from "./request-details-missing"
 import { RequestDetailsOrigin } from "./request-details-origin"
@@ -17,39 +17,42 @@ import { RequestDetailsTags } from "./request-details-tags"
 
 interface Props {
 	request: RequestsTransportHttpGetRequestResponse
-	/** id заявки — по нему загружаются и удаляются файлы */
 	requestId: string
 }
 
-export const RequestDetailsContent: FC<Props> = ({ request, requestId }) => (
-	<m.div
-		initial={{ opacity: 0 }}
-		animate={{ opacity: 1 }}
-		transition={{ duration: DURATION.base, ease: EASE_OUT }}
-		className="flex flex-col gap-5 pt-2"
-	>
-		<RequestDetailsHeader request={request} />
+export const RequestDetailsContent: FC<Props> = ({ request, requestId }) => {
+	const reduceMotion = useReduceMotion()
 
-		<RequestDetailsMissing fields={request.fields_remaining ?? []} />
+	return (
+		<m.div
+			initial={reduceMotion ? false : { opacity: 0 }}
+			animate={{ opacity: 1 }}
+			transition={reduceMotion ? INSTANT : { duration: DURATION.base, ease: EASE_OUT }}
+			className="flex flex-col gap-(--section-gap) pt-4"
+		>
+			<RequestDetailsHeader request={request} />
 
-		<RequestDetailsOrigin origin={request.origin} />
+			<RequestDetailsMissing fields={request.fields_remaining ?? []} />
 
-		<RequestDetailsClient client={request.client} />
+			<RequestDetailsOrigin origin={request.origin} />
 
-		<RequestDetailsTags
-			icon={BriefcaseBusinessIcon}
-			title="Виды работ"
-			items={request.work_types}
-		/>
+			<RequestDetailsClient client={request.client} />
 
-		<RequestDetailsTags
-			icon={MapPinIcon}
-			title="География"
-			items={request.geography_description}
-		/>
+			<RequestDetailsTags
+				icon={BriefcaseBusinessIcon}
+				title="Виды работ"
+				items={request.work_types}
+			/>
 
-		<RequestDetailsFiles requestId={requestId} docs={request.docs} />
+			<RequestDetailsTags
+				icon={MapPinIcon}
+				title="География"
+				items={request.geography_description}
+			/>
 
-		<RequestDetailsStatus user={request.status_by} status={request.status} />
-	</m.div>
-)
+			<RequestDetailsFiles requestId={requestId} docs={request.docs} />
+
+			<RequestDetailsStatus user={request.status_by} status={request.status} />
+		</m.div>
+	)
+}

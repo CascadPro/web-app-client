@@ -5,7 +5,7 @@ import { AnimatePresence, m } from "motion/react"
 import { type FC, memo, useId } from "react"
 
 import { AnimatedHeight, Button, Input } from "@/components/ui"
-import { REQUEST_FORM_LIMITS } from "@/libs/constants/screens/request-form"
+import { REQUEST_FORM_LIMITS } from "@/libs/constants/screens/requests/request-form"
 import { SPRING } from "@/libs/motion"
 import { cn } from "@/libs/utils"
 
@@ -45,12 +45,13 @@ const RequestTagsFieldComponent: FC<Props> = ({ name, label, placeholder }) => {
 					{label}
 				</label>
 
-				<span className="text-on-surface-variant text-xs tabular-nums">
-					{tags.length}/{REQUEST_FORM_LIMITS.TAGS_MAX_ITEMS}
-				</span>
+				{tags.length > 0 && (
+					<span className="animate-fade-up text-on-surface-variant text-xs tabular-nums">
+						{tags.length} / {REQUEST_FORM_LIMITS.TAGS_MAX_ITEMS}
+					</span>
+				)}
 			</div>
 
-			{/* Высота блока с тегами меняется плавно: новая строка не двигает форму рывком */}
 			<AnimatedHeight>
 				<ul
 					className={cn(

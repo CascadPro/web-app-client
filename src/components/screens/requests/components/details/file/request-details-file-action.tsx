@@ -1,5 +1,3 @@
-"use client"
-
 import type { LucideIcon } from "lucide-react"
 import type { FC } from "react"
 
@@ -12,7 +10,6 @@ interface Props {
 	onClick: () => void
 }
 
-/** Иконка-кнопка в строке файла: область нажатия 40×40 */
 export const RequestDetailsFileAction: FC<Props> = ({
 	icon: Icon,
 	label,
@@ -33,6 +30,6 @@ export const RequestDetailsFileAction: FC<Props> = ({
 				: "text-on-surface-variant active:bg-primary/10"
 		)}
 	>
-		<Icon size={18} aria-hidden />
+		<Icon size={20} aria-hidden />
 	</button>
 )

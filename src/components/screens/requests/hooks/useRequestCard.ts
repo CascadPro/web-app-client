@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 
 import type { RequestHttpDtoGetRequestsResponseRequest as Request } from "@/api/generated"
 import { useScrollLocked } from "@/libs/hooks"
+import { useReduceMotion } from "@/libs/motion"
 import {
 	formatRequestDate,
 	getRequestProgress
@@ -11,7 +12,6 @@ import {
 import type { RequestCardDescriptionData } from "@/types/screens/requests"
 
 const LONG_PRESS_DELAY = 450
-/** Высота меню действий (4 пункта + отступы) вместе с зазором под карточкой */
 const ACTIONS_HEIGHT = 240
 const VIEWPORT_PADDING = 16
 
@@ -35,6 +35,7 @@ export const useRequestCard = ({
 	created_at,
 	deadline
 }: Params): UseRequestCardReturn => {
+	const reduceMotion = useReduceMotion()
 	const [isSelected, setIsSelected] = useState(false)
 	const [selectedY, setSelectedY] = useState(0)
 
@@ -128,7 +129,6 @@ export const useRequestCard = ({
 	const handleTouchEnd = clearLongPress
 	const handleTouchCancel = clearLongPress
 
-	// Для клавиатуры: клавиша меню или Shift+F10 открывают действия (как долгое нажатие)
 	const handleKeyDown = useCallback(
 		(event: KeyboardEvent) => {
 			if (
@@ -164,7 +164,7 @@ export const useRequestCard = ({
 		progress,
 		descriptionData,
 		isSelected,
-		selectedY,
+		selectedY: reduceMotion ? 0 : selectedY,
 		handleTouchStart,
 		handleTouchEnd,
 		handleTouchCancel,

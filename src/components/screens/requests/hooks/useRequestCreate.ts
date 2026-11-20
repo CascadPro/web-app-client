@@ -14,7 +14,7 @@ import {
 import {
 	REQUEST_CREATE_ERROR_RESET_DELAY,
 	REQUEST_CREATE_SUCCESS_DELAY
-} from "@/libs/constants/screens/request-form"
+} from "@/libs/constants/screens/requests/request-form"
 import { useHaptic } from "@/libs/haptics"
 import { useReduceMotion } from "@/libs/motion"
 import { useCreateRequest } from "@/libs/query/hooks/use-requests"
@@ -32,7 +32,7 @@ import {
 	scrollToRequestList,
 	toCreateRequestPayload
 } from "@/libs/utils/screens/request-create"
-import { useRequestsUiStore } from "@/store/requests"
+import { useRequestContext } from "../requests-context"
 import type { RequestCreateStatus } from "@/types/screens/requests"
 
 import { applyServerFieldErrors } from "./applyServerFieldErrors"
@@ -61,13 +61,12 @@ export const useRequestCreate = (
 	const { mutateAsync } = useCreateRequest()
 	const { haptic } = useHaptic()
 	const reduceMotion = useReduceMotion()
-	const highlight = useRequestsUiStore(state => state.highlight)
+	const { highlight } = useRequestContext()
 
 	const { isRestored, dismissRestored } = useRequestDraft(form, open)
 
 	const [status, setStatus] = useState<RequestCreateStatus>("default")
 
-	/** Ключ идемпотентности живёт, пока не изменился отправляемый payload */
 	const attemptRef = useRef<{ key: string; fingerprint: string } | null>(null)
 	const busyRef = useRef(false)
 	const timersRef = useRef(new Set<ReturnType<typeof setTimeout>>())
@@ -103,7 +102,6 @@ export const useRequestCreate = (
 
 				setStatus("default")
 
-				// Подсветку и прокрутку запускаем, когда шторка уже уехала вниз
 				later(() => {
 					if (createdId) highlight(createdId)
 
@@ -175,7 +173,6 @@ export const useRequestCreate = (
 
 				finish("success", created.id)
 			} catch (error) {
-				// Связь пропала во время отправки — кладём в очередь с тем же ключом
 				if (isOffline()) {
 					toast.dismiss(toastId)
 					await saveToQueue()
@@ -216,7 +213,6 @@ export const useRequestCreate = (
 
 	const handleOpenChange = useCallback(
 		(next: boolean) => {
-			// Пока заявка отправляется, шторку не закрываем
 			if (!next && status === "loading") return
 
 			onOpenChange(next)

@@ -7,7 +7,7 @@ import {
 	TOAST_ERROR_DURATION,
 	TOAST_SUCCESS_DURATION
 } from "@/components/ui/toast"
-import type { RequestDocSlot } from "@/libs/constants/screens/request-docs"
+import type { RequestDocSlot } from "@/libs/constants/screens/requests/request-docs"
 import { useHaptic } from "@/libs/haptics"
 import {
 	useDeleteRequestFile,
@@ -17,9 +17,13 @@ import {
 import { createIdempotencyKey } from "@/libs/query/idempotency"
 import { errorCatch } from "@/libs/utils"
 import { isOffline } from "@/libs/utils/screens/request-create"
+import { useOfflineFilesStore } from "@/store/offline-files"
 
-/** Загрузка, замена и удаление файла в одном слоте документов заявки */
-export const useRequestFile = (requestId: string, slot: RequestDocSlot) => {
+export const useRequestFile = (
+	requestId: string,
+	slot: RequestDocSlot,
+	currentFileId?: string
+) => {
 	const uploadMutation = useUploadRequestFile(requestId, slot.index)
 	const deleteMutation = useDeleteRequestFile(requestId, slot.index)
 	const { isUploading, isDeleting } = useRequestFileBusy(requestId, slot.index)
@@ -80,7 +84,7 @@ export const useRequestFile = (requestId: string, slot: RequestDocSlot) => {
 				setProgress(0)
 			}
 		},
-		[uploadFile, slot.label, fail]
+		[uploadFile, slot.label, currentFileId, fail]
 	)
 
 	const remove = useCallback(async () => {
@@ -98,13 +102,17 @@ export const useRequestFile = (requestId: string, slot: RequestDocSlot) => {
 				docKey: slot.key
 			})
 
+			if (currentFileId) {
+				void useOfflineFilesStore.getState().remove(currentFileId)
+			}
+
 			toast.success(`${slot.label}: файл удалён`, {
 				duration: TOAST_SUCCESS_DURATION
 			})
 		} catch (error) {
 			fail("Не удалось удалить файл", error)
 		}
-	}, [deleteFile, slot.key, slot.label, fail])
+	}, [deleteFile, slot.key, slot.label, currentFileId, fail])
 
 	return { isUploading, isDeleting, progress, upload, remove }
 }

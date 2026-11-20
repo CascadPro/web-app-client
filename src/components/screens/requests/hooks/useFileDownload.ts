@@ -14,15 +14,16 @@ import {
 	saveBlob,
 	toPercent
 } from "@/libs/utils/screens/request-details"
+import { useOfflineFilesStore } from "@/store/offline-files"
 
-/**
- * Скачивание файла с прогрессом: поток, процент, «сколько из скольки», отмена.
- * Если закрыть шторку посреди скачивания, оно отменяется — файл не «выскочит» позже.
- */
+export interface DownloadTarget {
+	fileId?: string
+	expectedSize?: number | null
+}
+
 export const useFileDownload = () => {
 	const { haptic } = useHaptic()
 
-	// null — скачивание не идёт
 	const [progress, setProgress] = useState<DownloadProgress | null>(null)
 	const controllerRef = useRef<AbortController | null>(null)
 
@@ -31,23 +32,39 @@ export const useFileDownload = () => {
 	const cancel = useCallback(() => controllerRef.current?.abort(), [])
 
 	const download = useCallback(
-		async (url: string, filename: string) => {
+		async (
+			url: string,
+			filename: string,
+			{ fileId, expectedSize }: DownloadTarget = {}
+		) => {
 			if (controllerRef.current) return
-
-			if (isOffline()) {
-				toast.error("Нет соединения", {
-					description: "Файл нельзя скачать без сети",
-					duration: TOAST_ERROR_DURATION
-				})
-				return
-			}
 
 			const controller = new AbortController()
 
 			controllerRef.current = controller
-			setProgress({ loaded: 0, total: null })
 
 			try {
+				const offline = useOfflineFilesStore.getState()
+
+				if (fileId) {
+					const copy = await offline.read(fileId, expectedSize)
+
+					if (copy) {
+						saveBlob(copy.blob, filename)
+						return
+					}
+				}
+
+				if (isOffline()) {
+					toast.error("Нет соединения", {
+						description: "Файла нет на устройстве, а без сети его не скачать",
+						duration: TOAST_ERROR_DURATION
+					})
+					return
+				}
+
+				setProgress({ loaded: 0, total: null })
+
 				const { blob } = await downloadFile(url, {
 					signal: controller.signal,
 					fetchImpl: authorizedFetch,
@@ -55,8 +72,16 @@ export const useFileDownload = () => {
 				})
 
 				saveBlob(blob, filename)
+
+				if (fileId && (!expectedSize || blob.size === expectedSize)) {
+					void offline.save({
+						id: fileId,
+						blob,
+						name: filename,
+						type: blob.type
+					})
+				}
 			} catch (error) {
-				// Отмена — решение пользователя, а не ошибка
 				if (isAbortError(error)) return
 
 				haptic("medium")
