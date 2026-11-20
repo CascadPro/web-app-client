@@ -5,8 +5,11 @@ import { parseApiError } from "@/libs/errors"
 import { queryClient } from "@/libs/query/client"
 import { queryPersister } from "@/libs/query/persister"
 import { useAuthStore } from "@/store/auth"
+import { useOfflineFilesStore } from "@/store/offline-files"
 
 import type {
+	ClientTransportHttpGetClientsRequest as GetClientsRequest,
+	ClientTransportHttpGetClientResponse as GetClientsResponse,
 	RequestsTransportHttpGetRequestsRequest as GetRequestsRequest,
 	RequestsTransportHttpGetRequestsResponse as GetRequestsResponse
 } from "./generated"
@@ -31,6 +34,13 @@ service.getRequests = (
 	options?: AxiosRequestConfig
 ): Promise<AxiosResponse<GetRequestsResponse>> => {
 	return instance.query(`/requests`, request, options)
+}
+
+service.getClients = (
+	request?: GetClientsRequest,
+	options?: AxiosRequestConfig
+): Promise<AxiosResponse<GetClientsResponse[]>> => {
+	return instance.query(`/clients`, request, options)
 }
 
 let refreshPromise: Promise<string | null> | null = null
@@ -80,7 +90,9 @@ const refreshAccessToken = (): Promise<string | null> => {
 const clearAuthenticatedCache = (): void => {
 	queryClient.clear()
 
-	queryPersister.removeClient()
+	void queryPersister.removeClient()
+
+	void useOfflineFilesStore.getState().clear()
 }
 
 const expireClientSession = (): void => {
@@ -97,7 +109,13 @@ const isAuthEndpoint = (url?: string): boolean => {
 	return /(?:^|\/)auth(?:\/|$)/i.test(pathname)
 }
 
-const ROOT_ROUTER_PATHS = new Set(["sessions", "requests", "auth", "users"])
+const ROOT_ROUTER_PATHS = new Set([
+	"sessions",
+	"requests",
+	"auth",
+	"users",
+	"clients"
+])
 
 instance.interceptors.request.use(
 	config => {

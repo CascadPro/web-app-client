@@ -37,7 +37,7 @@ export const QueryKeys = {
 		lists: () => [...QueryKeys.requests.all, "list"] as const,
 
 		list: (params?: GetRequestsParams) =>
-			[...QueryKeys.requests.lists(), params] as const,
+			[...QueryKeys.requests.lists(), ...(params ? [params] : [])] as const,
 
 		stats: () => [...QueryKeys.requests.all, "stats"] as const,
 
@@ -54,5 +54,14 @@ export const QueryKeys = {
 		details: () => [...QueryKeys.requests.all, "detail"] as const,
 
 		detail: (id: string) => [...QueryKeys.requests.details(), id] as const
+	},
+
+	clients: {
+		all: ["clients"] as const,
+
+		list: (params?: Record<any, any>) =>
+			[...QueryKeys.clients.all, ...(params ? [params] : [])] as const,
+
+		detail: (id: string) => [...QueryKeys.clients.all, "detail", id] as const
 	}
 }
