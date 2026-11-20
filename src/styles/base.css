@@ -33,13 +33,20 @@ img {
 button,
 a {
 	cursor: pointer;
-	/* убирает задержку тапа и случайный double-tap zoom */
 	touch-action: manipulation;
 }
 
-/* В @layer base, чтобы utility-классы Tailwind (focus-visible:outline-none и т.п.) побеждали */
 @layer base {
-	:where(a, button, input, textarea, select, summary, [role="switch"], [tabindex]):focus-visible {
+	:where(
+		a,
+		button,
+		input,
+		textarea,
+		select,
+		summary,
+		[role="switch"],
+		[tabindex]
+	):focus-visible {
 		outline: 2px solid var(--primary);
 		outline-offset: 2px;
 	}
@@ -74,10 +81,6 @@ ul {
 	}
 }
 
-/*
- * Слабые устройства (html[data-perf="low"], определяется в boot-скрипте):
- * выключаем бесконечные декоративные анимации. Индикаторы загрузки (animate-spin) остаются.
- */
 :root[data-perf="low"] .shine::after,
 :root[data-perf="low"] .skeleton::after,
 :root[data-perf="low"] .animate-ping,
