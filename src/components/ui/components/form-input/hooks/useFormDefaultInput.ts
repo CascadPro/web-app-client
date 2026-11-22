@@ -1,6 +1,6 @@
 import IMask, { FactoryArg } from "imask"
 import type InputMask from "imask/esm/controls/input"
-import { InputEvent, useEffect, useState } from "react"
+import { type FormEvent, useEffect, useState } from "react"
 
 import { PHONE_MASK_PATTERN } from "@/libs/constants"
 import { onInputRule } from "@/libs/utils"
@@ -37,7 +37,7 @@ export const useFormDefaultInput = (
 
 	const clear = () => setValue(name, "", { shouldValidate: true })
 
-	const onInput = (e: InputEvent<HTMLInputElement>) => {
+	const onInput = (e: FormEvent<HTMLInputElement>) => {
 		if (!isPhone) onInputRule(e.currentTarget)
 		else if (!input?.value) setValue(name, "", { shouldValidate: true })
 		else if (input?.value.includes("+7 (") && !getValues(name))
@@ -59,6 +59,7 @@ export const useFormDefaultInput = (
 		clearError,
 		error,
 		register,
-		value
+		value,
+		setValue
 	}
 }

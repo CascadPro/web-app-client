@@ -10,7 +10,6 @@ import {
 	Title
 } from "@/components/ui"
 import { FormInput } from "@/components/ui/components/form-input"
-import { PhoneInputWithLabel } from "@/components/ui/phone-input"
 import { VALUES } from "@/libs/constants"
 
 import { useLoginPage } from "./hooks/useLogin"
@@ -70,15 +69,13 @@ export const LoginScreen = () => {
 
 					{method === "phone" && (
 						<StaggerItem className="w-full">
-							<PhoneInputWithLabel
+							<FormInput
 								name="phone"
 								label={"Телефон"}
 								placeholder="+7 (900) 000-00-00"
 								containerClassName="w-full mb-12"
 								required
 								autoComplete="tel"
-								value={phoneValue ?? ""}
-								onValueChange={value => form.setValue("phone", value)}
 							/>
 						</StaggerItem>
 					)}

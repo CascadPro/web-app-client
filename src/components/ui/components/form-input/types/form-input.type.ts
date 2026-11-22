@@ -15,8 +15,9 @@ export type FormInputFieldNames =
 	| keyof LoginFormFields
 	| keyof RegisterFormFields
 	| keyof CreateRequestFormFields
+	| (string & {})
 
-export type FormInputType = "default" | "textarea"
+export type FormInputType = "default" | "textarea" | "phone"
 
 export interface FormInputProps extends InputHTMLAttributes<HTMLInputElement> {
 	name: FormInputFieldNames
@@ -31,6 +32,8 @@ export interface FormInputProps extends InputHTMLAttributes<HTMLInputElement> {
 	textareaProps?: TextareaHTMLAttributes<HTMLTextAreaElement> & {
 		counter?: boolean
 	}
+	/** Явное указание типа поля (переопределяет автоопределение по имени) */
+	variant?: FormInputType
 }
 
 export interface FormDefaultInputProps extends InputHTMLAttributes<HTMLInputElement> {
